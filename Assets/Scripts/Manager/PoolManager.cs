@@ -120,7 +120,10 @@ public sealed class PoolManager : BaseManager<PoolManager>
 
     protected override void DisposeProcess()
     {
-        Object.Destroy(_root.gameObject);
+        if (_root != null)
+        {
+            Object.Destroy(_root.gameObject);
+        }
     }
 
     public void CreatePool(GameObject original, int count = 0)

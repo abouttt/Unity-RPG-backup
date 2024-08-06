@@ -4,7 +4,10 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: a77be1863293ab54fb312b2ea8663a12
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: c4ad3f5ed618bab44ad5843c675940cd, type: 2}
     com.unity.input.settings: {fileID: 11400000, guid: a80c3c62e8eae074e8dd177270f5ca2b, type: 2}
