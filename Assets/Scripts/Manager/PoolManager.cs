@@ -144,26 +144,29 @@ public sealed class PoolManager : BaseManager<PoolManager>
         _pools.Add(original.name, pool);
     }
 
-    public void Push(GameObject go)
+    public bool Push(GameObject go)
     {
         CheckInit();
 
         if (go == null)
         {
             Debug.LogWarning($"[PoolManager/Push] GameObject is null.");
-            return;
+            return false;
         }
 
         if (!_pools.ContainsKey(go.name))
         {
             Debug.LogWarning($"[PoolManager/Push] {go.name} pool does not exist.");
-            return;
+            return false;
         }
 
         if (!_pools[go.name].Push(go))
         {
             Debug.LogWarning($"[PoolManager/Push] {go.name} is not included in this pool.");
+            return false;
         }
+
+        return true;
     }
 
     public void PushAll(GameObject go)

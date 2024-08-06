@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public abstract class BaseManager<T>
+public abstract class BaseManager<T> where T : class
 {
     private bool _isInit;
 
