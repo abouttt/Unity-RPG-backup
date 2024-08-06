@@ -34,12 +34,7 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     public T Load<T>(string key) where T : Object
     {
-        if (_resources.TryGetValue(key, out var resource))
-        {
-            return resource as T;
-        }
-
-        return null;
+        return _resources.TryGetValue(key, out var resource) ? resource as T : null;
     }
 
     public void LoadAsync<T>(string key, Action<T> callback = null) where T : Object
