@@ -4,8 +4,58 @@
         {
             "name": "Player",
             "id": "a0231650-dedd-42ca-af1e-3787b327fd62",
-            "actions": [],
-            "bindings": []
+            "actions": [
+                {
+                    "name": "Look",
+                    "type": "Value",
+                    "id": "a4158f61-adf3-4051-8e85-46dcb95d41f7",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "fe5d2632-d3be-4703-a94a-fcb429bf7e85",
+                    "path": "<Mouse>/delta",
+                    "interactions": "",
+                    "processors": "InvertVector2(invertX=false),ScaleVector2(x=0.5,y=0.5)",
+                    "groups": "Keyboard&Mouse",
+                    "action": "Look",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "9140595f-8aed-4af3-b99c-cd90b2efa250",
+            "actions": [
+                {
+                    "name": "CursorToggle",
+                    "type": "Button",
+                    "id": "4b2467ce-e8df-472d-ba29-c9002c14a46d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d6ad6808-dc65-4e34-8f00-c93aa6bc4812",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CursorToggle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

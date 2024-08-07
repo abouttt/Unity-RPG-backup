@@ -1,8 +1,24 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public sealed class InputManager : BaseManager<InputManager>
+public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIActions
 {
+    public bool Enabled
+    {
+        get => _gameControls.asset.enabled;
+        set
+        {
+            if (value)
+            {
+                _gameControls.Enable();
+            }
+            else
+            {
+                _gameControls.Disable();
+            }
+        }
+    }
+
     public bool CursorLocked
     {
         get => _cursorLocked;
@@ -20,18 +36,19 @@ public sealed class InputManager : BaseManager<InputManager>
     protected override void InitProcess()
     {
         _gameControls = new();
-        _gameControls.Enable();
+        _gameControls.UI.SetCallbacks(this);
+        Enabled = false;
         CursorLocked = false;
     }
 
     protected override void ClearProcess()
     {
-
+        Enabled = false;
     }
 
     protected override void DisposeProcess()
     {
-        _gameControls.Disable();
+        _gameControls.UI.RemoveCallbacks(this);
         _gameControls.Dispose();
     }
 
@@ -53,5 +70,13 @@ public sealed class InputManager : BaseManager<InputManager>
         string key = GetAction(actionNameOrId).bindings[bindingIndex].path;
         string path = key.GetStringAfterLastSlash();
         return path.ToUpper();
+    }
+
+    public void OnCursorToggle(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            CursorLocked = !CursorLocked;
+        }
     }
 }
