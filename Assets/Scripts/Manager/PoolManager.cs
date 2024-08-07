@@ -103,9 +103,7 @@ public sealed class PoolManager : BaseManager<PoolManager>
 
     protected override void InitProcess()
     {
-        var go = new GameObject($"Pool_Root");
-        Object.DontDestroyOnLoad(go);
-        _root = go.transform;
+        _root = Util.Instantiate("Pool_Root", true).transform;
     }
 
     protected override void ClearProcess()

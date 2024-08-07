@@ -29,11 +29,11 @@ public abstract class BaseUI : MonoBehaviour
         {
             if (typeof(T) == typeof(GameObject))
             {
-                newObjects[i] = gameObject.FindChild(names[i], true);
+                newObjects.Add(gameObject.FindChild(names[i], true));
             }
             else
             {
-                newObjects[i] = gameObject.FindChild<T>(names[i], true);
+                newObjects.Add(gameObject.FindChild<T>(names[i], true));
             }
 
             if (newObjects[i] == null)

@@ -6,30 +6,21 @@ using UnityEngine.SceneManagement;
 
 public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 {
-    public BaseScene CurrentScene
-    {
-        get
-        {
-            if (_currentScene == null)
-            {
-                _currentScene = Object.FindAnyObjectByType<BaseScene>();
-            }
-
-            return _currentScene;
-        }
-    }
-
     public string NextSceneAddress { get; private set; }
     public bool IsReadyToLoad { get; private set; }
     public bool IsReadyToCompletion { get; private set; }
-    public float LoadingProgress => _sceneHandle.PercentComplete;
+    public float LoadingProgress => _loadingUpdater.LoadingProgress;
 
     private AsyncOperationHandle<SceneInstance> _sceneHandle;
-    private BaseScene _currentScene;
+    private LoadingUpdater _loadingUpdater;
 
     protected override void InitProcess()
     {
         Addressables.InitializeAsync();
+
+        var go = Util.Instantiate(typeof(LoadingUpdater).Name, true, typeof(LoadingUpdater));
+        _loadingUpdater = go.GetComponent<LoadingUpdater>();
+        _loadingUpdater.UpdateEnded += () => IsReadyToCompletion = true;
     }
 
     protected override void ClearProcess()
@@ -40,10 +31,13 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
     protected override void DisposeProcess()
     {
         ClearLoadStatus();
+
         if (_sceneHandle.IsValid())
         {
             Addressables.Release(_sceneHandle);
         }
+
+        Object.Destroy(_loadingUpdater);
     }
 
     public void ReadyToLoad(string sceneAddress)
@@ -82,7 +76,7 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
             }
 
             _sceneHandle = Addressables.LoadSceneAsync(NextSceneAddress, LoadSceneMode.Single, false);
-            _sceneHandle.Completed += handle => IsReadyToCompletion = true;
+            _loadingUpdater.StartUpdate(_sceneHandle);
         }
         else
         {

@@ -18,9 +18,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
     protected override void InitProcess()
     {
-        var go = new GameObject($"UI_Root");
-        Object.DontDestroyOnLoad(go);
-        _root = go.transform;
+        _root = Util.Instantiate("UI_Root", true).transform;
     }
 
     protected override void ClearProcess()

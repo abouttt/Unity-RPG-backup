@@ -3,6 +3,17 @@ using UnityEngine;
 
 public static class Util
 {
+    public static GameObject Instantiate(string name, bool dontDestroyOnLoad, params System.Type[] components)
+    {
+        var go = new GameObject(name, components);
+        if (dontDestroyOnLoad)
+        {
+            Object.DontDestroyOnLoad(go);
+        }
+
+        return go;
+    }
+
     public static T GetOrAddComponent<T>(GameObject go) where T : Component
     {
         if (go == null)
