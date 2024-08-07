@@ -6,12 +6,14 @@ public class Managers : SingletonBehaviour<Managers>
     public static PoolManager Pool => Instance._pool;
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
+    public static SoundManager Sound => Instance._sound;
     public static UIManager UI => Instance._ui;
 
     private readonly InputManager _input = new();
     private readonly PoolManager _pool = new();
     private readonly ResourceManager _resource = new();
     private readonly SceneManagerEx _scene = new();
+    private readonly SoundManager _sound = new();
     private readonly UIManager _ui = new();
 
     protected override void Init()
@@ -21,6 +23,7 @@ public class Managers : SingletonBehaviour<Managers>
         _pool.Init();
         _resource.Init();
         _scene.Init();
+        _sound.Init();
         _ui.Init();
     }
 
@@ -30,6 +33,7 @@ public class Managers : SingletonBehaviour<Managers>
         Pool.Clear();
         Resource.Clear();
         Scene.Clear();
+        Sound.Clear();
         UI.Clear();
     }
 
@@ -40,6 +44,7 @@ public class Managers : SingletonBehaviour<Managers>
         _pool.Dispose();
         _resource.Dispose();
         _scene.Dispose();
+        _sound.Dispose();
         _ui.Dispose();
     }
 }
