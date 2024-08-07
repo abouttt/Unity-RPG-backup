@@ -10,7 +10,12 @@ public static class Util
             return null;
         }
 
-        return go.TryGetComponent<T>(out var component) ? component : go.AddComponent<T>();
+        if (go.TryGetComponent<T>(out var component))
+        {
+            return component;
+        }
+
+        return go.AddComponent<T>();
     }
 
     public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)

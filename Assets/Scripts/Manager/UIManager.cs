@@ -49,11 +49,20 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public T Get<T>() where T : BaseUI
     {
-        return _objects.TryGetValue(typeof(T), out var ui) ? ui as T : null;
+        CheckInit();
+
+        if (_objects.TryGetValue(typeof(T), out var ui))
+        {
+            return ui as T;
+        }
+
+        return null;
     }
 
     public void Register<T>(T ui) where T : BaseUI
     {
+        CheckInit();
+
         if (ui == null)
         {
             Debug.LogWarning($"[UIManager/Register] {typeof(T)} object is null.");
@@ -93,6 +102,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public void Unregister<T>() where T : BaseUI
     {
+        CheckInit();
+
         if (_objects.TryGetValue(typeof(T), out var ui))
         {
             if (ui is PopupUI popup)
@@ -121,6 +132,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public T Show<T>() where T : BaseUI
     {
+        CheckInit();
+
         if (_objects.TryGetValue(typeof(T), out var ui))
         {
             if (ui.gameObject.activeSelf)
@@ -165,11 +178,14 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public bool IsActive<T>() where T : BaseUI
     {
+        CheckInit();
         return _objects.TryGetValue(typeof(T), out var ui) && ui.gameObject.activeSelf;
     }
 
     public void Close<T>() where T : BaseUI
     {
+        CheckInit();
+
         if (_objects.TryGetValue(typeof(T), out var ui))
         {
             if (!ui.gameObject.activeSelf)
@@ -199,6 +215,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public void CloseTopPopup()
     {
+        CheckInit();
+
         if (ActivePopupCount > 0)
         {
             var popup = _activePopups.Last.Value;
@@ -219,6 +237,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public void CloseAll(UIType type)
     {
+        CheckInit();
+
         if (type == UIType.Popup)
         {
             foreach (var popup in _activePopups)
@@ -241,6 +261,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     public void ShowOrClose<T>() where T : BaseUI
     {
+        CheckInit();
+
         if (IsActive<T>())
         {
             Close<T>();

@@ -60,7 +60,12 @@ public abstract class BaseUI : MonoBehaviour
 
     protected T Get<T>(int index) where T : Object
     {
-        return _objects.TryGetValue(typeof(T), out var objects) ? objects[index] as T : null;
+        if (_objects.TryGetValue(typeof(T), out var objects))
+        {
+            return objects[index] as T;
+        }
+
+        return null;
     }
 
     protected GameObject GetObject(int index) => Get<GameObject>(index);

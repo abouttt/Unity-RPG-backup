@@ -48,6 +48,8 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
     public void ReadyToLoad(string sceneAddress)
     {
+        CheckInit();
+
         if (string.IsNullOrEmpty(sceneAddress))
         {
             Debug.LogWarning("[SceneManagerEx/ReadyToLoad] The scene address is empty");
@@ -70,6 +72,8 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
     public void StartLoad()
     {
+        CheckInit();
+
         if (IsReadyToLoad)
         {
             if (_sceneHandle.IsValid())
@@ -88,6 +92,8 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
     public void CompleteLoad()
     {
+        CheckInit();
+
         if (IsReadyToCompletion)
         {
             ClearLoadStatus();

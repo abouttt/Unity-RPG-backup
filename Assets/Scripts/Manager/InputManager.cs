@@ -37,16 +37,19 @@ public sealed class InputManager : BaseManager<InputManager>
 
     public InputActionMap GetActionMap(string nameOrId, bool throwIfNotFound = false)
     {
+        CheckInit();
         return _gameControls.asset.FindActionMap(nameOrId, throwIfNotFound);
     }
 
     public InputAction GetAction(string actionNameOrId, bool throwIfNotFound = false)
     {
+        CheckInit();
         return _gameControls.FindAction(actionNameOrId, throwIfNotFound);
     }
 
     public string GetBindingPath(string actionNameOrId, int bindingIndex = 0)
     {
+        CheckInit();
         string key = GetAction(actionNameOrId).bindings[bindingIndex].path;
         string path = key.GetStringAfterLastSlash();
         return path.ToUpper();

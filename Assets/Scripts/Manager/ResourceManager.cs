@@ -34,11 +34,20 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     public T Load<T>(string key) where T : Object
     {
-        return _resources.TryGetValue(key, out var resource) ? resource as T : null;
+        CheckInit();
+
+        if (_resources.TryGetValue(key, out var resource))
+        {
+            return resource as T;
+        }
+
+        return null;
     }
 
     public void LoadAsync<T>(string key, Action<T> callback = null) where T : Object
     {
+        CheckInit();
+
         if (_resources.TryGetValue(key, out var resource))
         {
             callback?.Invoke(resource as T);
@@ -71,6 +80,8 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     public void LoadAllAsync<T>(string label, Action<T[]> callback = null) where T : Object
     {
+        CheckInit();
+
         Addressables.LoadResourceLocationsAsync(label, typeof(T)).Completed += handle =>
         {
             if (handle.Status != AsyncOperationStatus.Succeeded || handle.Result.Count == 0)
@@ -101,18 +112,24 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     public GameObject Instantiate(string key, Transform parent = null, bool pooling = false)
     {
+        CheckInit();
+
         var prefab = Load<GameObject>(key);
         return pooling ? Managers.Pool.Pop(prefab, parent) : Object.Instantiate(prefab, parent);
     }
 
     public T Instantiate<T>(string key, Transform parent = null, bool pooling = false) where T : Component
     {
+        CheckInit();
+
         var go = Instantiate(key, parent, pooling);
         return go.GetComponent<T>();
     }
 
     public void InstantiateAsync(string key, Action<GameObject> callback = null, Transform parent = null, bool pooling = false)
     {
+        CheckInit();
+
         LoadAsync<GameObject>(key, prefab =>
         {
             var go = pooling ? Managers.Pool.Pop(prefab, parent) : Object.Instantiate(prefab, parent);
@@ -122,11 +139,14 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     public void InstantiateAsync<T>(string key, Action<T> callback = null, Transform parent = null, bool pooling = false) where T : Component
     {
+        CheckInit();
         InstantiateAsync(key, go => callback?.Invoke(go.GetComponent<T>()), parent, pooling);
     }
 
     public void Destroy(GameObject go)
     {
+        CheckInit();
+
         if (go == null)
         {
             return;
