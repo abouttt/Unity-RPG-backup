@@ -18,8 +18,8 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
     {
         Addressables.InitializeAsync();
 
-        var go = Util.Instantiate(typeof(LoadingUpdater).Name, true, typeof(LoadingUpdater));
-        _loadingUpdater = go.GetComponent<LoadingUpdater>();
+        var go = Util.CreateGameObject(typeof(LoadingUpdater).Name, Managers.Instance.gameObject.transform);
+        _loadingUpdater = go.AddComponent<LoadingUpdater>();
         _loadingUpdater.UpdateEnded += () => IsReadyToCompletion = true;
     }
 

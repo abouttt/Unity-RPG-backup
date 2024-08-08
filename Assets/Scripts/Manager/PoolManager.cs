@@ -103,7 +103,7 @@ public sealed class PoolManager : BaseManager<PoolManager>
 
     protected override void InitProcess()
     {
-        _root = Util.Instantiate("Pool_Root", true).transform;
+        _root = Util.CreateGameObject("Pool_Root", Managers.Instance.gameObject.transform).transform;
     }
 
     protected override void ClearProcess()
@@ -118,10 +118,7 @@ public sealed class PoolManager : BaseManager<PoolManager>
 
     protected override void DisposeProcess()
     {
-        if (_root != null)
-        {
-            Object.Destroy(_root.gameObject);
-        }
+        Object.Destroy(_root.gameObject);
     }
 
     public void CreatePool(GameObject original, int count = 0)

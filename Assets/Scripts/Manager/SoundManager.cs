@@ -10,7 +10,7 @@ public sealed class SoundManager : BaseManager<SoundManager>
 
     protected override void InitProcess()
     {
-        _root = Util.Instantiate("Sound_Root", true).transform;
+        _root = Util.CreateGameObject("Sound_Root", Managers.Instance.gameObject.transform).transform;
 
         foreach (var typeName in Enum.GetNames(typeof(SoundType)))
         {
@@ -34,10 +34,7 @@ public sealed class SoundManager : BaseManager<SoundManager>
 
     protected override void DisposeProcess()
     {
-        if (_root != null)
-        {
-            Object.Destroy(_root.gameObject);
-        }
+        Object.Destroy(_root.gameObject);
     }
 
     public void Play(SoundType audioType, string key)

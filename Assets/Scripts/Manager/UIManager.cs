@@ -18,7 +18,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
     protected override void InitProcess()
     {
-        _root = Util.Instantiate("UI_Root", true).transform;
+        _root = Util.CreateGameObject("UI_Root", Managers.Instance.gameObject.transform).transform;
     }
 
     protected override void ClearProcess()
@@ -39,10 +39,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
     protected override void DisposeProcess()
     {
-        if (_root != null)
-        {
-            Object.Destroy(_root.gameObject);
-        }
+        Object.Destroy(_root.gameObject);
     }
 
     public T Get<T>() where T : BaseUI

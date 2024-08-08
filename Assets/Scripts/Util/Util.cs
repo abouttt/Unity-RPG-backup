@@ -1,11 +1,14 @@
+using System;
 using System.Linq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public static class Util
 {
-    public static GameObject Instantiate(string name, bool dontDestroyOnLoad, params System.Type[] components)
+    public static GameObject CreateGameObject(string name, Transform parent = null, bool dontDestroyOnLoad = false, params Type[] components)
     {
         var go = new GameObject(name, components);
+        go.transform.SetParent(parent);
         if (dontDestroyOnLoad)
         {
             Object.DontDestroyOnLoad(go);
