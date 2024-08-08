@@ -35,9 +35,9 @@ public class CameraController : MonoBehaviour
         ApplyRotate();
     }
 
-    public void LookRotate(Vector3 direction, float speed)
+    public void LookRotate(Vector3 position, float speed)
     {
-        var lookRotation = Quaternion.LookRotation(direction - _cinemachineCameraTarget.position);
+        var lookRotation = Quaternion.LookRotation(position - _cinemachineCameraTarget.position);
         _rotation = Quaternion.Slerp(_rotation, lookRotation, speed * Time.deltaTime);
         _eulerAngles = _rotation.eulerAngles;
         ApplyRotate();
