@@ -12,7 +12,7 @@ public abstract class BaseManager<T> where T : class
             return;
         }
 
-        InitProcess();
+        OnInit();
 
         _isInit = true;
     }
@@ -24,7 +24,7 @@ public abstract class BaseManager<T> where T : class
             return;
         }
 
-        ClearProcess();
+        OnClear();
     }
 
     public void Dispose()
@@ -34,8 +34,8 @@ public abstract class BaseManager<T> where T : class
             return;
         }
 
-        ClearProcess();
-        DisposeProcess();
+        OnClear();
+        OnDispose();
 
         _isInit = false;
     }
@@ -48,7 +48,7 @@ public abstract class BaseManager<T> where T : class
         }
     }
 
-    protected abstract void InitProcess();
-    protected abstract void ClearProcess();
-    protected abstract void DisposeProcess();
+    protected abstract void OnInit();
+    protected abstract void OnClear();
+    protected abstract void OnDispose();
 }

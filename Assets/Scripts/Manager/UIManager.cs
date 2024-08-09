@@ -16,7 +16,7 @@ public sealed class UIManager : BaseManager<UIManager>
     private UI_Popup _helperPopup;
     private UI_Popup _selfishPopup;
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         _root = Util.CreateGameObject("UI_Root", Managers.Instance.gameObject.transform).transform;
 
@@ -33,7 +33,7 @@ public sealed class UIManager : BaseManager<UIManager>
         }
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
         foreach (var kvp in _roots)
         {
@@ -49,7 +49,7 @@ public sealed class UIManager : BaseManager<UIManager>
         _selfishPopup = null;
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
         Object.Destroy(_root.gameObject);
     }

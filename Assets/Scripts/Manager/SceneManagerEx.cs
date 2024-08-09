@@ -14,7 +14,7 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
     private AsyncOperationHandle<SceneInstance> _sceneHandle;
     private LoadingUpdater _loadingUpdater;
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         Addressables.InitializeAsync();
 
@@ -23,12 +23,12 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
         _loadingUpdater.UpdateEnded += () => IsReadyToCompletion = true;
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
 
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
         ClearLoadStatus();
 

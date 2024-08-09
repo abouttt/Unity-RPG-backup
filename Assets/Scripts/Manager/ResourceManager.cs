@@ -11,12 +11,12 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
 
     private readonly Dictionary<string, Object> _resources = new();
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         Addressables.InitializeAsync();
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
         foreach (var kvp in _resources)
         {
@@ -27,7 +27,7 @@ public sealed class ResourceManager : BaseManager<ResourceManager>
         Resources.UnloadUnusedAssets();
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
 
     }

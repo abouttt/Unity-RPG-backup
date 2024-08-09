@@ -8,7 +8,7 @@ public sealed class SoundManager : BaseManager<SoundManager>
     private Transform _root;
     private readonly List<AudioSource> _audioSources = new();
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         _root = Util.CreateGameObject("Sound_Root", Managers.Instance.gameObject.transform).transform;
 
@@ -23,7 +23,7 @@ public sealed class SoundManager : BaseManager<SoundManager>
         _audioSources[(int)SoundType.BGM].loop = true;
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
         foreach (var audioSource in _audioSources)
         {
@@ -32,7 +32,7 @@ public sealed class SoundManager : BaseManager<SoundManager>
         }
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
         Object.Destroy(_root.gameObject);
     }

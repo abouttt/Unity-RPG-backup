@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!114 &11400000
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 32
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -19,12 +19,13 @@ MonoBehaviour:
         <AddressableLabels>k__BackingField:
         - m_LabelString: Default
         <ReloadSceneWhenNoResources>k__BackingField: 0
-        <LoadingBackground>k__BackingField: {fileID: 0}
+        <LoadingImage>k__BackingField: {fileID: 0}
         <BGM>k__BackingField: {fileID: 0}
     - Key: DevScene.unity
       Value:
         <AddressableLabels>k__BackingField:
         - m_LabelString: Default
+        - m_LabelString: Game
         <ReloadSceneWhenNoResources>k__BackingField: 1
-        <LoadingBackground>k__BackingField: {fileID: 0}
+        <LoadingImage>k__BackingField: {fileID: 0}
         <BGM>k__BackingField: {fileID: 0}

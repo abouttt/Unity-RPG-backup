@@ -87,4 +87,9 @@ public static class Util
 
         return Mathf.Clamp(lfAngle, lfMin, lfMax);
     }
+
+    public static bool IsInLayerMask(GameObject go, LayerMask layerMask)
+    {
+        return (layerMask.value & (1 << go.layer)) != 0;
+    }
 }

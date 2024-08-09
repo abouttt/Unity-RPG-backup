@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     private CharacterMovement _movement;
     private CameraController _cameraController;
     private FieldOfView _lockOnFov;
+    private Interactor _interactor;
 
     #region Input Value
     private Vector2 _move;
@@ -32,6 +33,7 @@ public class PlayerController : MonoBehaviour
         _movement = GetComponent<CharacterMovement>();
         _cameraController = GetComponent<CameraController>();
         _lockOnFov = _mainCamera.GetComponent<FieldOfView>();
+        _interactor = GetComponentInChildren<Interactor>();
     }
 
     private void Update()
@@ -116,6 +118,11 @@ public class PlayerController : MonoBehaviour
         {
             _lockOnFov.FindTarget();
         }
+    }
+
+    private void OnInteract(InputValue inputValue)
+    {
+        _interactor.Interact = inputValue.isPressed;
     }
     #endregion
 }

@@ -33,7 +33,7 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
     private GameControls _gameControls;
     private bool _cursorLocked;
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         _gameControls = new();
         _gameControls.UI.SetCallbacks(this);
@@ -41,12 +41,12 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
         CursorLocked = false;
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
         Enabled = false;
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
         _gameControls.UI.RemoveCallbacks(this);
         _gameControls.Dispose();

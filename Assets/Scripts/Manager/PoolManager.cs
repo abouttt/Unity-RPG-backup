@@ -101,12 +101,12 @@ public sealed class PoolManager : BaseManager<PoolManager>
     private Transform _root;
     private readonly Dictionary<string, Pool> _pools = new();
 
-    protected override void InitProcess()
+    protected override void OnInit()
     {
         _root = Util.CreateGameObject("Pool_Root", Managers.Instance.gameObject.transform).transform;
     }
 
-    protected override void ClearProcess()
+    protected override void OnClear()
     {
         foreach (var kvp in _pools.ToArray())
         {
@@ -116,7 +116,7 @@ public sealed class PoolManager : BaseManager<PoolManager>
         _pools.Clear();
     }
 
-    protected override void DisposeProcess()
+    protected override void OnDispose()
     {
         Object.Destroy(_root.gameObject);
     }
