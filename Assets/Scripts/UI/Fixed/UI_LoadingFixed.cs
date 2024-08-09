@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class LoadingUI : BaseUI
+public class UI_LoadingFixed : UI_Base
 {
     enum Images
     {

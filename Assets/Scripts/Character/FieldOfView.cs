@@ -11,11 +11,12 @@ public class FieldOfView : MonoBehaviour
         set
         {
             _target = value;
+            HasTarget = _target != null;
             TargetChanged?.Invoke(_target);
         }
     }
 
-    public bool HasTarget => _target != null;
+    public bool HasTarget { get; private set; }
 
     [field: Header("Find")]
     [field: SerializeField]

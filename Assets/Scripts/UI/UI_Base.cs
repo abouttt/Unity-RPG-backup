@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 using Object = UnityEngine.Object;
 
-public abstract class BaseUI : MonoBehaviour
+public abstract class UI_Base : MonoBehaviour
 {
     [field: SerializeField]
     public UIType UIType { get; private set; }

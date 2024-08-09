@@ -11,14 +11,26 @@ public sealed class UIManager : BaseManager<UIManager>
 
     private Transform _root;
     private readonly Dictionary<UIType, Transform> _roots = new();
-    private readonly Dictionary<Type, BaseUI> _objects = new();
-    private readonly LinkedList<PopupUI> _activePopups = new();
-    private PopupUI _helperPopup;
-    private PopupUI _selfishPopup;
+    private readonly Dictionary<Type, UI_Base> _objects = new();
+    private readonly LinkedList<UI_Popup> _activePopups = new();
+    private UI_Popup _helperPopup;
+    private UI_Popup _selfishPopup;
 
     protected override void InitProcess()
     {
         _root = Util.CreateGameObject("UI_Root", Managers.Instance.gameObject.transform).transform;
+
+        foreach (UIType type in Enum.GetValues(typeof(UIType)))
+        {
+            if (type is UIType.Subitem)
+            {
+                continue;
+            }
+
+            var root = new GameObject($"{type}_Root").transform;
+            root.SetParent(_root);
+            _roots.Add(type, root);
+        }
     }
 
     protected override void ClearProcess()
@@ -42,7 +54,7 @@ public sealed class UIManager : BaseManager<UIManager>
         Object.Destroy(_root.gameObject);
     }
 
-    public T Get<T>() where T : BaseUI
+    public T Get<T>() where T : UI_Base
     {
         CheckInit();
 
@@ -54,7 +66,7 @@ public sealed class UIManager : BaseManager<UIManager>
         return null;
     }
 
-    public void Register<T>(T ui) where T : BaseUI
+    public void Register<T>(T ui) where T : UI_Base
     {
         CheckInit();
 
@@ -88,20 +100,20 @@ public sealed class UIManager : BaseManager<UIManager>
 
         if (ui.UIType == UIType.Popup)
         {
-            InitPopup(ui as PopupUI);
+            InitPopup(ui as UI_Popup);
         }
 
         ui.transform.SetParent(_roots[ui.UIType]);
         _objects.Add(typeof(T), ui);
     }
 
-    public void Unregister<T>() where T : BaseUI
+    public void Unregister<T>() where T : UI_Base
     {
         CheckInit();
 
         if (_objects.TryGetValue(typeof(T), out var ui))
         {
-            if (ui is PopupUI popup)
+            if (ui is UI_Popup popup)
             {
                 popup.ClearEvents();
 
@@ -125,7 +137,7 @@ public sealed class UIManager : BaseManager<UIManager>
         }
     }
 
-    public T Show<T>() where T : BaseUI
+    public T Show<T>() where T : UI_Base
     {
         CheckInit();
 
@@ -136,7 +148,7 @@ public sealed class UIManager : BaseManager<UIManager>
                 return ui as T;
             }
 
-            if (ui is PopupUI popup)
+            if (ui is UI_Popup popup)
             {
                 if (IsActiveSelfishPopup && !popup.IgnoreSelfish)
                 {
@@ -171,13 +183,13 @@ public sealed class UIManager : BaseManager<UIManager>
         return null;
     }
 
-    public bool IsActive<T>() where T : BaseUI
+    public bool IsActive<T>() where T : UI_Base
     {
         CheckInit();
         return _objects.TryGetValue(typeof(T), out var ui) && ui.gameObject.activeSelf;
     }
 
-    public void Close<T>() where T : BaseUI
+    public void Close<T>() where T : UI_Base
     {
         CheckInit();
 
@@ -190,7 +202,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
             if (ui.UIType == UIType.Popup)
             {
-                var popup = ui as PopupUI;
+                var popup = ui as UI_Popup;
 
                 if (popup.IsHelper)
                 {
@@ -254,7 +266,7 @@ public sealed class UIManager : BaseManager<UIManager>
         }
     }
 
-    public void ShowOrClose<T>() where T : BaseUI
+    public void ShowOrClose<T>() where T : UI_Base
     {
         CheckInit();
 
@@ -268,7 +280,7 @@ public sealed class UIManager : BaseManager<UIManager>
         }
     }
 
-    private void InitPopup(PopupUI popup)
+    private void InitPopup(UI_Popup popup)
     {
         popup.gameObject.SetActive(false);
         popup.PopupRT.anchoredPosition = popup.DefaultPosition;
