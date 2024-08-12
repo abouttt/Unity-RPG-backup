@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        CameraRotate();
+        RotateCamera();
     }
 
     private void MoveAndRotate()
@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void CameraRotate()
+    private void RotateCamera()
     {
         if (_lockOnFov.HasTarget)
         {

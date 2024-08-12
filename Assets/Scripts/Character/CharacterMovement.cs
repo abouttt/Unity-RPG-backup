@@ -26,6 +26,9 @@ public class CharacterMovement : MonoBehaviour
     [field: SerializeField]
     public float SpeedChangeRate { get; set; }
 
+    [field: SerializeField]
+    public float SlopeRayLength { get; set; }
+
     [field: Header("Rotation")]
     [field: SerializeField, Range(0f, 0.3f)]
     public float RotationSmoothTime { get; set; }
@@ -84,9 +87,9 @@ public class CharacterMovement : MonoBehaviour
 
     private void Update()
     {
+        CheckGrounded();
         UpdateTimeouts();
         ApplyGravity();
-        CheckGrounded();
         ApplyMovement();
     }
 
@@ -198,7 +201,14 @@ public class CharacterMovement : MonoBehaviour
         {
             if (IsGrounded && _verticalVelocity < 0f)
             {
-                _verticalVelocity = -2f;
+                if (OnSlope())
+                {
+                    _verticalVelocity = -20f;
+                }
+                else
+                {
+                    _verticalVelocity = -2f;
+                }
             }
 
             if (_verticalVelocity < _terminalVelocity)
@@ -225,8 +235,27 @@ public class CharacterMovement : MonoBehaviour
         _controller.Move(move + height);
     }
 
+    private bool OnSlope()
+    {
+        if (IsJumping)
+        {
+            return false;
+        }
+
+        if (Physics.Raycast(transform.position, Vector3.down, out var hit, SlopeRayLength))
+        {
+            if (hit.normal != Vector3.up)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void OnDrawGizmosSelected()
     {
+        #region CheckGrounded
         var transparentGreen = new Color(0f, 1f, 0f, 0.35f);
         var transparentRed = new Color(1f, 0f, 0f, 0.35f);
 
@@ -244,5 +273,14 @@ public class CharacterMovement : MonoBehaviour
 #if UNITY_EDITOR
         Handles.Label(spherePosition, "Check Grounded");
 #endif
+        #endregion
+
+        #region Slope Ray
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, Vector3.down * SlopeRayLength);
+#if UNITY_EDITOR
+        Handles.Label(transform.position + Vector3.down * SlopeRayLength, "Slope Ray");
+#endif
+        #endregion
     }
 }
