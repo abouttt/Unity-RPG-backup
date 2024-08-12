@@ -73,7 +73,7 @@ public class Interactor : MonoBehaviour
 
         if (Target == null)
         {
-            TrySetTarget(other);
+            SetNotNullTarget(other);
         }
         else
         {
@@ -96,7 +96,7 @@ public class Interactor : MonoBehaviour
                     return;
                 }
 
-                TrySetTarget(other);
+                SetNotNullTarget(other);
             }
         }
     }
@@ -123,6 +123,18 @@ public class Interactor : MonoBehaviour
         }
     }
 
+    private void SetNotNullTarget(Collider collider)
+    {
+        if (collider.TryGetComponent<Interactable>(out var interactable))
+        {
+            SetTarget(interactable);
+        }
+        else
+        {
+            Debug.LogWarning($"{collider.name} has no Interactable component.");
+        }
+    }
+
     private void SetTarget(Interactable newTarget)
     {
         if (Target == newTarget)
@@ -146,17 +158,5 @@ public class Interactor : MonoBehaviour
         }
 
         TargetChanged?.Invoke(newTarget);
-    }
-
-    private void TrySetTarget(Collider collider)
-    {
-        if (collider.TryGetComponent<Interactable>(out var interactable))
-        {
-            SetTarget(interactable);
-        }
-        else
-        {
-            Debug.LogWarning($"{collider.name} has no Interactable component.");
-        }
     }
 }
