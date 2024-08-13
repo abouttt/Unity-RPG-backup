@@ -363,6 +363,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106c18ba933ba3e4091c906af9cbdbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemData: {fileID: 11400000, guid: f87e915727224bf4fba0f9f8262f536c, type: 2}
+  count: 50
 --- !u!4 &571259574
 Transform:
   m_ObjectHideFlags: 0
@@ -1191,10 +1193,11 @@ GameObject:
   - component: {fileID: 1674235272}
   - component: {fileID: 1674235278}
   - component: {fileID: 1674235273}
+  - component: {fileID: 1674235275}
   - component: {fileID: 1674235276}
   - component: {fileID: 1674235277}
   - component: {fileID: 1674235274}
-  - component: {fileID: 1674235275}
+  - component: {fileID: 1674235279}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -1339,7 +1342,6 @@ MonoBehaviour:
   <GroundLayers>k__BackingField:
     serializedVersion: 2
     m_Bits: 64
-  _verticalVelocity: 0
 --- !u!95 &1674235278
 Animator:
   serializedVersion: 5
@@ -1361,6 +1363,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1674235279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1674235271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9242356478c66fa4fa72f4bb4caf9a31, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _inventory:
+    <Capacity>k__BackingField: 30
+    <Count>k__BackingField: 0
 --- !u!1 &1866471506
 GameObject:
   m_ObjectHideFlags: 0
@@ -1635,5 +1652,5 @@ SceneRoots:
   - {fileID: 1947517775}
   - {fileID: 1674235272}
   - {fileID: 473037051}
-  - {fileID: 571259574}
   - {fileID: 1878497839}
+  - {fileID: 571259574}
