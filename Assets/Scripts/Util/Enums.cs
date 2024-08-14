@@ -1,4 +1,9 @@
 
+public enum SlotType
+{
+    Item,
+}
+
 public enum EquipmentType
 {
     Helmet,
@@ -32,7 +37,7 @@ public enum UIType
     Auto,
     Fixed,
     Popup,
-    Top,
+    Top = 999,
 }
 
 public enum SoundType

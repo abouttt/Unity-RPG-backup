@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ItemInventory : MonoBehaviour
 {
-    public event Action<int> InventoryChanged;
+    public event Action<Item, int> InventoryChanged;
 
     public IReadOnlyList<Item> Items => _inventory.Items;
 
@@ -83,7 +83,7 @@ public class ItemInventory : MonoBehaviour
     {
         if (_inventory.RemoveItem(index))
         {
-            InventoryChanged?.Invoke(index);
+            InventoryChanged?.Invoke(null, index);
         }
     }
 
@@ -92,7 +92,7 @@ public class ItemInventory : MonoBehaviour
         int index = _inventory.GetItemIndex(item);
         if (_inventory.RemoveItem(index))
         {
-            InventoryChanged?.Invoke(index);
+            InventoryChanged?.Invoke(null, index);
         }
     }
 
@@ -103,7 +103,7 @@ public class ItemInventory : MonoBehaviour
                     : itemData.CreateItem();
         if (_inventory.SetItem(newItem, index, count))
         {
-            InventoryChanged?.Invoke(index);
+            InventoryChanged?.Invoke(newItem, index);
         }
     }
 
@@ -198,7 +198,7 @@ public class ItemInventory : MonoBehaviour
     private void SwapItem(int indexA, int indexB)
     {
         _inventory.SwapItem(indexA, indexB);
-        InventoryChanged?.Invoke(indexA);
-        InventoryChanged?.Invoke(indexB);
+        InventoryChanged?.Invoke(_inventory.Items[indexA], indexA);
+        InventoryChanged?.Invoke(_inventory.Items[indexB], indexB);
     }
 }

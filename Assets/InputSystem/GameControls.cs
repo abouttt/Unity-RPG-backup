@@ -207,6 +207,15 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ItemInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""93543b68-4e86-4171-812c-c95ed3cba014"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -218,6 +227,17 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""CursorToggle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f98c9f25-4d8b-4604-99bb-dca50f78f49a"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""ItemInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -254,6 +274,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_CursorToggle = m_UI.FindAction("CursorToggle", throwIfNotFound: true);
+        m_UI_ItemInventory = m_UI.FindAction("ItemInventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -402,11 +423,13 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_UI;
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_CursorToggle;
+    private readonly InputAction m_UI_ItemInventory;
     public struct UIActions
     {
         private @GameControls m_Wrapper;
         public UIActions(@GameControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @CursorToggle => m_Wrapper.m_UI_CursorToggle;
+        public InputAction @ItemInventory => m_Wrapper.m_UI_ItemInventory;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -419,6 +442,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @CursorToggle.started += instance.OnCursorToggle;
             @CursorToggle.performed += instance.OnCursorToggle;
             @CursorToggle.canceled += instance.OnCursorToggle;
+            @ItemInventory.started += instance.OnItemInventory;
+            @ItemInventory.performed += instance.OnItemInventory;
+            @ItemInventory.canceled += instance.OnItemInventory;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -426,6 +452,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @CursorToggle.started -= instance.OnCursorToggle;
             @CursorToggle.performed -= instance.OnCursorToggle;
             @CursorToggle.canceled -= instance.OnCursorToggle;
+            @ItemInventory.started -= instance.OnItemInventory;
+            @ItemInventory.performed -= instance.OnItemInventory;
+            @ItemInventory.canceled -= instance.OnItemInventory;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -464,5 +493,6 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     public interface IUIActions
     {
         void OnCursorToggle(InputAction.CallbackContext context);
+        void OnItemInventory(InputAction.CallbackContext context);
     }
 }

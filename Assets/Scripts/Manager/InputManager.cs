@@ -79,4 +79,22 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
             CursorLocked = !CursorLocked;
         }
     }
+
+    public void OnItemInventory(InputAction.CallbackContext context)
+    {
+        ShowOrClosePopup<UI_ItemInventoryPopup>(context);
+    }
+
+    private void ShowOrClosePopup<T>(InputAction.CallbackContext context) where T : UI_Popup
+    {
+        if (context.performed)
+        {
+            if (Managers.UI.IsActiveHelperPopup)
+            {
+                return;
+            }
+
+            Managers.UI.ShowOrClose<T>();
+        }
+    }
 }

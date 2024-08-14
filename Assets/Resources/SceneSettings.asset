@@ -26,6 +26,7 @@ MonoBehaviour:
         <AddressableLabels>k__BackingField:
         - m_LabelString: Default
         - m_LabelString: Game
+        - m_LabelString: Game_UI
         <ReloadSceneWhenNoResources>k__BackingField: 1
         <LoadingImage>k__BackingField: {fileID: 0}
         <BGM>k__BackingField: {fileID: 0}
