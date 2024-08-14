@@ -299,10 +299,10 @@ public sealed class UIManager : BaseManager<UIManager>
 
     private void RefreshAllPopupDepth()
     {
-        int count = 0;
+        int count = 1;
         foreach (var popup in _activePopups)
         {
-            popup.Canvas.sortingOrder = (int)UIType.Top + count++;
+            popup.Canvas.sortingOrder = (int)UIType.Top - count++;
         }
     }
 }
