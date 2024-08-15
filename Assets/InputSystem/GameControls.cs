@@ -216,6 +216,15 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""93a6c061-5ce8-4a61-92ab-b052ccc73cec"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -238,6 +247,17 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""ItemInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""43f00bb3-b881-40b0-b5b3-4c7460ac9eeb"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -275,6 +295,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_CursorToggle = m_UI.FindAction("CursorToggle", throwIfNotFound: true);
         m_UI_ItemInventory = m_UI.FindAction("ItemInventory", throwIfNotFound: true);
+        m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -424,12 +445,14 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_CursorToggle;
     private readonly InputAction m_UI_ItemInventory;
+    private readonly InputAction m_UI_Cancel;
     public struct UIActions
     {
         private @GameControls m_Wrapper;
         public UIActions(@GameControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @CursorToggle => m_Wrapper.m_UI_CursorToggle;
         public InputAction @ItemInventory => m_Wrapper.m_UI_ItemInventory;
+        public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -445,6 +468,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @ItemInventory.started += instance.OnItemInventory;
             @ItemInventory.performed += instance.OnItemInventory;
             @ItemInventory.canceled += instance.OnItemInventory;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
         }
 
         private void UnregisterCallbacks(IUIActions instance)
@@ -455,6 +481,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @ItemInventory.started -= instance.OnItemInventory;
             @ItemInventory.performed -= instance.OnItemInventory;
             @ItemInventory.canceled -= instance.OnItemInventory;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
         }
 
         public void RemoveCallbacks(IUIActions instance)
@@ -494,5 +523,6 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     {
         void OnCursorToggle(InputAction.CallbackContext context);
         void OnItemInventory(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
     }
 }

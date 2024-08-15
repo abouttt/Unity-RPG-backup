@@ -22,7 +22,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
         foreach (UIType type in Enum.GetValues(typeof(UIType)))
         {
-            if (type is UIType.Subitem)
+            if (type == UIType.Subitem)
             {
                 continue;
             }
@@ -171,7 +171,7 @@ public sealed class UIManager : BaseManager<UIManager>
                     _selfishPopup = popup;
                 }
 
-                _activePopups.AddLast(popup);
+                _activePopups.AddFirst(popup);
                 RefreshAllPopupDepth();
             }
 
@@ -226,7 +226,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
         if (ActivePopupCount > 0)
         {
-            var popup = _activePopups.Last.Value;
+            var popup = _activePopups.First.Value;
 
             if (popup.IsHelper)
             {
@@ -237,7 +237,7 @@ public sealed class UIManager : BaseManager<UIManager>
                 _selfishPopup = null;
             }
 
-            _activePopups.RemoveLast();
+            _activePopups.RemoveFirst();
             popup.gameObject.SetActive(false);
         }
     }
@@ -292,7 +292,7 @@ public sealed class UIManager : BaseManager<UIManager>
             }
 
             _activePopups.Remove(popup);
-            _activePopups.AddLast(popup);
+            _activePopups.AddFirst(popup);
             RefreshAllPopupDepth();
         };
     }
