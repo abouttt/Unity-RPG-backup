@@ -30,14 +30,19 @@ public class UI_ItemInventoryPopup : UI_Popup
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
+        Managers.UI.Register(this);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         Showed += () =>
         {
             PopupRT.SetParent(transform);
         };
 
         GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_ItemInventoryPopup>);
-
-        Managers.UI.Register(this);
     }
 
     public void Setup(ItemInventory itemInventory)

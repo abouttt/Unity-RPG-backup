@@ -44,6 +44,13 @@ public class UI_ItemSplitPopup : UI_Popup
         BindButton(typeof(Buttons));
         BindInputField(typeof(InputFields));
 
+        Managers.UI.Register(this);
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+
         var inputField = GetInputField((int)InputFields.InputField);
         inputField.onValueChanged.AddListener(value => OnValueChanged(value));
         inputField.onEndEdit.AddListener(value => OnEndEdit(value));
@@ -52,8 +59,6 @@ public class UI_ItemSplitPopup : UI_Popup
         GetButton((int)Buttons.UpButton).onClick.AddListener(() => OnClickUpOrDownButton(1));
         GetButton((int)Buttons.DownButton).onClick.AddListener(() => OnClickUpOrDownButton(-1));
         GetButton((int)Buttons.NoButton).onClick.AddListener(Managers.UI.Close<UI_ItemSplitPopup>);
-
-        Managers.UI.Register(this);
     }
 
     public void SetEvent(UnityAction callback, string text, int minCount, int maxCount, int price = 0, bool showPrice = false)

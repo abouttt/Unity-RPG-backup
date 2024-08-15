@@ -46,6 +46,13 @@ public abstract class UI_Popup : UI_Base, IPointerDownHandler
                 Managers.Input.CursorLocked = true;
             }
         };
+
+        PopupRT.anchoredPosition = DefaultPosition;
+    }
+
+    protected virtual void Start()
+    {
+        gameObject.SetActive(false);
     }
 
     public void SetTop()
