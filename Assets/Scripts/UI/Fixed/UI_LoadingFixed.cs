@@ -11,10 +11,7 @@ public class UI_LoadingFixed : UI_Base
     protected override void Init()
     {
         BindImage(typeof(Images));
-    }
 
-    private void Start()
-    {
         var bg = GetImage((int)Images.BG);
         bg.sprite = SceneSettings.Instance[Managers.Scene.NextSceneAddress].LoadingImage;
         bg.color = bg.sprite != null ? Color.white : Color.black;

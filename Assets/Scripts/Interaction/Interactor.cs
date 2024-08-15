@@ -135,9 +135,9 @@ public class Interactor : MonoBehaviour
         }
     }
 
-    private void SetTarget(Interactable newTarget)
+    private void SetTarget(Interactable target)
     {
-        if (Target == newTarget)
+        if (Target == target)
         {
             return;
         }
@@ -147,16 +147,16 @@ public class Interactor : MonoBehaviour
             Target.Undetected();
         }
 
-        Target = newTarget;
+        Target = target;
         InteractLoadingTime = 0f;
         _isReadyToInteract = false;
         _isTargetRangeOut = false;
 
-        if (newTarget != null)
+        if (target != null)
         {
-            newTarget.Detected();
+            target.Detected();
         }
 
-        TargetChanged?.Invoke(newTarget);
+        TargetChanged?.Invoke(target);
     }
 }

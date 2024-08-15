@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(UI_FollowWorldObject))]
-public class UI_Interactor : UI_Auto
+public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 {
     enum Images
     {
@@ -17,33 +17,32 @@ public class UI_Interactor : UI_Auto
         NameText,
     }
 
-    private Interactor _interactor;
+    public Interactor SystemRef { get; private set; }
+
     private UI_FollowWorldObject _followTarget;
 
     protected override void Init()
     {
+        base.Init();
+
         BindImage(typeof(Images));
         BindText(typeof(Texts));
 
-        _interactor = GameObject.FindWithTag("Player").GetComponentInChildren<Interactor>();
         _followTarget = GetComponent<UI_FollowWorldObject>();
-    }
 
-    protected override void Start()
-    {
-        base.Start();
         GetText((int)Texts.KeyText).text = Managers.Input.GetBindingPath("Interact");
-        _interactor.TargetChanged += target => SetTarget(target);
+
+        Managers.UI.Get<UI_AutoCanvas>().AddUniqueAutoUI(this);
     }
 
     private void LateUpdate()
     {
-        if (_interactor.Target == null)
+        if (SystemRef.Target == null)
         {
             return;
         }
 
-        if (_interactor.Target.IsInteracted)
+        if (SystemRef.Target.IsInteracted)
         {
             _body.SetActive(false);
             return;
@@ -56,35 +55,57 @@ public class UI_Interactor : UI_Auto
 
         if (GetImage((int)Images.LoadingTimeImage).IsActive())
         {
-            GetImage((int)Images.LoadingTimeImage).fillAmount = _interactor.InteractLoadingTime / _interactor.Target.MaxLoadingTime;
+            GetImage((int)Images.LoadingTimeImage).fillAmount = SystemRef.InteractLoadingTime / SystemRef.Target.MaxLoadingTime;
         }
     }
 
-    private void SetTarget(Interactable newTarget)
+    public void ConnectSystem(Interactor interactor)
     {
-        bool isNotNull = newTarget != null;
+        SystemRef = interactor;
+        interactor.TargetChanged += SetTarget;
+    }
+
+    public void DeconnectSystem()
+    {
+        if (SystemRef == null)
+        {
+            return;
+        }
+
+        SystemRef.TargetChanged -= SetTarget;
+        SystemRef = null;
+    }
+
+    private void SetTarget(Interactable target)
+    {
+        bool isNotNull = target != null;
 
         if (isNotNull)
         {
-            _followTarget.SetTargetAndOffset(newTarget.transform, newTarget.UIOffset);
+            _followTarget.SetTargetAndOffset(target.transform, target.UIOffset);
 
-            bool canInteract = newTarget.CanInteract;
+            bool canInteract = target.CanInteract;
             GetImage((int)Images.BG).gameObject.SetActive(canInteract);
             GetText((int)Texts.KeyText).gameObject.SetActive(canInteract);
 
-            bool hasLoadingTime = canInteract && newTarget.MaxLoadingTime > 0f;
+            bool hasLoadingTime = canInteract && target.MaxLoadingTime > 0f;
             GetImage((int)Images.LoadingTimeImage).gameObject.SetActive(hasLoadingTime);
             GetImage((int)Images.Frame).gameObject.SetActive(hasLoadingTime);
 
             var interactionText = GetText((int)Texts.InteractionText);
-            interactionText.text = newTarget.InteractionMessage;
+            interactionText.text = target.InteractionMessage;
             interactionText.gameObject.SetActive(canInteract);
 
             var name = GetText((int)Texts.NameText);
-            name.text = newTarget.InteractionObjectName;
-            name.gameObject.SetActive(!string.IsNullOrEmpty(newTarget.InteractionObjectName));
+            name.text = target.InteractionObjectName;
+            name.gameObject.SetActive(!string.IsNullOrEmpty(target.InteractionObjectName));
         }
 
         _body.SetActive(isNotNull);
+    }
+
+    private void OnDestroy()
+    {
+        DeconnectSystem();
     }
 }

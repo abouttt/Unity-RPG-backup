@@ -146,7 +146,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
         var otherItem = otherItemSlot.ObjectRef as Item;
-        var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
+        var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().SystemRef;
 
         if (!HasObject && otherItem is IStackable otherStackable && otherStackable.Count > 1)
         {

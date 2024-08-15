@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UI_ItemInventoryPopup : UI_Popup
+public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 {
     enum RTs
     {
@@ -18,7 +18,7 @@ public class UI_ItemInventoryPopup : UI_Popup
         CloseButton,
     }
 
-    public ItemInventory ItemInventoryRef { get; private set; }
+    public ItemInventory SystemRef { get; private set; }
 
     private readonly List<UI_ItemSlot> _slots = new();
 
@@ -30,26 +30,37 @@ public class UI_ItemInventoryPopup : UI_Popup
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        Managers.UI.Register(this);
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
         Showed += () =>
         {
             PopupRT.SetParent(transform);
         };
 
         GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_ItemInventoryPopup>);
+
+        Managers.UI.Register(this);
     }
 
-    public void Setup(ItemInventory itemInventory)
+    public void ConnectSystem(ItemInventory itemInventory)
     {
-        ItemInventoryRef = itemInventory;
-        itemInventory.InventoryChanged += (item, index) => _slots[index].Refresh(item);
+        SystemRef = itemInventory;
+        itemInventory.InventoryChanged += RefreshSlot;
         InitSlots(itemInventory.Items.Count, GetRT((int)RTs.ItemSlots));
+    }
+
+    public void DeconnectSystem()
+    {
+        if (SystemRef == null)
+        {
+            return;
+        }
+
+        SystemRef.InventoryChanged -= RefreshSlot;
+        SystemRef = null;
+    }
+
+    private void RefreshSlot(Item item, int index)
+    {
+        _slots[index].Refresh(item);
     }
 
     private void InitSlots(int count, Transform parent)
@@ -61,5 +72,10 @@ public class UI_ItemInventoryPopup : UI_Popup
             itemSlot.transform.SetParent(parent);
             _slots.Add(itemSlot);
         }
+    }
+
+    private void OnDestroy()
+    {
+        DeconnectSystem();
     }
 }
