@@ -57,6 +57,12 @@ public abstract class UI_Base : MonoBehaviour
     protected void BindImage(Type type) => Bind<Image>(type);
     protected void BindText(Type type) => Bind<TextMeshProUGUI>(type);
     protected void BindButton(Type type) => Bind<Button>(type);
+    protected void BindToggle(Type type) => Bind<Toggle>(type);
+    protected void BindSlider(Type type) => Bind<Slider>(type);
+    protected void BindScrollbar(Type type) => Bind<Scrollbar>(type);
+    protected void BindScrollRect(Type type) => Bind<ScrollRect>(type);
+    protected void BindDropdown(Type type) => Bind<TMP_Dropdown>(type);
+    protected void BindInputField(Type type) => Bind<TMP_InputField>(type);
 
     protected T Get<T>(int index) where T : Object
     {
@@ -73,4 +79,10 @@ public abstract class UI_Base : MonoBehaviour
     protected Image GetImage(int index) => Get<Image>(index);
     protected TextMeshProUGUI GetText(int index) => Get<TextMeshProUGUI>(index);
     protected Button GetButton(int index) => Get<Button>(index);
+    protected Toggle GetToggle(int index) => Get<Toggle>(index);
+    protected Slider GetSlider(int index) => Get<Slider>(index);
+    protected Scrollbar GetScrollbar(int index) => Get<Scrollbar>(index);
+    protected ScrollRect GetScrollRect(int index) => Get<ScrollRect>(index);
+    protected TMP_Dropdown GetDropdown(int index) => Get<TMP_Dropdown>(index);
+    protected TMP_InputField GetInputField(int index) => Get<TMP_InputField>(index);
 }

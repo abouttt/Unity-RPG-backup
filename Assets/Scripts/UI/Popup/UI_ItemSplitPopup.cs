@@ -42,9 +42,9 @@ public class UI_ItemSplitPopup : UI_Popup
         BindObject(typeof(GameObjects));
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
-        Bind<TMP_InputField>(typeof(InputFields));
+        BindInputField(typeof(InputFields));
 
-        var inputField = Get<TMP_InputField>((int)InputFields.InputField);
+        var inputField = GetInputField((int)InputFields.InputField);
         inputField.onValueChanged.AddListener(value => OnValueChanged(value));
         inputField.onEndEdit.AddListener(value => OnEndEdit(value));
         inputField.onSubmit.AddListener(value => GetButton((int)Buttons.YesButton).onClick.Invoke());
@@ -71,7 +71,7 @@ public class UI_ItemSplitPopup : UI_Popup
 
         GetObject((int)GameObjects.ItemPrice).SetActive(_isShowedPrice);
         GetText((int)Texts.GuideText).text = text;
-        var inputField = Get<TMP_InputField>((int)InputFields.InputField);
+        var inputField = GetInputField((int)InputFields.InputField);
         inputField.text = Count.ToString();
         inputField.ActivateInputField();
         RefreshPriceText();
@@ -80,14 +80,14 @@ public class UI_ItemSplitPopup : UI_Popup
     private void OnValueChanged(string value)
     {
         Count = string.IsNullOrEmpty(value) ? 0 : Mathf.Clamp(int.Parse(value), _minCount, _maxCount);
-        Get<TMP_InputField>((int)InputFields.InputField).text = Count.ToString();
+        GetInputField((int)InputFields.InputField).text = Count.ToString();
         RefreshPriceText();
     }
 
     private void OnEndEdit(string value)
     {
         Count = Mathf.Clamp(string.IsNullOrEmpty(value) ? _maxCount : int.Parse(value), _minCount, _maxCount);
-        var inputField = Get<TMP_InputField>((int)InputFields.InputField);
+        var inputField = GetInputField((int)InputFields.InputField);
         inputField.text = Count.ToString();
         inputField.caretPosition = inputField.text.Length;
     }
@@ -95,7 +95,7 @@ public class UI_ItemSplitPopup : UI_Popup
     private void OnClickUpOrDownButton(int count)
     {
         Count = Mathf.Clamp(Count + count, _minCount, _maxCount);
-        Get<TMP_InputField>((int)InputFields.InputField).text = Count.ToString();
+        GetInputField((int)InputFields.InputField).text = Count.ToString();
     }
 
     private void RefreshPriceText()
