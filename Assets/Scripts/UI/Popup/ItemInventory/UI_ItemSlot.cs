@@ -151,8 +151,11 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         if (!HasObject && otherItem is IStackable otherStackable && otherStackable.Count > 1)
         {
             var splitPopup = Managers.UI.Show<UI_ItemSplitPopup>();
-            splitPopup.SetEvent(() => itemInventory.SplitItem(otherItemSlot.Index, Index, splitPopup.Count),
-                $"[{otherItem.Data.ItemName}] 아이템 나누기", 1, otherStackable.Count);
+            splitPopup.SetEvent(() =>
+            {
+                itemInventory.SplitItem(otherItemSlot.Index, Index, splitPopup.Count);
+            },
+            $"[{otherItem.Data.ItemName}] 아이템 나누기", 1, otherStackable.Count);
         }
         else
         {

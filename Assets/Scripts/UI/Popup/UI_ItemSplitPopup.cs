@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Events;
-using TMPro;
 
 public class UI_ItemSplitPopup : UI_Popup
 {
@@ -33,7 +32,6 @@ public class UI_ItemSplitPopup : UI_Popup
     private int _price;
     private int _minCount;
     private int _maxCount;
-    private bool _isShowedPrice;
 
     protected override void Init()
     {
@@ -44,24 +42,19 @@ public class UI_ItemSplitPopup : UI_Popup
         BindButton(typeof(Buttons));
         BindInputField(typeof(InputFields));
 
-        Managers.UI.Register(this);
-    }
-
-    protected override void Start()
-    {
-        base.Start();
-
         var inputField = GetInputField((int)InputFields.InputField);
         inputField.onValueChanged.AddListener(value => OnValueChanged(value));
         inputField.onEndEdit.AddListener(value => OnEndEdit(value));
-        inputField.onSubmit.AddListener(value => GetButton((int)Buttons.YesButton).onClick.Invoke());
+        inputField.onSubmit.AddListener(value => GetButton((int)Buttons.YesButton).onClick?.Invoke());
 
         GetButton((int)Buttons.UpButton).onClick.AddListener(() => OnClickUpOrDownButton(1));
         GetButton((int)Buttons.DownButton).onClick.AddListener(() => OnClickUpOrDownButton(-1));
         GetButton((int)Buttons.NoButton).onClick.AddListener(Managers.UI.Close<UI_ItemSplitPopup>);
+
+        Managers.UI.Register(this);
     }
 
-    public void SetEvent(UnityAction callback, string text, int minCount, int maxCount, int price = 0, bool showPrice = false)
+    public void SetEvent(UnityAction callback, string text, int minCount, int maxCount, int price = -1)
     {
         var yesButton = GetButton((int)Buttons.YesButton);
         yesButton.onClick.RemoveAllListeners();
@@ -72,9 +65,8 @@ public class UI_ItemSplitPopup : UI_Popup
         _maxCount = maxCount;
         _minCount = minCount;
         _price = price;
-        _isShowedPrice = showPrice;
 
-        GetObject((int)GameObjects.ItemPrice).SetActive(_isShowedPrice);
+        GetObject((int)GameObjects.ItemPrice).SetActive(price >= 0);
         GetText((int)Texts.GuideText).text = text;
         var inputField = GetInputField((int)InputFields.InputField);
         inputField.text = Count.ToString();
@@ -105,7 +97,7 @@ public class UI_ItemSplitPopup : UI_Popup
 
     private void RefreshPriceText()
     {
-        if (!_isShowedPrice)
+        if (_price < 0)
         {
             return;
         }
