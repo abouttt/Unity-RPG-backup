@@ -11,7 +11,6 @@ public class UI_LockOn : UI_Auto, ISystemConnectable<FieldOfView>
     {
         base.Init();
         _followTarget = GetComponent<UI_FollowWorldObject>();
-        Managers.UI.Get<UI_AutoCanvas>().AddUniqueAutoUI(this);
     }
 
     public void ConnectSystem(FieldOfView lockOnFov)
@@ -33,8 +32,8 @@ public class UI_LockOn : UI_Auto, ISystemConnectable<FieldOfView>
 
     private void SetTarget(Transform target)
     {
-        _body.SetActive(target != null);
         _followTarget.Target = target;
+        gameObject.SetActive(target != null);
     }
 
     private void OnDestroy()

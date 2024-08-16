@@ -4,28 +4,30 @@ using UnityEngine;
 
 public class UI_AutoCanvas : UI_Base
 {
-    public readonly Dictionary<Type, UI_Auto> _objects = new();
+    public readonly Dictionary<Type, UI_Auto> _subitems = new();
 
     protected override void Init()
     {
         Managers.UI.Register(this);
     }
 
-    public void AddUniqueAutoUI<T>(T ui) where T : UI_Auto
+    public void AddSubitem(UI_Auto ui)
     {
-        if (_objects.ContainsKey(typeof(T)))
+        if (_subitems.ContainsKey(ui.GetType()))
         {
-            Debug.LogWarning($"{typeof(T)} has already been added to auto canvas.");
+            Debug.LogWarning($"{ui.GetType()} has already been added to auto canvas.");
         }
         else
         {
-            _objects.Add(typeof(T), ui);
+            ui.gameObject.SetActive(false);
+            ui.transform.SetParent(transform);
+            _subitems.Add(ui.GetType(), ui);
         }
     }
 
-    public T Get<T>() where T : UI_Auto
+    public T GetSubitem<T>() where T : UI_Auto
     {
-        if (_objects.TryGetValue(typeof(T), out var ui))
+        if (_subitems.TryGetValue(typeof(T), out var ui))
         {
             return ui as T;
         }
@@ -35,6 +37,6 @@ public class UI_AutoCanvas : UI_Base
 
     private void OnDestroy()
     {
-        _objects.Clear();
+        _subitems.Clear();
     }
 }

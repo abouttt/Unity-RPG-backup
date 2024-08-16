@@ -22,7 +22,7 @@ public class GameScene : BaseScene
     private void ConnectUI()
     {
         Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(Player.ItemInventory);
-        Managers.UI.Get<UI_AutoCanvas>().Get<UI_Interactor>().ConnectSystem(Player.Interactor);
-        Managers.UI.Get<UI_AutoCanvas>().Get<UI_LockOn>().ConnectSystem(Player.LockOnFov);
+        Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().ConnectSystem(Player.Interactor);
+        Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().ConnectSystem(Player.LockOnFov);
     }
 }

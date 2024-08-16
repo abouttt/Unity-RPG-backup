@@ -31,26 +31,19 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
         _followTarget = GetComponent<UI_FollowWorldObject>();
 
         GetText((int)Texts.KeyText).text = Managers.Input.GetBindingPath("Interact");
-
-        Managers.UI.Get<UI_AutoCanvas>().AddUniqueAutoUI(this);
     }
 
     private void LateUpdate()
     {
-        if (SystemRef.Target == null)
-        {
-            return;
-        }
-
         if (SystemRef.Target.IsInteracted)
         {
-            _body.SetActive(false);
+            gameObject.SetActive(false);
             return;
         }
 
-        if (!_body.activeSelf)
+        if (!gameObject.activeSelf)
         {
-            _body.SetActive(true);
+            gameObject.SetActive(true);
         }
 
         if (GetImage((int)Images.LoadingTimeImage).IsActive())
@@ -101,7 +94,7 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
             name.gameObject.SetActive(!string.IsNullOrEmpty(target.InteractionObjectName));
         }
 
-        _body.SetActive(isNotNull);
+        gameObject.SetActive(isNotNull);
     }
 
     private void OnDestroy()
