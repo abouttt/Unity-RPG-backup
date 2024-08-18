@@ -740,6 +740,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FieldItem
       objectReference: {fileID: 0}
+    - target: {fileID: 4123568088493535183, guid: 7c77c469f86d63d43bfc874639b6c00d, type: 3}
+      propertyPath: <MaxLoadingTime>k__BackingField
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8745842377659494693, guid: 7c77c469f86d63d43bfc874639b6c00d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.96
@@ -1560,7 +1564,7 @@ GameObject:
   - component: {fileID: 1878497838}
   - component: {fileID: 1878497837}
   - component: {fileID: 1878497836}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}

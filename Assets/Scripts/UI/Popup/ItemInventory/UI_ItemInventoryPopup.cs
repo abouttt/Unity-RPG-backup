@@ -30,12 +30,12 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
+        GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_ItemInventoryPopup>);
+
         Showed += () =>
         {
             PopupRT.SetParent(transform);
         };
-
-        GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_ItemInventoryPopup>);
 
         Managers.UI.Register(this);
     }

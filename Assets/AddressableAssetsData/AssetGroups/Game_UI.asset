@@ -23,9 +23,15 @@ MonoBehaviour:
     m_SerializedLabels:
     - Game_UI
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5c0a8f41f0ec1a441bc2ff9d9f16960e
+    m_Address: UI_LootSubitem.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Game_UI
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 01fe3182575d9d942a72c98aefaf831b, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 4c44420fb3e419d47b1a45994c0d6adf, type: 2}
     - {fileID: 11400000, guid: 5934bdd22a71d0849b653bf18b895de9, type: 2}
+    - {fileID: 11400000, guid: 4c44420fb3e419d47b1a45994c0d6adf, type: 2}

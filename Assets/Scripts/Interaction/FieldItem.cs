@@ -22,7 +22,7 @@ public class FieldItem : Interactable
 
     protected override void OnInteract()
     {
-
+        Managers.UI.Show<UI_LootPopup>().SetFieldItem(this);
     }
 
     public void AddItem(ItemData itemData, int count)
