@@ -60,13 +60,11 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
     public void DeconnectSystem()
     {
-        if (SystemRef == null)
+        if (SystemRef != null)
         {
-            return;
+            SystemRef.TargetChanged -= SetTarget;
+            SystemRef = null;
         }
-
-        SystemRef.TargetChanged -= SetTarget;
-        SystemRef = null;
     }
 
     private void SetTarget(Interactable target)
@@ -95,10 +93,5 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
         }
 
         gameObject.SetActive(isNotNull);
-    }
-
-    private void OnDestroy()
-    {
-        DeconnectSystem();
     }
 }

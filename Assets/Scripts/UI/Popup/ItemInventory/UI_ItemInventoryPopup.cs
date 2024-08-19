@@ -49,13 +49,11 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public void DeconnectSystem()
     {
-        if (SystemRef == null)
+        if (SystemRef != null)
         {
-            return;
+            SystemRef.InventoryChanged -= RefreshSlot;
+            SystemRef = null;
         }
-
-        SystemRef.InventoryChanged -= RefreshSlot;
-        SystemRef = null;
     }
 
     private void RefreshSlot(Item item, int index)
@@ -72,10 +70,5 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
             itemSlot.transform.SetParent(parent);
             _slots.Add(itemSlot);
         }
-    }
-
-    private void OnDestroy()
-    {
-        DeconnectSystem();
     }
 }

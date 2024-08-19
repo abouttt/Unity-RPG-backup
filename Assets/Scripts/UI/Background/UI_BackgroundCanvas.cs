@@ -1,14 +1,29 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
+public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPointerDownHandler, IDropHandler
 {
+    public Inventories SystemRef { get; private set; }
+
     [SerializeField, Space(10), TextArea]
     private string DestroyItemText;
 
     protected override void Init()
     {
         Managers.UI.Register(this);
+    }
+
+    public void ConnectSystem(Inventories inventories)
+    {
+        SystemRef = inventories;
+    }
+
+    public void DeconnectSystem()
+    {
+        if (SystemRef != null)
+        {
+            SystemRef = null;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -35,7 +50,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
         string text = $"[{item.Data.ItemName}] {DestroyItemText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            Player.ItemInventory.RemoveItem(itemSlot.Index);
+            SystemRef.ItemInventory.RemoveItem(itemSlot.Index);
         },
         text);
     }

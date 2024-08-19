@@ -180,9 +180,4 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
             AddAllItemToItemInventory();
         }
     }
-
-    private void OnDestroy()
-    {
-        DeconnectSystem();
-    }
 }

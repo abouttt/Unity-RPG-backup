@@ -21,23 +21,16 @@ public class UI_LockOn : UI_Auto, ISystemConnectable<FieldOfView>
 
     public void DeconnectSystem()
     {
-        if (SystemRef == null)
+        if (SystemRef != null)
         {
-            return;
+            SystemRef.TargetChanged -= SetTarget;
+            SystemRef = null;
         }
-
-        SystemRef.TargetChanged -= SetTarget;
-        SystemRef = null;
     }
 
     private void SetTarget(Transform target)
     {
         _followTarget.Target = target;
         gameObject.SetActive(target != null);
-    }
-
-    private void OnDestroy()
-    {
-        DeconnectSystem();
     }
 }
