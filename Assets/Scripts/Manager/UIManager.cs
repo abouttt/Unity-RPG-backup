@@ -5,6 +5,7 @@ using Object = UnityEngine.Object;
 
 public sealed class UIManager : BaseManager<UIManager>
 {
+    public int Count => _objects.Count;
     public int ActivePopupCount => _activePopups.Count;
     public bool IsActiveHelperPopup => _helperPopup != null;
     public bool IsActiveSelfishPopup => _selfishPopup != null;

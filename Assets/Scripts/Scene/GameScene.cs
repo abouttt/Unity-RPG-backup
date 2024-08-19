@@ -2,16 +2,18 @@ using UnityEngine;
 
 public class GameScene : BaseScene
 {
+    [SerializeField]
+    private Vector3 DefaultPosition;
+
+    [SerializeField]
+    private float DefalutRotationYaw;
+
     private GameObject _player;
-    private bool _isUIConnected;
 
     protected override void Init()
     {
         base.Init();
-
-        InstantiatePackage("PlayerPackage.prefab");
-        _player = GameObject.FindWithTag("Player");
-
+        InitPlayer();
         InstantiatePackage("GameUIPackage.prefab");
     }
 
@@ -28,6 +30,15 @@ public class GameScene : BaseScene
         DeconnectUI();
     }
 
+    private void InitPlayer()
+    {
+        var playerPackagePrefab = Managers.Resource.Load<GameObject>("PlayerPackage.prefab");
+        var playerPackage = Instantiate(playerPackagePrefab, DefaultPosition, Quaternion.Euler(0, DefalutRotationYaw, 0));
+        _player = playerPackage.FindChildWithTag("Player");
+        playerPackage.transform.DetachChildren();
+        Destroy(playerPackage);
+    }
+
     private void ConnectUI()
     {
         var itemInventory = _player.GetComponent<ItemInventory>();
@@ -39,18 +50,16 @@ public class GameScene : BaseScene
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().ConnectSystem(interactor);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().ConnectSystem(lockOnFov);
         Managers.UI.Get<UI_BackgroundCanvas>().ConnectSystem(new Inventories(itemInventory));
-
-        _isUIConnected = true;
     }
 
     private void DeconnectUI()
     {
-        if (!_isUIConnected)
+        if (Managers.Instance == null)
         {
             return;
         }
 
-        if (Managers.Instance == null)
+        if (Managers.UI.Count == 0)
         {
             return;
         }

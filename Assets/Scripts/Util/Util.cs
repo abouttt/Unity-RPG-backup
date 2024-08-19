@@ -68,6 +68,24 @@ public static class Util
         return null;
     }
 
+    public static GameObject FindChildWithTag(GameObject go, string tag)
+    {
+        if (string.IsNullOrEmpty(tag))
+        {
+            return null;
+        }
+
+        foreach (Transform child in go.transform)
+        {
+            if (child.CompareTag(tag))
+            {
+                return child.gameObject;
+            }
+        }
+
+        return null;
+    }
+
     public static string GetStringAfterLastSlash(string str)
     {
         int index = str.LastIndexOf('/');

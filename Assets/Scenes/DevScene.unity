@@ -297,8 +297,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 106c18ba933ba3e4091c906af9cbdbf2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: 581b8dbbd49014344a66b0ed4e0f3d66, type: 2}
-  count: 50
 --- !u!4 &571259574
 Transform:
   m_ObjectHideFlags: 0
@@ -836,6 +834,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SceneAddress>k__BackingField: DevScene.unity
+  DefaultPosition: {x: 0, y: 0, z: 0}
+  DefalutRotationYaw: 0
 --- !u!4 &1496621882
 Transform:
   m_ObjectHideFlags: 0

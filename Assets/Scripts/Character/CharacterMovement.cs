@@ -85,6 +85,14 @@ public class CharacterMovement : MonoBehaviour
         _controller = GetComponent<CharacterController>();
     }
 
+    private void Start()
+    {
+        _targetRotation = Mathf.Atan2(transform.forward.x, transform.forward.z) * Mathf.Rad2Deg;
+        _targetMove = _targetRotation;
+        _jumpTimeoutDelta = JumpTimeout;
+        _fallTimeoutDelta = FallTimeout;
+    }
+
     private void Update()
     {
         CheckGrounded();

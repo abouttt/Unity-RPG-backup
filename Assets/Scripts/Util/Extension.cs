@@ -17,6 +17,11 @@ public static class Extension
         return Util.FindChild<T>(go, name, recursive);
     }
 
+    public static GameObject FindChildWithTag(this GameObject go, string tag)
+    {
+        return Util.FindChildWithTag(go, tag);
+    }
+
     public static string GetStringAfterLastSlash(this string str)
     {
         return Util.GetStringAfterLastSlash(str);
