@@ -22,6 +22,7 @@ public class LoadingUpdater : MonoBehaviour
 
     private IEnumerator UpdateLoadingProgress(AsyncOperationHandle<SceneInstance> handle)
     {
+        LoadingProgress = 0f;
         float timer = 0f;
 
         while (!handle.IsDone)
@@ -53,7 +54,6 @@ public class LoadingUpdater : MonoBehaviour
                 if (LoadingProgress >= 1f)
                 {
                     UpdateEnded?.Invoke();
-                    LoadingProgress = 0f;
                     yield break;
                 }
             }
