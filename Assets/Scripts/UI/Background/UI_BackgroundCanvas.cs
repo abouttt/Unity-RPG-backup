@@ -3,10 +3,10 @@ using UnityEngine.EventSystems;
 
 public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPointerDownHandler, IDropHandler
 {
-    public Inventories SystemRef { get; private set; }
-
     [SerializeField, Space(10), TextArea]
     private string DestroyItemText;
+
+    private Inventories _inventoriesRef;
 
     protected override void Init()
     {
@@ -15,15 +15,12 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
 
     public void ConnectSystem(Inventories inventories)
     {
-        SystemRef = inventories;
+        _inventoriesRef = inventories;
     }
 
     public void DeconnectSystem()
     {
-        if (SystemRef != null)
-        {
-            SystemRef = null;
-        }
+        _inventoriesRef = null;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -50,7 +47,7 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
         string text = $"[{item.Data.ItemName}] {DestroyItemText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            SystemRef.ItemInventory.RemoveItem(itemSlot.Index);
+            _inventoriesRef.ItemInventory.RemoveItem(itemSlot.Index);
         },
         text);
     }

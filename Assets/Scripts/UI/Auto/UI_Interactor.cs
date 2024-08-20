@@ -17,8 +17,7 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
         NameText,
     }
 
-    public Interactor SystemRef { get; private set; }
-
+    private Interactor _interactorRef;
     private UI_FollowWorldObject _followTarget;
 
     protected override void Init()
@@ -35,7 +34,7 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
     private void LateUpdate()
     {
-        if (SystemRef.Target.IsInteracted)
+        if (_interactorRef.Target.IsInteracted)
         {
             gameObject.SetActive(false);
             return;
@@ -48,22 +47,22 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
         if (GetImage((int)Images.LoadingTimeImage).IsActive())
         {
-            GetImage((int)Images.LoadingTimeImage).fillAmount = SystemRef.InteractLoadingTime / SystemRef.Target.MaxLoadingTime;
+            GetImage((int)Images.LoadingTimeImage).fillAmount = _interactorRef.InteractLoadingTime / _interactorRef.Target.MaxLoadingTime;
         }
     }
 
     public void ConnectSystem(Interactor interactor)
     {
-        SystemRef = interactor;
+        _interactorRef = interactor;
         interactor.TargetChanged += SetTarget;
     }
 
     public void DeconnectSystem()
     {
-        if (SystemRef != null)
+        if (_interactorRef != null)
         {
-            SystemRef.TargetChanged -= SetTarget;
-            SystemRef = null;
+            _interactorRef.TargetChanged -= SetTarget;
+            _interactorRef = null;
         }
     }
 

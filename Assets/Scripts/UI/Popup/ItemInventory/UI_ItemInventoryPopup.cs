@@ -18,7 +18,7 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
         CloseButton,
     }
 
-    public ItemInventory SystemRef { get; private set; }
+    public ItemInventory ItemInventoryRef { get; private set; }
 
     private readonly List<UI_ItemSlot> _slots = new();
 
@@ -42,17 +42,17 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public void ConnectSystem(ItemInventory itemInventory)
     {
-        SystemRef = itemInventory;
+        ItemInventoryRef = itemInventory;
         itemInventory.InventoryChanged += RefreshSlot;
         InitSlots(itemInventory.Items.Count, GetRT((int)RTs.ItemSlots));
     }
 
     public void DeconnectSystem()
     {
-        if (SystemRef != null)
+        if (ItemInventoryRef != null)
         {
-            SystemRef.InventoryChanged -= RefreshSlot;
-            SystemRef = null;
+            ItemInventoryRef.InventoryChanged -= RefreshSlot;
+            ItemInventoryRef = null;
         }
     }
 

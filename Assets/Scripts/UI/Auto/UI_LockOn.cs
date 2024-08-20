@@ -3,8 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(UI_FollowWorldObject))]
 public class UI_LockOn : UI_Auto, ISystemConnectable<FieldOfView>
 {
-    public FieldOfView SystemRef { get; private set; }
-
+    private FieldOfView _lockOnFovRef;
     private UI_FollowWorldObject _followTarget;
 
     protected override void Init()
@@ -15,16 +14,16 @@ public class UI_LockOn : UI_Auto, ISystemConnectable<FieldOfView>
 
     public void ConnectSystem(FieldOfView lockOnFov)
     {
-        SystemRef = lockOnFov;
+        _lockOnFovRef = lockOnFov;
         lockOnFov.TargetChanged += SetTarget;
     }
 
     public void DeconnectSystem()
     {
-        if (SystemRef != null)
+        if (_lockOnFovRef != null)
         {
-            SystemRef.TargetChanged -= SetTarget;
-            SystemRef = null;
+            _lockOnFovRef.TargetChanged -= SetTarget;
+            _lockOnFovRef = null;
         }
     }
 

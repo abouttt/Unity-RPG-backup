@@ -21,11 +21,10 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
         LootAllButton,
     }
 
-    public ItemInventory SystemRef { get; private set; }
-
     [SerializeField]
     private float _trackingDistance;
 
+    private ItemInventory _itemInventoryRef;
     private FieldItem _fieldItemRef;
     private InputAction _interact;
     private readonly Dictionary<UI_LootSubitem, ItemData> _subitems = new();
@@ -74,15 +73,12 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public void ConnectSystem(ItemInventory itemInventory)
     {
-        SystemRef = itemInventory;
+        _itemInventoryRef = itemInventory;
     }
 
     public void DeconnectSystem()
     {
-        if (SystemRef != null)
-        {
-            SystemRef = null;
-        }
+        _itemInventoryRef = null;
     }
 
     public void SetFieldItem(FieldItem fieldItem)
@@ -113,7 +109,7 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
     public void AddItemToItemInventory(UI_LootSubitem lootSubitem)
     {
         _fieldItemRef.RemoveItem(lootSubitem.ItemDataRef, lootSubitem.Count);
-        int count = SystemRef.AddItem(lootSubitem.ItemDataRef, lootSubitem.Count);
+        int count = _itemInventoryRef.AddItem(lootSubitem.ItemDataRef, lootSubitem.Count);
         if (count > 0)
         {
             lootSubitem.SetItemData(lootSubitem.ItemDataRef, count);
@@ -143,7 +139,7 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     private void TrackingFieldItem()
     {
-        if (_trackingDistance < Vector3.Distance(SystemRef.gameObject.transform.position, _fieldItemRef.transform.position))
+        if (_trackingDistance < Vector3.Distance(_itemInventoryRef.gameObject.transform.position, _fieldItemRef.transform.position))
         {
             Managers.UI.Close<UI_LootPopup>();
         }
