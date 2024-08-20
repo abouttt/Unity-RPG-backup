@@ -76,7 +76,7 @@ public class CharacterMovement : MonoBehaviour
     private float _fallTimeoutDelta;
     private float _landTimeoutDelta;
     private bool _isGroundedTrigger;    // 공중에 떠있기 전 땅에있는 판단을 무시하기 위함
-    private bool _canUpdateGroundedTimeouts;
+    private bool _canUpdateGroundedTimeouts = true;
 
     private CharacterController _controller;
 
