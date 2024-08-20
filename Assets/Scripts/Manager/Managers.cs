@@ -3,22 +3,26 @@ using UnityEngine;
 public class Managers : SingletonBehaviour<Managers>
 {
     public static CooldownManager Cooldown => Instance._cooldown;
-    public static InputManager Input => Instance._input;
     public static InventoryManager Inventory => Instance._inventory;
+
+    private readonly CooldownManager _cooldown = new();
+    private readonly InventoryManager _inventory = new();
+
+    #region Core
+    public static InputManager Input => Instance._input;
     public static PoolManager Pool => Instance._pool;
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
     public static SoundManager Sound => Instance._sound;
     public static UIManager UI => Instance._ui;
 
-    private readonly CooldownManager _cooldown = new();
     private readonly InputManager _input = new();
-    private readonly InventoryManager _inventory = new();
     private readonly PoolManager _pool = new();
     private readonly ResourceManager _resource = new();
     private readonly SceneManagerEx _scene = new();
     private readonly SoundManager _sound = new();
     private readonly UIManager _ui = new();
+    #endregion
 
     private void LateUpdate()
     {
