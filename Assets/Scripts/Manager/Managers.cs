@@ -4,6 +4,7 @@ public class Managers : SingletonBehaviour<Managers>
 {
     public static CooldownManager Cooldown => Instance._cooldown;
     public static InputManager Input => Instance._input;
+    public static InventoryManager Inventory => Instance._inventory;
     public static PoolManager Pool => Instance._pool;
     public static ResourceManager Resource => Instance._resource;
     public static SceneManagerEx Scene => Instance._scene;
@@ -12,6 +13,7 @@ public class Managers : SingletonBehaviour<Managers>
 
     private readonly CooldownManager _cooldown = new();
     private readonly InputManager _input = new();
+    private readonly InventoryManager _inventory = new();
     private readonly PoolManager _pool = new();
     private readonly ResourceManager _resource = new();
     private readonly SceneManagerEx _scene = new();
@@ -28,6 +30,7 @@ public class Managers : SingletonBehaviour<Managers>
         base.Init();
         _cooldown.Init();
         _input.Init();
+        _inventory.Init();
         _pool.Init();
         _resource.Init();
         _scene.Init();
@@ -39,6 +42,7 @@ public class Managers : SingletonBehaviour<Managers>
     {
         Cooldown.Clear();
         Input.Clear();
+        Inventory.Clear();
         Pool.Clear();
         Resource.Clear();
         Scene.Clear();
@@ -51,6 +55,7 @@ public class Managers : SingletonBehaviour<Managers>
         base.Dispose();
         _cooldown.Dispose();
         _input.Dispose();
+        _inventory.Dispose();
         _pool.Dispose();
         _resource.Dispose();
         _scene.Dispose();

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemInventory : MonoBehaviour
+public class ItemInventory : MonoBehaviour, IInventory
 {
     public event Action<Item, int> InventoryChanged;
 
@@ -14,6 +14,7 @@ public class ItemInventory : MonoBehaviour
     private void Awake()
     {
         _inventory.Init();
+        Managers.Inventory.Register(this);
     }
 
     public int AddItem(ItemData itemData, int count = 1)

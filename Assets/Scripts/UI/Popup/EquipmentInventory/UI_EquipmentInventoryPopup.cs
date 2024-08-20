@@ -28,8 +28,8 @@ public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<Equipment
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
-        InitSlots();
         GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_EquipmentInventoryPopup>);
+        InitSlots();
 
         Managers.UI.Register(this);
     }

@@ -1,26 +1,14 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPointerDownHandler, IDropHandler
+public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 {
     [SerializeField, Space(10), TextArea]
     private string DestroyItemText;
 
-    private Inventories _inventoriesRef;
-
     protected override void Init()
     {
         Managers.UI.Register(this);
-    }
-
-    public void ConnectSystem(Inventories inventories)
-    {
-        _inventoriesRef = inventories;
-    }
-
-    public void DeconnectSystem()
-    {
-        _inventoriesRef = null;
     }
 
     public void OnPointerDown(PointerEventData eventData)
@@ -50,7 +38,7 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
         string text = $"[{item.Data.ItemName}] {DestroyItemText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            _inventoriesRef.ItemInventory.RemoveItem(itemSlot.Index);
+            Managers.Inventory.Get<ItemInventory>().RemoveItem(itemSlot.Index);
         },
         text);
     }
@@ -58,7 +46,7 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
     private void OnDropEquipmentSlot(UI_EquipmentSlot equipmentSlot)
     {
         var equipmentItem = equipmentSlot.ObjectRef as EquipmentItem;
-        _inventoriesRef.EquipmentInventory.UnequipItem(equipmentSlot.EquipmentType);
-        _inventoriesRef.ItemInventory.AddItem(equipmentItem.Data);
+        Managers.Inventory.Get<EquipmentInventory>().UnequipItem(equipmentSlot.EquipmentType);
+        Managers.Inventory.Get<ItemInventory>().AddItem(equipmentItem.Data);
     }
 }

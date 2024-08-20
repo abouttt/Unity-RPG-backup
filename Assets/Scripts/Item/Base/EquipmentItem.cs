@@ -15,15 +15,18 @@ public class EquipmentItem : Item, IUsable
             return false;
         }
 
-        var equippedItem = s_inventoriesRef.EquipmentInventory.GetItem(EquipmentData.EquipmentType);
+        var itemInventory = Managers.Inventory.Get<ItemInventory>();
+        var equipmentInventory = Managers.Inventory.Get<EquipmentInventory>();
+
+        var equippedItem = equipmentInventory.GetItem(EquipmentData.EquipmentType);
         if (equippedItem == this)
         {
-            s_inventoriesRef.EquipmentInventory.UnequipItem(EquipmentData.EquipmentType);
-            s_inventoriesRef.ItemInventory.AddItem(EquipmentData);
+            equipmentInventory.UnequipItem(EquipmentData.EquipmentType);
+            itemInventory.AddItem(EquipmentData);
         }
         else
         {
-            int index = s_inventoriesRef.ItemInventory.GetItemIndex(this);
+            int index = itemInventory.GetItemIndex(this);
             if (index == -1)
             {
                 return false;
@@ -31,14 +34,14 @@ public class EquipmentItem : Item, IUsable
 
             if (equippedItem != null)
             {
-                s_inventoriesRef.ItemInventory.SetItem(equippedItem.EquipmentData, index);
+                itemInventory.SetItem(equippedItem.EquipmentData, index);
             }
             else
             {
-                s_inventoriesRef.ItemInventory.RemoveItem(index);
+                itemInventory.RemoveItem(index);
             }
 
-            s_inventoriesRef.EquipmentInventory.EquipItem(EquipmentData);
+            equipmentInventory.EquipItem(EquipmentData);
         }
 
         return true;

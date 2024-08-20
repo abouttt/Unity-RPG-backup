@@ -16,6 +16,12 @@ public abstract class ConsumableItem : StackableItem, IUsable
         }
 
         Count -= ConsumableData.RequiredCount;
+        if (IsEmpty)
+        {
+            Managers.Inventory.Get<ItemInventory>().RemoveItem(this);
+        }
+
+        Managers.Cooldown.AddCooldown(ConsumableData.Cooldown);
 
         return true;
     }

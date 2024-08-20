@@ -41,19 +41,14 @@ public class GameScene : BaseScene
 
     private void ConnectRef()
     {
-        var itemInventory = _player.GetComponent<ItemInventory>();
-        var equipmentInventory = _player.GetComponent<EquipmentInventory>();
         var interactor = _player.GetComponentInChildren<Interactor>();
         var lockOnFov = Camera.main.GetComponent<FieldOfView>();
-        var inventories = new Inventories(itemInventory, equipmentInventory);
 
-        Item.SetInventoryRef(inventories);
-        Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(itemInventory);
-        Managers.UI.Get<UI_EquipmentInventoryPopup>().ConnectSystem(equipmentInventory);
-        Managers.UI.Get<UI_LootPopup>().ConnectSystem(itemInventory);
+        Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(Managers.Inventory.Get<ItemInventory>());
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().ConnectSystem(Managers.Inventory.Get<EquipmentInventory>());
+        Managers.UI.Get<UI_LootPopup>().ConnectSystem(Managers.Inventory.Get<ItemInventory>());
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().ConnectSystem(interactor);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().ConnectSystem(lockOnFov);
-        Managers.UI.Get<UI_BackgroundCanvas>().ConnectSystem(new Inventories(itemInventory, equipmentInventory));
     }
 
     private void DeconnectRef()
@@ -73,6 +68,5 @@ public class GameScene : BaseScene
         Managers.UI.Get<UI_LootPopup>().DeconnectSystem();
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().DeconnectSystem();
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().DeconnectSystem();
-        Managers.UI.Get<UI_BackgroundCanvas>().DeconnectSystem();
     }
 }

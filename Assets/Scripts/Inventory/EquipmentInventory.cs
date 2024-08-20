@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class EquipmentInventory : MonoBehaviour
+public class EquipmentInventory : MonoBehaviour, IInventory
 {
     public event Action<EquipmentItem, EquipmentType> InventoryChanged;
 
@@ -10,6 +10,7 @@ public class EquipmentInventory : MonoBehaviour
     private void Awake()
     {
         _inventory.Init(Enum.GetValues(typeof(EquipmentType)).Length);
+        Managers.Inventory.Register(this);
     }
 
     public void EquipItem(EquipmentItemData equipmentItemData)
