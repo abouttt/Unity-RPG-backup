@@ -28,6 +28,16 @@ public abstract class ConsumableItem : StackableItem, IUsable
 
     public bool CanUse()
     {
+        if (Count < ConsumableData.RequiredCount)
+        {
+            return false;
+        }
+
+        if (ConsumableData.Cooldown.RemainingTime > 0f)
+        {
+            return false;
+        }
+
         return true;
     }
 }
