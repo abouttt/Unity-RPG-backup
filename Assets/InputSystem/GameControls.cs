@@ -218,6 +218,15 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""EquipmentInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""578720e8-46a5-4d92-a246-8a43647499c6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Cancel"",
                     ""type"": ""Button"",
                     ""id"": ""93a6c061-5ce8-4a61-92ab-b052ccc73cec"",
@@ -260,6 +269,17 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
                     ""action"": ""Cancel"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c06b866f-8ac2-4057-8196-14d258297096"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""EquipmentInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -295,6 +315,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_CursorToggle = m_UI.FindAction("CursorToggle", throwIfNotFound: true);
         m_UI_ItemInventory = m_UI.FindAction("ItemInventory", throwIfNotFound: true);
+        m_UI_EquipmentInventory = m_UI.FindAction("EquipmentInventory", throwIfNotFound: true);
         m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
     }
 
@@ -445,6 +466,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     private List<IUIActions> m_UIActionsCallbackInterfaces = new List<IUIActions>();
     private readonly InputAction m_UI_CursorToggle;
     private readonly InputAction m_UI_ItemInventory;
+    private readonly InputAction m_UI_EquipmentInventory;
     private readonly InputAction m_UI_Cancel;
     public struct UIActions
     {
@@ -452,6 +474,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
         public UIActions(@GameControls wrapper) { m_Wrapper = wrapper; }
         public InputAction @CursorToggle => m_Wrapper.m_UI_CursorToggle;
         public InputAction @ItemInventory => m_Wrapper.m_UI_ItemInventory;
+        public InputAction @EquipmentInventory => m_Wrapper.m_UI_EquipmentInventory;
         public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
@@ -468,6 +491,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @ItemInventory.started += instance.OnItemInventory;
             @ItemInventory.performed += instance.OnItemInventory;
             @ItemInventory.canceled += instance.OnItemInventory;
+            @EquipmentInventory.started += instance.OnEquipmentInventory;
+            @EquipmentInventory.performed += instance.OnEquipmentInventory;
+            @EquipmentInventory.canceled += instance.OnEquipmentInventory;
             @Cancel.started += instance.OnCancel;
             @Cancel.performed += instance.OnCancel;
             @Cancel.canceled += instance.OnCancel;
@@ -481,6 +507,9 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
             @ItemInventory.started -= instance.OnItemInventory;
             @ItemInventory.performed -= instance.OnItemInventory;
             @ItemInventory.canceled -= instance.OnItemInventory;
+            @EquipmentInventory.started -= instance.OnEquipmentInventory;
+            @EquipmentInventory.performed -= instance.OnEquipmentInventory;
+            @EquipmentInventory.canceled -= instance.OnEquipmentInventory;
             @Cancel.started -= instance.OnCancel;
             @Cancel.performed -= instance.OnCancel;
             @Cancel.canceled -= instance.OnCancel;
@@ -523,6 +552,7 @@ public partial class @GameControls: IInputActionCollection2, IDisposable
     {
         void OnCursorToggle(InputAction.CallbackContext context);
         void OnItemInventory(InputAction.CallbackContext context);
+        void OnEquipmentInventory(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
     }
 }

@@ -37,6 +37,9 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
                 case SlotType.Item:
                     OnDropItemSlot(slot as UI_ItemSlot);
                     break;
+                case SlotType.Equipment:
+                    OnDropEquipmentSlot(slot as UI_EquipmentSlot);
+                    break;
             }
         }
     }
@@ -50,5 +53,12 @@ public class UI_BackgroundCanvas : UI_Base, ISystemConnectable<Inventories>, IPo
             _inventoriesRef.ItemInventory.RemoveItem(itemSlot.Index);
         },
         text);
+    }
+
+    private void OnDropEquipmentSlot(UI_EquipmentSlot equipmentSlot)
+    {
+        var equipmentItem = equipmentSlot.ObjectRef as EquipmentItem;
+        _inventoriesRef.EquipmentInventory.UnequipItem(equipmentSlot.EquipmentType);
+        _inventoriesRef.ItemInventory.AddItem(equipmentItem.Data);
     }
 }

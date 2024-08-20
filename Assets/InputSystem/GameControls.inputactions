@@ -196,6 +196,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "EquipmentInventory",
+                    "type": "Button",
+                    "id": "578720e8-46a5-4d92-a246-8a43647499c6",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Cancel",
                     "type": "Button",
                     "id": "93a6c061-5ce8-4a61-92ab-b052ccc73cec",
@@ -236,6 +245,17 @@
                     "processors": "",
                     "groups": "Keyboard&Mouse",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c06b866f-8ac2-4057-8196-14d258297096",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "EquipmentInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

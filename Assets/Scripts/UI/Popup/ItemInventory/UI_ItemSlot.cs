@@ -139,6 +139,9 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
                 case SlotType.Item:
                     OnDropItemSlot(otherSlot as UI_ItemSlot);
                     break;
+                case SlotType.Equipment:
+                    OnDropEquipmentSlot(otherSlot as UI_EquipmentSlot);
+                    break;
             }
         }
     }
@@ -160,6 +163,38 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         else
         {
             itemInventory.MoveItem(otherItemSlot.Index, Index);
+        }
+    }
+
+    private void OnDropEquipmentSlot(UI_EquipmentSlot otherEquipmentSlot)
+    {
+        var otherEquipmentItem = otherEquipmentSlot.ObjectRef as EquipmentItem;
+        var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
+        var equipmentInventory = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
+
+        if (HasObject)
+        {
+            if (ObjectRef is not EquipmentItem equipmentItem)
+            {
+                return;
+            }
+
+            if (equipmentItem.EquipmentData.EquipmentType != otherEquipmentItem.EquipmentData.EquipmentType)
+            {
+                return;
+            }
+
+            if (equipmentItem is not IUsable usable)
+            {
+                return;
+            }
+
+            usable.Use();
+        }
+        else
+        {
+            equipmentInventory.UnequipItem(otherEquipmentSlot.EquipmentType);
+            itemInventory.SetItem(otherEquipmentItem.Data, Index);
         }
     }
 }

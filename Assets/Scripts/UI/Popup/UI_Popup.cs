@@ -41,6 +41,11 @@ public abstract class UI_Popup : UI_Base, IPointerDownHandler
 
         Closed += () =>
         {
+            if (Managers.Instance == null)
+            {
+                return;
+            }
+
             if (Managers.UI.ActivePopupCount == 0)
             {
                 Managers.Input.CursorLocked = true;

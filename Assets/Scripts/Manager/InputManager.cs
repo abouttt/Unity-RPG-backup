@@ -85,6 +85,11 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
         ShowOrClosePopup<UI_ItemInventoryPopup>(context);
     }
 
+    public void OnEquipmentInventory(InputAction.CallbackContext context)
+    {
+        ShowOrClosePopup<UI_EquipmentInventoryPopup>(context);
+    }
+
     public void OnCancel(InputAction.CallbackContext context)
     {
         if (context.performed)

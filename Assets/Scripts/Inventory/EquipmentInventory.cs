@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class EquipmentInventory : MonoBehaviour
 {
-    public event Action<EquipmentType> InventoryChanged;
+    public event Action<EquipmentItem, EquipmentType> InventoryChanged;
 
     private readonly Inventory<EquipmentItem> _inventory = new();
 
@@ -22,7 +22,7 @@ public class EquipmentInventory : MonoBehaviour
 
         var newEquipmentItem = equipmentItemData.CreateItem() as EquipmentItem;
         _inventory.SetItem(newEquipmentItem, (int)equipmentType, 1);
-        InventoryChanged?.Invoke(equipmentType);
+        InventoryChanged?.Invoke(newEquipmentItem, equipmentType);
     }
 
     public void UnequipItem(EquipmentType equipmentType)
@@ -33,7 +33,7 @@ public class EquipmentInventory : MonoBehaviour
         }
 
         _inventory.RemoveItem((int)equipmentType);
-        InventoryChanged?.Invoke(equipmentType);
+        InventoryChanged?.Invoke(null, equipmentType);
     }
 
     public EquipmentItem GetItem(EquipmentType equipmentType)
