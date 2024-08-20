@@ -6,11 +6,17 @@ public abstract class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehavi
     protected bool _isDestroyOnLoad = false;
 
     private static T s_instance;
+    private static bool s_isApplicationQuitted;
 
     public static T Instance
     {
         get
         {
+            if (s_isApplicationQuitted)
+            {
+                return null;
+            }
+
             if (s_instance == null)
             {
                 s_instance = FindAnyObjectByType<T>();
@@ -57,5 +63,10 @@ public abstract class SingletonBehaviour<T> : MonoBehaviour where T : MonoBehavi
         {
             s_instance = null;
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        s_isApplicationQuitted = true;
     }
 }
