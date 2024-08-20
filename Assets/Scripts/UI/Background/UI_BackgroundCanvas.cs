@@ -38,7 +38,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
         string text = $"[{item.Data.ItemName}] {DestroyItemText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            Managers.Inventory.Get<ItemInventory>().RemoveItem(itemSlot.Index);
+            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(itemSlot.Index);
         },
         text);
     }
@@ -46,7 +46,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
     private void OnDropEquipmentSlot(UI_EquipmentSlot equipmentSlot)
     {
         var equipmentItem = equipmentSlot.ObjectRef as EquipmentItem;
-        Managers.Inventory.Get<EquipmentInventory>().UnequipItem(equipmentSlot.EquipmentType);
-        Managers.Inventory.Get<ItemInventory>().AddItem(equipmentItem.Data);
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.UnequipItem(equipmentSlot.EquipmentType);
+        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(equipmentItem.Data);
     }
 }
