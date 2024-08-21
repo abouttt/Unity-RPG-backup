@@ -10,7 +10,6 @@ public class EquipmentInventory : MonoBehaviour, IInventory
     private void Awake()
     {
         _inventory.Init(Enum.GetValues(typeof(EquipmentType)).Length);
-        Managers.Inventory.Register(this);
     }
 
     public void EquipItem(EquipmentItemData equipmentItemData)

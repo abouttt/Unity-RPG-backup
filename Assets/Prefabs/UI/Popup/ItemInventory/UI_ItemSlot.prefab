@@ -57,6 +57,7 @@ MonoBehaviour:
   <UIType>k__BackingField: -1
   <SlotType>k__BackingField: 0
   CanDrag: 1
+  _itemSplitText: "\uC544\uC774\uD15C \uB098\uB204\uAE30"
 --- !u!1 &4543174180895700177
 GameObject:
   m_ObjectHideFlags: 0

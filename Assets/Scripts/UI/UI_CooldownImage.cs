@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class UI_CooldownImage : UI_Base
+public class UI_CooldownImage : UI_Base, ISystemConnectable<Cooldown>
 {
     private Cooldown _cooldownRef;
     private Image _cooldownImage;
@@ -28,7 +28,7 @@ public class UI_CooldownImage : UI_Base
         }
     }
 
-    public void SetCooldown(Cooldown cooldown)
+    public void ConnectSystem(Cooldown cooldown)
     {
         if (cooldown == null)
         {
@@ -37,7 +37,7 @@ public class UI_CooldownImage : UI_Base
 
         if (_cooldownRef != null)
         {
-            Clear();
+            DeconnectSystem();
         }
 
         _cooldownRef = cooldown;
@@ -48,7 +48,7 @@ public class UI_CooldownImage : UI_Base
         }
     }
 
-    public void Clear()
+    public void DeconnectSystem()
     {
         if (_cooldownRef == null)
         {

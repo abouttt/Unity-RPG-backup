@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public interface IStackable
+public interface IStackableItem
 {
-    event Action StackChanged;
+    event Action CountChanged;
 
     int Count { get; }
     int MaxCount { get; }

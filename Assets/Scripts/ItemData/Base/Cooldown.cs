@@ -10,12 +10,21 @@ public class Cooldown
     public float MaxTime { get; private set; }
 
     [field: SerializeField]
-    public float RemainingTime { get; set; }
+    public float RemainingTime { get; private set; }
 
     public void Start()
     {
         RemainingTime = MaxTime;
         CooldownStarted?.Invoke();
+    }
+
+    public void Update()
+    {
+        RemainingTime -= Time.deltaTime;
+        if (RemainingTime <= 0f)
+        {
+            RemainingTime = 0f;
+        }
     }
 
     public void Clear()

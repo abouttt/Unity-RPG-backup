@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public abstract class StackableItem : Item, IStackable
+public abstract class StackableItem : Item, IStackableItem
 {
-    public event Action StackChanged;
+    public event Action CountChanged;
 
     public StackableItemData StackableData => Data as StackableItemData;
 
@@ -14,9 +14,9 @@ public abstract class StackableItem : Item, IStackable
         {
             int prevCount = _count;
             _count = Mathf.Clamp(value, 0, MaxCount);
-            if (prevCount != _count)
+            if (_count != prevCount)
             {
-                StackChanged?.Invoke();
+                CountChanged?.Invoke();
             }
         }
     }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class ConsumableItem : StackableItem, IUsable
+public abstract class ConsumableItem : StackableItem, IUsableItem
 {
     public ConsumableItemData ConsumableData => Data as ConsumableItemData;
 
@@ -8,22 +8,22 @@ public abstract class ConsumableItem : StackableItem, IUsable
         : base(data, count)
     { }
 
-    public virtual bool Use()
+    public void Use(ItemInventory itemInventory, EquipmentInventory equipmentInventory)
     {
         if (!CanUse())
         {
-            return false;
+            return;
         }
+
+        OnUse();
 
         Count -= ConsumableData.RequiredCount;
         if (IsEmpty)
         {
-            Managers.Inventory.Get<ItemInventory>().RemoveItem(this);
+            itemInventory.RemoveItem(this);
         }
 
         Managers.Cooldown.AddCooldown(ConsumableData.Cooldown);
-
-        return true;
     }
 
     public bool CanUse()
@@ -40,4 +40,6 @@ public abstract class ConsumableItem : StackableItem, IUsable
 
         return true;
     }
+
+    protected abstract void OnUse();
 }

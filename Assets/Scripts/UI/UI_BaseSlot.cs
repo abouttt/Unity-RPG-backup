@@ -23,14 +23,24 @@ public abstract class UI_BaseSlot : UI_Base,
 
     protected bool IsPointerDown = false;
 
+    protected static bool s_isInitInventoryRef;
+    protected static ItemInventory s_itemInventoryRef;
+    protected static EquipmentInventory s_equipmentInventoryRef;
+
     protected override void Init()
     {
         BindImage(typeof(Images));
+        GetImage((int)Images.TempImage).gameObject.SetActive(false);
     }
 
     private void Start()
     {
-        GetImage((int)Images.TempImage).gameObject.SetActive(false);
+        if (!s_isInitInventoryRef)
+        {
+            s_itemInventoryRef = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
+            s_equipmentInventoryRef = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
+            s_isInitInventoryRef = true;
+        }
     }
 
     protected void SetObject(object obj, Sprite image)

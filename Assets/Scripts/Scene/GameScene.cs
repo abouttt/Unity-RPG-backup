@@ -19,7 +19,7 @@ public class GameScene : BaseScene
 
     private void Start()
     {
-        ConnectRef();
+        ConnectUI();
         Managers.Input.Enabled = true;
         Managers.Input.CursorLocked = true;
         Managers.Sound.Play(SoundType.BGM, SceneSettings.Instance[SceneAddress].BGM);
@@ -27,7 +27,7 @@ public class GameScene : BaseScene
 
     private void OnDestroy()
     {
-        DeconnectRef();
+        DeconnectUI();
     }
 
     private void InitPlayer()
@@ -39,19 +39,21 @@ public class GameScene : BaseScene
         Destroy(playerPackage);
     }
 
-    private void ConnectRef()
+    private void ConnectUI()
     {
+        var itemInventory = _player.GetComponent<ItemInventory>();
+        var equipmentInventory = _player.GetComponent<EquipmentInventory>();
         var interactor = _player.GetComponentInChildren<Interactor>();
         var lockOnFov = Camera.main.GetComponent<FieldOfView>();
 
-        Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(Managers.Inventory.Get<ItemInventory>());
-        Managers.UI.Get<UI_EquipmentInventoryPopup>().ConnectSystem(Managers.Inventory.Get<EquipmentInventory>());
-        Managers.UI.Get<UI_LootPopup>().ConnectSystem(Managers.Inventory.Get<ItemInventory>());
+        Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(itemInventory);
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().ConnectSystem(equipmentInventory);
+        Managers.UI.Get<UI_LootPopup>().ConnectSystem(itemInventory);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().ConnectSystem(interactor);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().ConnectSystem(lockOnFov);
     }
 
-    private void DeconnectRef()
+    private void DeconnectUI()
     {
         if (Managers.Instance == null)
         {

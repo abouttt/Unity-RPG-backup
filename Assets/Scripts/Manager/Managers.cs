@@ -3,10 +3,8 @@ using UnityEngine;
 public class Managers : SingletonBehaviour<Managers>
 {
     public static CooldownManager Cooldown => Instance._cooldown;
-    public static InventoryManager Inventory => Instance._inventory;
 
     private readonly CooldownManager _cooldown = new();
-    private readonly InventoryManager _inventory = new();
 
     #region Core
     public static InputManager Input => Instance._input;
@@ -34,7 +32,6 @@ public class Managers : SingletonBehaviour<Managers>
         base.Init();
         _cooldown.Init();
         _input.Init();
-        _inventory.Init();
         _pool.Init();
         _resource.Init();
         _scene.Init();
@@ -46,7 +43,6 @@ public class Managers : SingletonBehaviour<Managers>
     {
         Cooldown.Clear();
         Input.Clear();
-        Inventory.Clear();
         Pool.Clear();
         Resource.Clear();
         Scene.Clear();
@@ -59,7 +55,6 @@ public class Managers : SingletonBehaviour<Managers>
         base.Dispose();
         _cooldown.Dispose();
         _input.Dispose();
-        _inventory.Dispose();
         _pool.Dispose();
         _resource.Dispose();
         _scene.Dispose();

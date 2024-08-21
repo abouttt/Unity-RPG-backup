@@ -10,6 +10,7 @@ public class CooldownManager : BaseManager<CooldownManager>
     {
 
     }
+
     protected override void OnClear()
     {
         foreach (var cooldown in _cooldowns)
@@ -30,11 +31,8 @@ public class CooldownManager : BaseManager<CooldownManager>
     {
         foreach (var cooldown in _cooldowns)
         {
-            if (cooldown.RemainingTime >= 0f)
-            {
-                cooldown.RemainingTime -= Time.deltaTime;
-            }
-            else
+            cooldown.Update();
+            if (cooldown.RemainingTime <= 0f)
             {
                 _completedCooldownQueue.Enqueue(cooldown);
             }
@@ -42,8 +40,8 @@ public class CooldownManager : BaseManager<CooldownManager>
 
         while (_completedCooldownQueue.Count > 0)
         {
-            var completedCooldown = _completedCooldownQueue.Dequeue();
-            _cooldowns.Remove(completedCooldown);
+            var cooldown = _completedCooldownQueue.Dequeue();
+            _cooldowns.Remove(cooldown);
         }
     }
 

@@ -15,6 +15,9 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     public int Index { get; private set; }
 
+    [SerializeField, Space(10), TextArea]
+    private string _itemSplitText;
+
     protected override void Init()
     {
         base.Init();
@@ -46,14 +49,14 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
             SetObject(item, item.Data.ItemImage);
 
-            if (item is IStackable stackable)
+            if (item is IStackableItem stackable)
             {
-                stackable.StackChanged += RefreshCountText;
+                stackable.CountChanged += RefreshCountText;
             }
 
             if (item.Data is ICooldownable cooldownable)
             {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).SetCooldown(cooldownable.Cooldown);
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
             }
 
             RefreshCountText();
@@ -66,16 +69,18 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     protected override void Clear()
     {
-        if (ObjectRef is Item item)
+        if (ObjectRef != null)
         {
-            if (item is IStackable stackable)
+            var item = ObjectRef as Item;
+
+            if (item is IStackableItem stackable)
             {
-                stackable.StackChanged -= RefreshCountText;
+                stackable.CountChanged -= RefreshCountText;
             }
 
             if (item.Data is ICooldownable)
             {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).Clear();
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
             }
         }
 
@@ -85,7 +90,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     private void RefreshCountText()
     {
-        if (ObjectRef is IStackable stackable && stackable.Count > 1)
+        if (ObjectRef is IStackableItem stackable)
         {
             GetText((int)Texts.CountText).gameObject.SetActive(true);
             GetText((int)Texts.CountText).text = stackable.Count.ToString();
@@ -119,9 +124,9 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (ObjectRef is IUsable usable)
+        if (ObjectRef is IUsableItem usable)
         {
-            usable.Use();
+            usable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
         }
     }
 
@@ -149,28 +154,25 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
         var otherItem = otherItemSlot.ObjectRef as Item;
-        var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
 
-        if (!HasObject && otherItem is IStackable otherStackable && otherStackable.Count > 1)
+        if (!HasObject && otherItem is IStackableItem otherStackable && otherStackable.Count > 1)
         {
             var splitPopup = Managers.UI.Show<UI_ItemSplitPopup>();
             splitPopup.SetEvent(() =>
             {
-                itemInventory.SplitItem(otherItemSlot.Index, Index, splitPopup.Count);
+                s_itemInventoryRef.SplitItem(otherItemSlot.Index, Index, splitPopup.Count);
             },
-            $"[{otherItem.Data.ItemName}] 아이템 나누기", 1, otherStackable.Count);
+            $"[{otherItem.Data.ItemName}] {_itemSplitText}", 1, otherStackable.Count);
         }
         else
         {
-            itemInventory.MoveItem(otherItemSlot.Index, Index);
+            s_itemInventoryRef.MoveItem(otherItemSlot.Index, Index);
         }
     }
 
     private void OnDropEquipmentSlot(UI_EquipmentSlot otherEquipmentSlot)
     {
         var otherEquipmentItem = otherEquipmentSlot.ObjectRef as EquipmentItem;
-        var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
-        var equipmentInventory = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
 
         if (HasObject)
         {
@@ -184,17 +186,17 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
                 return;
             }
 
-            if (equipmentItem is not IUsable usable)
+            if (equipmentItem is not IUsableItem usable)
             {
                 return;
             }
 
-            usable.Use();
+            usable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
         }
         else
         {
-            equipmentInventory.UnequipItem(otherEquipmentSlot.EquipmentType);
-            itemInventory.SetItem(otherEquipmentItem.Data, Index);
+            s_equipmentInventoryRef.UnequipItem(otherEquipmentSlot.EquipmentType);
+            s_itemInventoryRef.SetItem(otherEquipmentItem.Data, Index);
         }
     }
 }

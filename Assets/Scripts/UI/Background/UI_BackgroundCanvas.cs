@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 {
     [SerializeField, Space(10), TextArea]
-    private string DestroyItemText;
+    private string _itemDestroyText;
 
     protected override void Init()
     {
@@ -35,7 +35,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
     private void OnDropItemSlot(UI_ItemSlot itemSlot)
     {
         var item = itemSlot.ObjectRef as Item;
-        string text = $"[{item.Data.ItemName}] {DestroyItemText}";
+        string text = $"[{item.Data.ItemName}] {_itemDestroyText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
             Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(itemSlot.Index);

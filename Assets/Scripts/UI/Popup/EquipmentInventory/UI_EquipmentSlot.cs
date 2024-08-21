@@ -57,9 +57,9 @@ public class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (ObjectRef is IUsable usable)
+        if (ObjectRef is IUsableItem usable)
         {
-            usable.Use();
+            usable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
         }
     }
 
@@ -82,12 +82,12 @@ public class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
                 return;
             }
 
-            if (otherEquipmentItem is not IUsable otherUsable)
+            if (otherEquipmentItem is not IUsableItem otherUsable)
             {
                 return;
             }
 
-            otherUsable.Use();
+            otherUsable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
         }
     }
 }

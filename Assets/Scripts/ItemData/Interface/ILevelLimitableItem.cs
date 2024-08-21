@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public interface ILimitLevelable
+public interface ILevelLimitableItem
 {
     int LimitLevel { get; }
 }

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EquipmentItem : Item, IUsable
+public class EquipmentItem : Item, IUsableItem
 {
     public EquipmentItemData EquipmentData => Data as EquipmentItemData;
 
@@ -8,15 +8,12 @@ public class EquipmentItem : Item, IUsable
         : base(data)
     { }
 
-    public bool Use()
+    public void Use(ItemInventory itemInventory, EquipmentInventory equipmentInventory)
     {
         if (!CanUse())
         {
-            return false;
+            return;
         }
-
-        var itemInventory = Managers.Inventory.Get<ItemInventory>();
-        var equipmentInventory = Managers.Inventory.Get<EquipmentInventory>();
 
         var equippedItem = equipmentInventory.GetItem(EquipmentData.EquipmentType);
         if (equippedItem == this)
@@ -27,10 +24,6 @@ public class EquipmentItem : Item, IUsable
         else
         {
             int index = itemInventory.GetItemIndex(this);
-            if (index == -1)
-            {
-                return false;
-            }
 
             if (equippedItem != null)
             {
@@ -43,8 +36,6 @@ public class EquipmentItem : Item, IUsable
 
             equipmentInventory.EquipItem(EquipmentData);
         }
-
-        return true;
     }
 
     public bool CanUse()
