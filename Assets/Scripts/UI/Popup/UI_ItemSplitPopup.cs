@@ -76,7 +76,12 @@ public class UI_ItemSplitPopup : UI_Popup
 
     private void OnValueChanged(string value)
     {
-        Count = string.IsNullOrEmpty(value) ? 0 : Mathf.Clamp(int.Parse(value), _minCount, _maxCount);
+        if (string.IsNullOrEmpty(value))
+        {
+            return;
+        }
+
+        Count = Mathf.Clamp(int.Parse(value), _minCount, _maxCount);
         GetInputField((int)InputFields.InputField).text = Count.ToString();
         RefreshPriceText();
     }
@@ -84,9 +89,7 @@ public class UI_ItemSplitPopup : UI_Popup
     private void OnEndEdit(string value)
     {
         Count = Mathf.Clamp(string.IsNullOrEmpty(value) ? _maxCount : int.Parse(value), _minCount, _maxCount);
-        var inputField = GetInputField((int)InputFields.InputField);
-        inputField.text = Count.ToString();
-        inputField.caretPosition = inputField.text.Length;
+        GetInputField((int)InputFields.InputField).text = Count.ToString();
     }
 
     private void OnClickUpOrDownButton(int count)
