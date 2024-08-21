@@ -47,7 +47,8 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
         if (GetImage((int)Images.LoadingTimeImage).IsActive())
         {
-            GetImage((int)Images.LoadingTimeImage).fillAmount = _interactorRef.InteractLoadingTime / _interactorRef.Target.MaxLoadingTime;
+            GetImage((int)Images.LoadingTimeImage).fillAmount = 
+                _interactorRef.InteractionHoldingTime / _interactorRef.Target.InteractionHoldTime;
         }
     }
 
@@ -72,15 +73,13 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
         if (isNotNull)
         {
-            _followTarget.SetTargetAndOffset(target.transform, target.UIOffset);
-
             bool canInteract = target.CanInteract;
             GetImage((int)Images.BG).gameObject.SetActive(canInteract);
             GetText((int)Texts.KeyText).gameObject.SetActive(canInteract);
 
-            bool hasLoadingTime = canInteract && target.MaxLoadingTime > 0f;
-            GetImage((int)Images.LoadingTimeImage).gameObject.SetActive(hasLoadingTime);
-            GetImage((int)Images.Frame).gameObject.SetActive(hasLoadingTime);
+            bool hasHoldTime = canInteract && target.InteractionHoldTime > 0f;
+            GetImage((int)Images.LoadingTimeImage).gameObject.SetActive(hasHoldTime);
+            GetImage((int)Images.Frame).gameObject.SetActive(hasHoldTime);
 
             var interactionText = GetText((int)Texts.InteractionText);
             interactionText.text = target.InteractionMessage;
@@ -89,6 +88,8 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
             var name = GetText((int)Texts.NameText);
             name.text = target.InteractionObjectName;
             name.gameObject.SetActive(!string.IsNullOrEmpty(target.InteractionObjectName));
+
+            _followTarget.SetTargetAndOffset(target.transform, target.UIOffset);
         }
 
         gameObject.SetActive(isNotNull);

@@ -15,13 +15,13 @@ public abstract class Interactable : MonoBehaviour
     public string InteractionMessage { get; protected set; }
 
     [field: SerializeField]
-    public Vector3 UIOffset { get; protected set; }
-
-    [field: SerializeField]
-    public float MaxLoadingTime { get; protected set; }    // 상호작용까지의 시간
+    public float InteractionHoldTime { get; protected set; }    // 상호작용까지의 시간
 
     [field: SerializeField]
     public bool CanInteract { get; protected set; } = true;
+
+    [field: SerializeField]
+    public Vector3 UIOffset { get; protected set; }
 
     public void Detected()
     {

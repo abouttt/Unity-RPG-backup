@@ -7,7 +7,7 @@ public class Interactor : MonoBehaviour
 
     public Interactable Target { get; private set; }
     public bool Interact { get; set; }
-    public float InteractLoadingTime { get; private set; }
+    public float InteractionHoldingTime { get; private set; }
 
     [field: SerializeField]
     public LayerMask TargetLayers { get; set; }
@@ -46,20 +46,20 @@ public class Interactor : MonoBehaviour
         {
             if (_isReadyToInteract && Target.CanInteract)
             {
-                if (InteractLoadingTime < Target.MaxLoadingTime)
+                if (InteractionHoldingTime < Target.InteractionHoldTime)
                 {
-                    InteractLoadingTime += Time.deltaTime;
+                    InteractionHoldingTime += Time.deltaTime;
                 }
                 else
                 {
-                    InteractLoadingTime = 0f;
+                    InteractionHoldingTime = 0f;
                     Target.Interact();
                 }
             }
         }
         else
         {
-            InteractLoadingTime = 0f;
+            InteractionHoldingTime = 0f;
             _isReadyToInteract = true;
         }
     }
@@ -148,7 +148,7 @@ public class Interactor : MonoBehaviour
         }
 
         Target = target;
-        InteractLoadingTime = 0f;
+        InteractionHoldingTime = 0f;
         _isReadyToInteract = false;
         _isTargetRangeOut = false;
 
