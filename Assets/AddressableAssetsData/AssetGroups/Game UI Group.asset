@@ -10,28 +10,34 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Game
+  m_Name: Game UI Group
   m_EditorClassIdentifier: 
-  m_GroupName: Game
+  m_GroupName: Game UI Group
   m_Data:
     m_SerializedData: []
-  m_GUID: 7ad7fcac15c84f54a84dacc623e40f42
+  m_GUID: 1028f1dd2b21ca84d8ea972c81d3e640
   m_SerializeEntries:
-  - m_GUID: 6521eafc8105f1641baa1fe603855ea4
-    m_Address: GameUIPackage.prefab
+  - m_GUID: 093eccc5ba7ed584e91e5b765e5054cb
+    m_Address: UI_ItemSlot.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Game
+    - Game_UI
     FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: b2be691d0f6517347b755f996350dbe6
-    m_Address: PlayerPackage.prefab
+  - m_GUID: 5c0a8f41f0ec1a441bc2ff9d9f16960e
+    m_Address: UI_LootSubitem.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Game
+    - Game_UI
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: da1dbbd1d43ff6b43b074bbec685a1bc
+    m_Address: UI_QuickSlot.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Game_UI
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 01fe3182575d9d942a72c98aefaf831b, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 42cb829810cf87b4fa5361f6fb3b6073, type: 2}
-    - {fileID: 11400000, guid: a4a94c0545b718547a36e6b83712ddf7, type: 2}
+    - {fileID: 11400000, guid: 5934bdd22a71d0849b653bf18b895de9, type: 2}
+    - {fileID: 11400000, guid: 4c44420fb3e419d47b1a45994c0d6adf, type: 2}

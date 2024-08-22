@@ -91,7 +91,7 @@ MonoBehaviour:
     m_LabelNames:
     - Default
     - Scene
-    - Game
+    - Game_Prefab
     - Game_UI
   m_SchemaTemplates: []
   m_GroupTemplateObjects:

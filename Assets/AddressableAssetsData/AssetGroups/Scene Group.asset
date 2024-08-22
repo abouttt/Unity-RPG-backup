@@ -10,28 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Game_UI
+  m_Name: Scene Group
   m_EditorClassIdentifier: 
-  m_GroupName: Game_UI
+  m_GroupName: Scene Group
   m_Data:
     m_SerializedData: []
-  m_GUID: 1028f1dd2b21ca84d8ea972c81d3e640
+  m_GUID: 5537e2a976459c642b5cbe3650c40db5
   m_SerializeEntries:
-  - m_GUID: 093eccc5ba7ed584e91e5b765e5054cb
-    m_Address: UI_ItemSlot.prefab
+  - m_GUID: 9fc0d4010bbf28b4594072e72b8655ab
+    m_Address: DevScene.unity
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Game_UI
-    FlaggedDuringContentUpdateRestriction: 0
-  - m_GUID: 5c0a8f41f0ec1a441bc2ff9d9f16960e
-    m_Address: UI_LootSubitem.prefab
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - Game_UI
+    - Scene
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 01fe3182575d9d942a72c98aefaf831b, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 5934bdd22a71d0849b653bf18b895de9, type: 2}
-    - {fileID: 11400000, guid: 4c44420fb3e419d47b1a45994c0d6adf, type: 2}
+    - {fileID: 11400000, guid: 4dc3611bfb5f803438ce105de7d41180, type: 2}
+    - {fileID: 11400000, guid: 0b00c3cb77feaf44c81408b1dd1b6b21, type: 2}

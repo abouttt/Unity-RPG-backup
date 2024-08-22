@@ -10,22 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Scene
+  m_Name: Game Group
   m_EditorClassIdentifier: 
-  m_GroupName: Scene
+  m_GroupName: Game Group
   m_Data:
     m_SerializedData: []
-  m_GUID: 5537e2a976459c642b5cbe3650c40db5
+  m_GUID: 7ad7fcac15c84f54a84dacc623e40f42
   m_SerializeEntries:
-  - m_GUID: 9fc0d4010bbf28b4594072e72b8655ab
-    m_Address: DevScene.unity
+  - m_GUID: 6521eafc8105f1641baa1fe603855ea4
+    m_Address: GameUIPackage.prefab
     m_ReadOnly: 0
     m_SerializedLabels:
-    - Scene
+    - Game_Prefab
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2be691d0f6517347b755f996350dbe6
+    m_Address: PlayerPackage.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Game_Prefab
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 01fe3182575d9d942a72c98aefaf831b, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 4dc3611bfb5f803438ce105de7d41180, type: 2}
-    - {fileID: 11400000, guid: 0b00c3cb77feaf44c81408b1dd1b6b21, type: 2}
+    - {fileID: 11400000, guid: 42cb829810cf87b4fa5361f6fb3b6073, type: 2}
+    - {fileID: 11400000, guid: a4a94c0545b718547a36e6b83712ddf7, type: 2}
