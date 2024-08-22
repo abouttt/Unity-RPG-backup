@@ -69,8 +69,13 @@ public class Inventory<T> where T : class
             return false;
         }
 
-        RemoveItemIndex(_items[index], index);
+        var item = _items[index];
         _items[index] = null;
+        _indexes[item].Remove(index);
+        if (_indexes[item].Count == 0)
+        {
+            _indexes.Remove(item);
+        }
         Count--;
 
         return true;
@@ -209,15 +214,5 @@ public class Inventory<T> where T : class
         }
 
         _indexes[item].Add(index);
-    }
-
-    private void RemoveItemIndex(T item, int index)
-    {
-        _indexes[item].Remove(index);
-
-        if (_indexes[item].Count == 0)
-        {
-            _indexes.Remove(item);
-        }
     }
 }

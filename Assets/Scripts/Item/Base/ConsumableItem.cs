@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class ConsumableItem : StackableItem, IUsableItem
+public abstract class ConsumableItem : StackableItem, IUsableItem, IQuickable
 {
     public ConsumableItemData ConsumableData => Data as ConsumableItemData;
 
@@ -39,6 +39,11 @@ public abstract class ConsumableItem : StackableItem, IUsableItem
         }
 
         return true;
+    }
+
+    public void UseQuick()
+    {
+        Use(Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef, null);
     }
 
     protected abstract void OnUse();

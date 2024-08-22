@@ -1,9 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class QuickInventory : MonoBehaviour
 {
     public event Action<IQuickable, int> InventoryChanged;
+
+    public IReadOnlyList<IQuickable> Quickables => _inventory.Items;
 
     [SerializeField]
     private Inventory<IQuickable> _inventory;
@@ -20,15 +23,11 @@ public class QuickInventory : MonoBehaviour
             return;
         }
 
-        if (_inventory.Items[index] == quickable)
-        {
-            return;
-        }
-
         if (_inventory.SetItem(quickable, index))
         {
             if (quickable is Item item)
             {
+                item.Destroyed -= OnItemDestroyed;
                 item.Destroyed += OnItemDestroyed;
             }
 

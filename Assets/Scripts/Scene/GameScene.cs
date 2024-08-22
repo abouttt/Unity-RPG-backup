@@ -43,11 +43,13 @@ public class GameScene : BaseScene
     {
         var itemInventory = _player.GetComponent<ItemInventory>();
         var equipmentInventory = _player.GetComponent<EquipmentInventory>();
+        var quickInventory = _player.GetComponent<QuickInventory>();
         var interactor = _player.GetComponentInChildren<Interactor>();
         var lockOnFov = Camera.main.GetComponent<FieldOfView>();
 
         Managers.UI.Get<UI_ItemInventoryPopup>().ConnectSystem(itemInventory);
         Managers.UI.Get<UI_EquipmentInventoryPopup>().ConnectSystem(equipmentInventory);
+        Managers.UI.Get<UI_QuickInventoryFixed>().ConnectSystem(quickInventory);
         Managers.UI.Get<UI_LootPopup>().ConnectSystem(itemInventory);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().ConnectSystem(interactor);
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().ConnectSystem(lockOnFov);

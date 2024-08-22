@@ -90,6 +90,21 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
         ShowOrClosePopup<UI_EquipmentInventoryPopup>(context);
     }
 
+    public void OnQuick(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            if (Managers.UI.IsActiveHelperPopup || Managers.UI.IsActiveSelfishPopup)
+            {
+                return;
+            }
+
+            int index = (int)context.ReadValue<float>();
+            var quickable = Managers.UI.Get<UI_QuickInventoryFixed>().QuickInventoryRef.GetQuickable(index);
+            quickable?.UseQuick();
+        }
+    }
+
     public void OnCancel(InputAction.CallbackContext context)
     {
         if (context.performed)

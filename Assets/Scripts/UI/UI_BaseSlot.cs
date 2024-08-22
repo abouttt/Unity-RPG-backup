@@ -19,9 +19,9 @@ public abstract class UI_BaseSlot : UI_Base,
     public bool HasObject { get; private set; }
 
     [field: SerializeField]
-    protected bool CanDrag = true;
+    protected bool _canDrag = true;
 
-    protected bool IsPointerDown = false;
+    protected bool _isPointerDown = false;
 
     protected static bool s_isInitInventoryRef;
     protected static ItemInventory s_itemInventoryRef;
@@ -64,9 +64,9 @@ public abstract class UI_BaseSlot : UI_Base,
 
     public virtual void OnBeginDrag(PointerEventData eventData)
     {
-        if ((eventData.button != PointerEventData.InputButton.Left) || !HasObject || !CanDrag)
+        if ((eventData.button != PointerEventData.InputButton.Left) || !HasObject || !_canDrag)
         {
-            IsPointerDown = false;
+            _isPointerDown = false;
             eventData.pointerDrag = null;
             return;
         }
@@ -99,7 +99,7 @@ public abstract class UI_BaseSlot : UI_Base,
             return;
         }
 
-        IsPointerDown = true;
+        _isPointerDown = true;
     }
 
     public abstract void OnPointerEnter(PointerEventData eventData);
@@ -108,12 +108,12 @@ public abstract class UI_BaseSlot : UI_Base,
 
     protected bool CanPointerUp()
     {
-        if (!IsPointerDown)
+        if (!_isPointerDown)
         {
             return false;
         }
 
-        IsPointerDown = false;
+        _isPointerDown = false;
 
         if (IsDragging)
         {
