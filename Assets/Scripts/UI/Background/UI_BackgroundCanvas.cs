@@ -38,7 +38,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
         string text = $"[{item.Data.ItemName}] {_itemDestroyText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(itemSlot.Index);
+            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(item);
         },
         text);
     }

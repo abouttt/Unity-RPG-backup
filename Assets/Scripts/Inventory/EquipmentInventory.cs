@@ -21,7 +21,7 @@ public class EquipmentInventory : MonoBehaviour, IInventory
         }
 
         var newEquipmentItem = equipmentItemData.CreateItem() as EquipmentItem;
-        _inventory.SetItem(newEquipmentItem, (int)equipmentType, 1);
+        _inventory.SetItem(newEquipmentItem, (int)equipmentType);
         InventoryChanged?.Invoke(newEquipmentItem, equipmentType);
     }
 

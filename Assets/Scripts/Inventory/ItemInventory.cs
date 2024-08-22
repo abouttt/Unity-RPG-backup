@@ -44,7 +44,7 @@ public class ItemInventory : MonoBehaviour, IInventory
                 int sameItemIndex = FindSameItemIndex(index, stackableData);
                 if (sameItemIndex != -1)
                 {
-                    var sameItem = GetItem<StackableItem>(sameItemIndex);
+                    var sameItem = _inventory.GetItem<StackableItem>(sameItemIndex);
                     count = sameItem.IsMax ? count : sameItem.AddCountAndGetExcess(count);
                     index = sameItemIndex;
                 }
@@ -81,8 +81,10 @@ public class ItemInventory : MonoBehaviour, IInventory
 
     public void RemoveItem(int index)
     {
+        var item = _inventory.GetItem<Item>(index);
         if (_inventory.RemoveItem(index))
         {
+            item.Destroy();
             InventoryChanged?.Invoke(null, index);
         }
     }
@@ -92,6 +94,7 @@ public class ItemInventory : MonoBehaviour, IInventory
         int index = _inventory.GetItemIndex(item);
         if (_inventory.RemoveItem(index))
         {
+            item.Destroy();
             InventoryChanged?.Invoke(null, index);
         }
     }
@@ -101,7 +104,7 @@ public class ItemInventory : MonoBehaviour, IInventory
         var newItem = itemData is StackableItemData stackableData
                     ? stackableData.CreateItem(count)
                     : itemData.CreateItem();
-        if (_inventory.SetItem(newItem, index, count))
+        if (_inventory.SetItem(newItem, index))
         {
             InventoryChanged?.Invoke(newItem, index);
         }
@@ -137,7 +140,7 @@ public class ItemInventory : MonoBehaviour, IInventory
             return;
         }
 
-        var fromItem = GetItem<StackableItem>(fromIndex);
+        var fromItem = _inventory.GetItem<StackableItem>(fromIndex);
         int remainingCount = fromItem.Count - count;
         if (remainingCount <= 0)
         {
@@ -167,8 +170,8 @@ public class ItemInventory : MonoBehaviour, IInventory
 
     private bool TryMergeItem(int fromIndex, int toIndex)
     {
-        var fromItem = GetItem<StackableItem>(fromIndex);
-        var toItem = GetItem<StackableItem>(toIndex);
+        var fromItem = _inventory.GetItem<StackableItem>(fromIndex);
+        var toItem = _inventory.GetItem<StackableItem>(toIndex);
 
         if (fromItem == null || toItem == null)
         {

@@ -33,7 +33,7 @@ public class Inventory<T> where T : class
         _items = new(nullItems);
     }
 
-    public bool SetItem(T item, int index, int count)
+    public bool SetItem(T item, int index)
     {
         if (item == null)
         {
@@ -41,11 +41,6 @@ public class Inventory<T> where T : class
         }
 
         if (!IsIndexInRange(index))
-        {
-            return false;
-        }
-
-        if (count <= 0)
         {
             return false;
         }
