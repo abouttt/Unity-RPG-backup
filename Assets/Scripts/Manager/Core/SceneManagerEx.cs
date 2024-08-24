@@ -1,14 +1,19 @@
+using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 {
+    public event Action LoadCompleteReady;
+
+    public BaseScene CurrentScene => Object.FindAnyObjectByType<BaseScene>();
     public string NextSceneAddress { get; private set; }
     public bool IsReadyToLoad { get; private set; }
-    public bool IsReadyToCompletion { get; private set; }
+    public bool IsReadyToLoadCompletion { get; private set; }
     public float LoadingProgress => _loadingUpdater.LoadingProgress;
 
     private AsyncOperationHandle<SceneInstance> _sceneHandle;
@@ -20,7 +25,11 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
         var go = Util.CreateGameObject(typeof(LoadingUpdater).Name, Managers.Instance.gameObject.transform);
         _loadingUpdater = go.AddComponent<LoadingUpdater>();
-        _loadingUpdater.UpdateEnded += () => IsReadyToCompletion = true;
+        _loadingUpdater.UpdateEnded += () =>
+        {
+            IsReadyToLoadCompletion = true;
+            LoadCompleteReady?.Invoke();
+        };
     }
 
     protected override void OnClear()
@@ -88,7 +97,7 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
     {
         CheckInit();
 
-        if (IsReadyToCompletion)
+        if (IsReadyToLoadCompletion)
         {
             ClearLoadStatus();
             _sceneHandle.Result.ActivateAsync().allowSceneActivation = true;
@@ -101,8 +110,9 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
     private void ClearLoadStatus()
     {
+        LoadCompleteReady = null;
         NextSceneAddress = null;
         IsReadyToLoad = false;
-        IsReadyToCompletion = false;
+        IsReadyToLoadCompletion = false;
     }
 }

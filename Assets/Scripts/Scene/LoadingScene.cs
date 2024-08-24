@@ -1,9 +1,13 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 public class LoadingScene : BaseScene
 {
+    [field: SerializeField]
+    public float LoadNextSceneDuration { get; private set; }
+
     [SerializeField]
     private string _defaultSceneAddress;
 
@@ -12,6 +16,11 @@ public class LoadingScene : BaseScene
         base.Init();
         Managers.Clear();
         GC.Collect();
+
+        Managers.Scene.LoadCompleteReady += () =>
+        {
+            StartCoroutine(LoadComplete());
+        };
 
         if (!Managers.Scene.IsReadyToLoad)
         {
@@ -24,12 +33,10 @@ public class LoadingScene : BaseScene
         LoadResourcesByLabels(Managers.Scene.StartLoad);
     }
 
-    private void Update()
+    private IEnumerator LoadComplete()
     {
-        if (Managers.Scene.IsReadyToCompletion)
-        {
-            Managers.Scene.CompleteLoad();
-        }
+        yield return YieldCache.WaitForSeconds(LoadNextSceneDuration);
+        Managers.Scene.CompleteLoad();
     }
 
     private void LoadResourcesByLabels(Action callback)
