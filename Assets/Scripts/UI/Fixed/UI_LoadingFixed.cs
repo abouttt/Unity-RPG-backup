@@ -21,7 +21,7 @@ public class UI_LoadingFixed : UI_Base
         GetImage((int)Images.Bar).fillAmount = 0f;
 
         var loadingScene = Managers.Scene.CurrentScene as LoadingScene;
-        Managers.Scene.LoadCompleteReady += () => GetImage((int)Images.FadeImage).DOFade(1f, loadingScene.LoadNextSceneDuration);
+        Managers.Scene.LoadCompleteReady += () => GetImage((int)Images.FadeImage).DOFade(1f, loadingScene.NextSceneLoadDuration);
     }
 
     private void Update()

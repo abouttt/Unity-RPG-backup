@@ -40,12 +40,7 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
     protected override void OnDispose()
     {
         ClearLoadStatus();
-
-        if (_sceneHandle.IsValid())
-        {
-            Addressables.Release(_sceneHandle);
-        }
-
+        ReleaseSceneHandle();
         Object.Destroy(_loadingUpdater);
     }
 
@@ -79,11 +74,7 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
 
         if (IsReadyToLoad)
         {
-            if (_sceneHandle.IsValid())
-            {
-                Addressables.Release(_sceneHandle);
-            }
-
+            ReleaseSceneHandle();
             _sceneHandle = Addressables.LoadSceneAsync(NextSceneAddress, LoadSceneMode.Single, false);
             _loadingUpdater.StartUpdate(_sceneHandle);
         }
@@ -105,6 +96,14 @@ public sealed class SceneManagerEx : BaseManager<SceneManagerEx>
         else
         {
             Debug.LogWarning("[SceneManagerEx/CompleteLoad] Not ready to completion");
+        }
+    }
+
+    private void ReleaseSceneHandle()
+    {
+        if (_sceneHandle.IsValid())
+        {
+            Addressables.Release(_sceneHandle);
         }
     }
 

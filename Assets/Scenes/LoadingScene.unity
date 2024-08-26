@@ -338,7 +338,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SceneAddress>k__BackingField: LoadingScene.unity
-  <LoadNextSceneDuration>k__BackingField: 0.5
+  <NextSceneLoadDuration>k__BackingField: 0.5
   _defaultSceneAddress: DevScene.unity
 --- !u!4 &2009708209
 Transform:

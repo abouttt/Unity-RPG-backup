@@ -3,10 +3,13 @@ using UnityEngine;
 public class GameScene : BaseScene
 {
     [SerializeField]
-    private Vector3 DefaultPosition;
+    private float _fadeInDuration;
 
     [SerializeField]
-    private float DefalutRotationYaw;
+    private Vector3 _defaultPosition;
+
+    [SerializeField]
+    private float _defalutRotationYaw;
 
     private GameObject _player;
 
@@ -23,6 +26,7 @@ public class GameScene : BaseScene
         Managers.Input.Enabled = true;
         Managers.Input.CursorLocked = true;
         Managers.Sound.Play(SoundType.BGM, SceneSettings.Instance[SceneAddress].BGM);
+        Managers.UI.Get<UI_TopCanvas>().FadeIn(_fadeInDuration);
     }
 
     private void OnDestroy()
@@ -33,7 +37,7 @@ public class GameScene : BaseScene
     private void InitPlayer()
     {
         var playerPackagePrefab = Managers.Resource.Load<GameObject>("PlayerPackage.prefab");
-        var playerPackage = Instantiate(playerPackagePrefab, DefaultPosition, Quaternion.Euler(0, DefalutRotationYaw, 0));
+        var playerPackage = Instantiate(playerPackagePrefab, _defaultPosition, Quaternion.Euler(0, _defalutRotationYaw, 0));
         _player = playerPackage.FindChildWithTag("Player");
         playerPackage.transform.DetachChildren();
         Destroy(playerPackage);

@@ -6,7 +6,7 @@ using Object = UnityEngine.Object;
 public class LoadingScene : BaseScene
 {
     [field: SerializeField]
-    public float LoadNextSceneDuration { get; private set; }
+    public float NextSceneLoadDuration { get; private set; }
 
     [SerializeField]
     private string _defaultSceneAddress;
@@ -35,7 +35,7 @@ public class LoadingScene : BaseScene
 
     private IEnumerator LoadComplete()
     {
-        yield return YieldCache.WaitForSeconds(LoadNextSceneDuration);
+        yield return YieldCache.WaitForSeconds(NextSceneLoadDuration);
         Managers.Scene.CompleteLoad();
     }
 

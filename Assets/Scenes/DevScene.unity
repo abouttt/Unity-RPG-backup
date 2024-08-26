@@ -862,8 +862,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <SceneAddress>k__BackingField: DevScene.unity
-  DefaultPosition: {x: 0, y: 0, z: 0}
-  DefalutRotationYaw: 0
+  _fadeInDuration: 0.5
+  _defaultPosition: {x: 0, y: 0, z: 0}
+  _defalutRotationYaw: 0
 --- !u!4 &1496621882
 Transform:
   m_ObjectHideFlags: 0
