@@ -69,6 +69,7 @@ public class GameScene : BaseScene
 
         Managers.UI.Get<UI_ItemInventoryPopup>().DeconnectSystem();
         Managers.UI.Get<UI_EquipmentInventoryPopup>().DeconnectSystem();
+        Managers.UI.Get<UI_QuickInventoryFixed>().DeconnectSystem();
         Managers.UI.Get<UI_LootPopup>().DeconnectSystem();
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_Interactor>().DeconnectSystem();
         Managers.UI.Get<UI_AutoCanvas>().GetSubitem<UI_LockOn>().DeconnectSystem();
