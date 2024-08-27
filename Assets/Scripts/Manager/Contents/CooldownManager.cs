@@ -52,9 +52,11 @@ public class CooldownManager : BaseManager<CooldownManager>
             return;
         }
 
-        if (_cooldowns.Add(cooldown))
+        if (cooldown.RemainingTime <= 0f)
         {
-            cooldown.Start();
+            return;
         }
+
+        _cooldowns.Add(cooldown);
     }
 }
