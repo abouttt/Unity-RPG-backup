@@ -3,9 +3,6 @@ using UnityEngine;
 public class GameScene : BaseScene
 {
     [SerializeField]
-    private float _fadeInDuration;
-
-    [SerializeField]
     private Vector3 _defaultPosition;
 
     [SerializeField]
@@ -26,7 +23,7 @@ public class GameScene : BaseScene
         Managers.Input.Enabled = true;
         Managers.Input.CursorLocked = true;
         Managers.Sound.Play(SoundType.BGM, SceneSettings.Instance[SceneAddress].BGM);
-        Managers.UI.Get<UI_TopCanvas>().FadeIn(_fadeInDuration);
+        Managers.UI.Get<UI_GlobalCanvas>().FadeIn(SceneSettings.Instance.FadeInDuration);
     }
 
     private void OnDestroy()

@@ -38,13 +38,30 @@ public sealed class UIManager : BaseManager<UIManager>
     {
         foreach (var kvp in _roots)
         {
+            if (kvp.Key == UIType.Global)
+            {
+                continue;
+            }
+
             foreach (Transform child in kvp.Value)
             {
                 Object.Destroy(child.gameObject);
             }
         }
 
-        _objects.Clear();
+        List<Type> removals = new();
+        foreach (var ui in _objects.Values)
+        {
+            if (ui.UIType != UIType.Global)
+            {
+                removals.Add(ui.GetType());
+            }
+        }
+        foreach (var ui in removals)
+        {
+            _objects.Remove(ui);
+        }
+
         _activePopups.Clear();
         _helperPopup = null;
         _selfishPopup = null;
@@ -52,6 +69,7 @@ public sealed class UIManager : BaseManager<UIManager>
 
     protected override void OnDispose()
     {
+        _objects.Clear();
         Object.Destroy(_root.gameObject);
     }
 
@@ -136,6 +154,11 @@ public sealed class UIManager : BaseManager<UIManager>
         {
             Debug.LogWarning($"[UIManager/Unregister] {typeof(T)} is not registered.");
         }
+    }
+
+    public bool Contains<T>() where T : UI_Base
+    {
+        return _objects.ContainsKey(typeof(T));
     }
 
     public T Show<T>() where T : UI_Base

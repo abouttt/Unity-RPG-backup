@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c27267e178efa1547bbba9475e74a62d, type: 3}
   m_Name: SceneSettings
   m_EditorClassIdentifier: 
+  <FadeInDuration>k__BackingField: 0.5
+  <FadeOutDuration>k__BackingField: 0.5
   _settings:
     _serializedList:
     - Key: LoadingScene.unity

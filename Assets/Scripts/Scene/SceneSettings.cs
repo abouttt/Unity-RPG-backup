@@ -24,6 +24,12 @@ public class SceneSettings : SingletonScriptableObject<SceneSettings>
 
     public Settings this[string sceneAddress] => _settings[sceneAddress];
 
+    [field: SerializeField]
+    public float FadeInDuration { get; private set; }
+
+    [field: SerializeField]
+    public float FadeOutDuration { get; private set; }
+
     [SerializeField, SerializedDictionary("Scene Address", "Settings")]
     private SerializedDictionary<string, Settings> _settings;
 }

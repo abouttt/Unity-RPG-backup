@@ -1,5 +1,4 @@
 using UnityEngine;
-using DG.Tweening;
 
 public class UI_LoadingFixed : UI_Base
 {
@@ -7,7 +6,6 @@ public class UI_LoadingFixed : UI_Base
     {
         BG,
         Bar,
-        FadeImage,
     }
 
     protected override void Init()
@@ -20,8 +18,7 @@ public class UI_LoadingFixed : UI_Base
 
         GetImage((int)Images.Bar).fillAmount = 0f;
 
-        var loadingScene = Managers.Scene.CurrentScene as LoadingScene;
-        Managers.Scene.LoadCompleteReady += () => GetImage((int)Images.FadeImage).DOFade(1f, loadingScene.NextSceneLoadDuration);
+        Managers.Scene.LoadCompleteReady += () => Managers.UI.Get<UI_GlobalCanvas>().FadeOut(SceneSettings.Instance.FadeOutDuration);
     }
 
     private void Update()

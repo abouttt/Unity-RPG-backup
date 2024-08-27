@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Default
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a340dede65c494d479b234d672f50a4d
+    m_Address: UI_GlobalCanvas.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - Default
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 01fe3182575d9d942a72c98aefaf831b, type: 2}
   m_SchemaSet:

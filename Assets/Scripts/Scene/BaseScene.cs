@@ -24,6 +24,11 @@ public abstract class BaseScene : MonoBehaviour
         {
             Managers.Resource.InstantiateAsync("EventSystem.prefab");
         }
+
+        if (!Managers.UI.Contains<UI_GlobalCanvas>())
+        {
+            Managers.Resource.InstantiateAsync("UI_GlobalCanvas.prefab");
+        }
     }
 
     protected void InstantiatePackage(string packageAddress)
