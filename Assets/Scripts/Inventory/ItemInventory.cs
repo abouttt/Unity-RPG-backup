@@ -14,6 +14,7 @@ public class ItemInventory : MonoBehaviour, IInventory
     private void Awake()
     {
         _inventory.Init();
+        Item.SetItemInventory(this);
     }
 
     public int AddItem(ItemData itemData, int count = 1)

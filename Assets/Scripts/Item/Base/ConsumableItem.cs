@@ -8,7 +8,7 @@ public abstract class ConsumableItem : StackableItem, IUsableItem, IQuickable
         : base(data, count)
     { }
 
-    public void Use(ItemInventory itemInventory, EquipmentInventory equipmentInventory)
+    public void Use()
     {
         if (!CanUse())
         {
@@ -20,10 +20,10 @@ public abstract class ConsumableItem : StackableItem, IUsableItem, IQuickable
         Count -= ConsumableData.RequiredCount;
         if (IsEmpty)
         {
-            itemInventory.RemoveItem(this);
+            ItemInventoryRef.RemoveItem(this);
         }
 
-        Managers.Cooldown.AddCooldown(ConsumableData.Cooldown);
+        ConsumableData.Cooldown.Start();
     }
 
     public bool CanUse()
@@ -43,7 +43,7 @@ public abstract class ConsumableItem : StackableItem, IUsableItem, IQuickable
 
     public void UseQuick()
     {
-        Use(Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef, null);
+        Use();
     }
 
     protected abstract void OnUse();

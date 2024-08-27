@@ -126,7 +126,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
         if (ObjectRef is IUsableItem usable)
         {
-            usable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
+            usable.Use();
         }
     }
 
@@ -191,7 +191,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
                 return;
             }
 
-            usable.Use(s_itemInventoryRef, s_equipmentInventoryRef);
+            usable.Use();
         }
         else
         {
