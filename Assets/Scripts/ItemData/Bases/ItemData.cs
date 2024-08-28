@@ -21,10 +21,13 @@ public abstract class ItemData : ScriptableObject
     [field: SerializeField, TextArea]
     public string Description { get; private set; }
 
-    public ItemData(ItemType itemType)
+    private void Awake()
     {
-        ItemType = itemType;
-        ItemId = $"ITEM_{itemType}_".ToUpper();
+        Init();
+        if (string.IsNullOrEmpty(ItemId))
+        {
+            ResetId();
+        }
     }
 
     public abstract Item CreateItem();
@@ -47,6 +50,13 @@ public abstract class ItemData : ScriptableObject
         }
 
         return ItemId.Equals(other.ItemId);
+    }
+
+    protected abstract void Init();
+
+    protected void SetItemType(ItemType itemType)
+    {
+        ItemType = itemType;
     }
 
     [ContextMenu("Reset Id")]

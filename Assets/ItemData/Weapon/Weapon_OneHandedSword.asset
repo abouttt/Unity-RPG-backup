@@ -9,16 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ec3ef80109cf62c4bae75640564ad4e9, type: 3}
-  m_Name: Equipment_Sword
+  m_Script: {fileID: 11500000, guid: a8b1c7394d9bd8e4d9f22b8bf27ca78d, type: 3}
+  m_Name: Weapon_OneHandedSword
   m_EditorClassIdentifier: 
-  <ItemId>k__BackingField: ITEM_EQUIPMENT_SWORD
-  <ItemName>k__BackingField: "\uAC15\uCCA0\uAC80"
+  <ItemId>k__BackingField: ITEM_EQUIPMENT_ONE_HANDED_SWORD
+  <ItemName>k__BackingField: "\uD55C\uC190\uAC80"
   <ItemImage>k__BackingField: {fileID: 21300000, guid: 009d4fc67f3ecc341a5229c548eea9a0, type: 3}
   <ItemType>k__BackingField: 0
   <ItemRarity>k__BackingField: 0
-  <Description>k__BackingField: "\uAC15\uCCA0\uB85C \uB9CC\uB4E0 \uD3C9\uBC94\uD55C
-    \uAC80\uC774\uB2E4."
-  <EquipmentType>k__BackingField: 4
-  <LimitLevel>k__BackingField: 1
+  <Description>k__BackingField: "\uAC15\uCCA0\uB85C \uB9CC\uB4E0 \uD55C\uC190\uAC80\uC774\uB2E4."
+  <EquipmentType>k__BackingField: 1
+  <LevelRequirements>k__BackingField: 1
   <Prefab>k__BackingField: {fileID: 0}
+  <WeaponType>k__BackingField: 0

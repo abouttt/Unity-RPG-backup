@@ -1,34 +1,29 @@
 using UnityEngine;
 
-public abstract class ConsumableItem : StackableItem, IUsableItem, IQuickable
+public abstract class ConsumableItem : StackableItem, IUsable, IQuickable
 {
     public ConsumableItemData ConsumableData => Data as ConsumableItemData;
 
-    public ConsumableItem(ConsumableItemData data, int count)
-        : base(data, count)
+    public ConsumableItem(ConsumableItemData data, int quantity)
+        : base(data, quantity)
     { }
 
-    public void Use()
+    public bool Use()
     {
         if (!CanUse())
         {
-            return;
+            return false;
         }
 
+        Quantity -= ConsumableData.ConsumptionQuantity;
         OnUse();
 
-        Count -= ConsumableData.RequiredCount;
-        if (IsEmpty)
-        {
-            ItemInventoryRef.RemoveItem(this);
-        }
-
-        ConsumableData.Cooldown.Start();
+        return true;
     }
 
     public bool CanUse()
     {
-        if (Count < ConsumableData.RequiredCount)
+        if (Quantity < ConsumableData.ConsumptionQuantity)
         {
             return false;
         }

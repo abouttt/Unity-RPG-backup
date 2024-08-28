@@ -6,14 +6,24 @@ public enum SlotType
     Quick,
 }
 
-public enum EquipmentType
+public enum ArmorType
 {
     Helmet,
     Chest,
     Pants,
     Boots,
-    Weapon,
+}
+
+public enum WeaponType
+{
+    OneHanded,
     Shield,
+}
+
+public enum EquipmentType
+{
+    Armor,
+    Weapon,
 }
 
 public enum ItemType
