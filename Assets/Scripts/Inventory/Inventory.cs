@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 [Serializable]
@@ -12,12 +11,11 @@ public class Inventory<T> where T : class
     [field: SerializeField, ReadOnly]
     public int Count { get; private set; }
 
-    public IReadOnlyList<T> Items => _items;
+    public IReadOnlyList<T> Items => _items.AsReadOnly();
 
     private List<T> _items;
-    private readonly Dictionary<T, List<int>> _indexes = new();
 
-    public void Init(int capacity = -1)
+    public void Init(int capacity = 0)
     {
         if (_items != null)
         {
@@ -29,8 +27,7 @@ public class Inventory<T> where T : class
             Capacity = capacity;
         }
 
-        var nullItems = Enumerable.Repeat<T>(null, Capacity);
-        _items = new(nullItems);
+        _items = new(new T[Capacity]);
     }
 
     public bool SetItem(T item, int index)
@@ -45,14 +42,12 @@ public class Inventory<T> where T : class
             return false;
         }
 
-        if (_items[index] != null)
+        if (_items[index] == null)
         {
-            RemoveItem(index);
+            Count++;
         }
 
         _items[index] = item;
-        AddItemIndex(item, index);
-        Count++;
 
         return true;
     }
@@ -69,76 +64,42 @@ public class Inventory<T> where T : class
             return false;
         }
 
-        var item = _items[index];
         _items[index] = null;
-        _indexes[item].Remove(index);
-        if (_indexes[item].Count == 0)
-        {
-            _indexes.Remove(item);
-        }
         Count--;
 
         return true;
     }
 
+    public T GetItem(int index)
+    {
+        return IsIndexInRange(index) ? _items[index] : null;
+    }
+
     public U GetItem<U>(int index) where U : class, T
     {
-        if (!IsIndexInRange(index))
-        {
-            return null;
-        }
-
-        return _items[index] as U;
+        return IsIndexInRange(index) ? _items[index] as U : null;
     }
 
-    public int GetItemIndex(T item)
+    public bool SwapItem(int fromIndex, int toIndex)
     {
-        if (item == null)
-        {
-            return -1;
-        }
-
-        if (_indexes.TryGetValue(item, out var indexes))
-        {
-            return indexes[0];
-        }
-
-        return -1;
-    }
-
-    public int[] GetItemAllIndex(T item)
-    {
-        if (item == null)
-        {
-            return null;
-        }
-
-        if (_indexes.TryGetValue(item, out var indexes))
-        {
-            return indexes.ToArray();
-        }
-
-        return null;
-    }
-
-    public int FindSameItemIndex(int startIndex, Predicate<T> match)
-    {
-        if (!IsIndexInRange(startIndex))
-        {
-            return -1;
-        }
-
-        return _items.FindIndex(startIndex, match);
-    }
-
-    public bool IsEmptyIndex(int index)
-    {
-        if (!IsIndexInRange(index))
+        if (!IsIndexInRange(fromIndex) || !IsIndexInRange(toIndex))
         {
             return false;
         }
 
-        return _items[index] == null;
+        (_items[fromIndex], _items[toIndex]) = (_items[toIndex], _items[fromIndex]);
+
+        return true;
+    }
+
+    public int GetItemIndex(T item)
+    {
+        return _items.IndexOf(item);
+    }
+
+    public int FindIndex(int startIndex, Predicate<T> match)
+    {
+        return IsIndexInRange(startIndex) ? _items.FindIndex(startIndex, match) : -1;
     }
 
     public int FindEmptyIndex(int startIndex)
@@ -156,38 +117,14 @@ public class Inventory<T> where T : class
         return _items.FindIndex(startIndex, item => item == null);
     }
 
-    public bool IsIncluded(T item)
+    public bool HasItem(int index)
     {
-        if (item == null)
-        {
-            return false;
-        }
-
-        return _indexes.ContainsKey(item);
+        return IsIndexInRange(index) && _items[index] != null;
     }
 
-    public void SwapItem(int indexA, int indexB)
+    public bool IsIndexInRange(int index)
     {
-        if (!IsIndexInRange(indexA) || !IsIndexInRange(indexB))
-        {
-            return;
-        }
-
-        var itemA = _items[indexA];
-        if (itemA != null)
-        {
-            _indexes[itemA].Remove(indexA);
-            _indexes[itemA].Add(indexB);
-        }
-
-        var itemB = _items[indexB];
-        if (itemB != null)
-        {
-            _indexes[itemB].Remove(indexB);
-            _indexes[itemB].Add(indexA);
-        }
-
-        (_items[indexA], _items[indexB]) = (_items[indexB], _items[indexA]);
+        return index >= 0 && index < Capacity;
     }
 
     public void AddCapacity(int capacity)
@@ -197,22 +134,23 @@ public class Inventory<T> where T : class
             return;
         }
 
-        var nullItems = Enumerable.Repeat<T>(null, capacity);
-        _items.AddRange(nullItems);
+        _items.AddRange(new T[capacity]);
+        Capacity += capacity;
     }
 
-    public bool IsIndexInRange(int index)
+    public void RemoveCapacity(int startIndex, int capacity)
     {
-        return index >= 0 && index < _items.Count;
-    }
-
-    private void AddItemIndex(T item, int index)
-    {
-        if (!_indexes.ContainsKey(item))
+        if (!IsIndexInRange(startIndex))
         {
-            _indexes.Add(item, new());
+            return;
         }
 
-        _indexes[item].Add(index);
+        if (capacity <= 0)
+        {
+            return;
+        }
+
+        _items.RemoveRange(startIndex, capacity);
+        Capacity -= capacity;
     }
 }
