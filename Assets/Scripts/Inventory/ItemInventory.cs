@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ItemInventory : MonoBehaviour, IInventory
+public class ItemInventory : MonoBehaviour
 {
     public event Action<Item, int> InventoryChanged;
 
@@ -14,17 +14,16 @@ public class ItemInventory : MonoBehaviour, IInventory
     private void Awake()
     {
         _inventory.Init();
-        Item.SetItemInventory(this);
     }
 
-    public int AddItem(ItemData itemData, int count = 1)
+    public int AddItem(ItemData itemData, int quantity = 1)
     {
         if (itemData == null)
         {
             return -1;
         }
 
-        if (count <= 0)
+        if (quantity <= 0)
         {
             return -1;
         }
@@ -37,7 +36,7 @@ public class ItemInventory : MonoBehaviour, IInventory
         {
             for (int index = 0; index < _inventory.Capacity; index++)
             {
-                if (count <= 0)
+                if (quantity <= 0)
                 {
                     break;
                 }
@@ -46,7 +45,10 @@ public class ItemInventory : MonoBehaviour, IInventory
                 if (sameItemIndex != -1)
                 {
                     var sameItem = _inventory.GetItem<StackableItem>(sameItemIndex);
-                    count = sameItem.IsMax ? count : sameItem.AddCountAndGetExcess(count);
+                    if (!sameItem.IsMax)
+                    {
+                        quantity = sameItem.StackAndGetExcess(quantity);
+                    }
                     index = sameItemIndex;
                 }
                 else
@@ -59,7 +61,7 @@ public class ItemInventory : MonoBehaviour, IInventory
         // 빈 공간에 아이템 추가 시도
         for (int index = 0; index < _inventory.Capacity; index++)
         {
-            if (count <= 0)
+            if (quantity <= 0)
             {
                 break;
             }
@@ -67,8 +69,8 @@ public class ItemInventory : MonoBehaviour, IInventory
             int emptyIndex = _inventory.FindEmptyIndex(index);
             if (emptyIndex != -1)
             {
-                SetItem(itemData, emptyIndex, count);
-                count = isStackable ? Mathf.Max(0, count - stackableData.MaxCount) : count - 1;
+                SetItem(itemData, emptyIndex, quantity);
+                quantity = isStackable ? Mathf.Max(0, quantity - stackableData.MaxQuantity) : quantity - 1;
                 index = emptyIndex;
             }
             else
@@ -77,33 +79,27 @@ public class ItemInventory : MonoBehaviour, IInventory
             }
         }
 
-        return count;
-    }
-
-    public void RemoveItem(int index)
-    {
-        var item = _inventory.GetItem<Item>(index);
-        if (_inventory.RemoveItem(index))
-        {
-            item.Destroy();
-            InventoryChanged?.Invoke(null, index);
-        }
+        return quantity;
     }
 
     public void RemoveItem(Item item)
     {
         int index = _inventory.GetItemIndex(item);
+        RemoveItem(index);
+    }
+
+    public void RemoveItem(int index)
+    {
         if (_inventory.RemoveItem(index))
         {
-            item.Destroy();
             InventoryChanged?.Invoke(null, index);
         }
     }
 
-    public void SetItem(ItemData itemData, int index, int count = 1)
+    public void SetItem(ItemData itemData, int index, int quantity = 1)
     {
         var newItem = itemData is StackableItemData stackableData
-                    ? stackableData.CreateItem(count)
+                    ? stackableData.CreateItem(quantity)
                     : itemData.CreateItem();
         if (_inventory.SetItem(newItem, index))
         {
@@ -124,33 +120,33 @@ public class ItemInventory : MonoBehaviour, IInventory
         }
     }
 
-    public void SplitItem(int fromIndex, int toIndex, int count)
+    public void SplitItem(int fromIndex, int toIndex, int quantity)
     {
         if (fromIndex == toIndex)
         {
             return;
         }
 
-        if (count <= 0)
+        if (quantity <= 0)
         {
             return;
         }
 
-        if (_inventory.IsEmptyIndex(fromIndex) || !_inventory.IsEmptyIndex(toIndex))
+        if (!_inventory.HasItem(fromIndex) || _inventory.HasItem(toIndex))
         {
             return;
         }
 
         var fromItem = _inventory.GetItem<StackableItem>(fromIndex);
-        int remainingCount = fromItem.Count - count;
-        if (remainingCount <= 0)
+        int remaining = fromItem.Quantity - quantity;
+        if (remaining <= 0)
         {
             SwapItem(fromIndex, toIndex);
         }
         else
         {
-            fromItem.Count = remainingCount;
-            SetItem(fromItem.StackableData, toIndex, count);
+            fromItem.Quantity = remaining;
+            SetItem(fromItem.StackableData, toIndex, quantity);
         }
     }
 
@@ -159,14 +155,19 @@ public class ItemInventory : MonoBehaviour, IInventory
         return _inventory.GetItem<T>(index);
     }
 
-    public int GetItemIndex(Item item)
+    public int GetIndex(Item item)
     {
         return _inventory.GetItemIndex(item);
     }
 
     public int FindSameItemIndex(int startIndex, ItemData itemData)
     {
-        return _inventory.FindSameItemIndex(startIndex, item => item != null && item.Data.Equals(itemData));
+        if (itemData == null)
+        {
+            return -1;
+        }
+
+        return _inventory.FindIndex(startIndex, item => item != null && item.Data.Equals(itemData));
     }
 
     private bool TryMergeItem(int fromIndex, int toIndex)
@@ -189,20 +190,19 @@ public class ItemInventory : MonoBehaviour, IInventory
             return false;
         }
 
-        int excessCount = toItem.AddCountAndGetExcess(fromItem.Count);
-        fromItem.Count = excessCount;
+        fromItem.Quantity = toItem.StackAndGetExcess(fromItem.Quantity);
         if (fromItem.IsEmpty)
         {
-            RemoveItem(fromItem);
+            RemoveItem(fromIndex);
         }
 
         return true;
     }
 
-    private void SwapItem(int indexA, int indexB)
+    private void SwapItem(int fromIndex, int toIndex)
     {
-        _inventory.SwapItem(indexA, indexB);
-        InventoryChanged?.Invoke(_inventory.Items[indexA], indexA);
-        InventoryChanged?.Invoke(_inventory.Items[indexB], indexB);
+        _inventory.SwapItem(fromIndex, toIndex);
+        InventoryChanged?.Invoke(_inventory.Items[fromIndex], fromIndex);
+        InventoryChanged?.Invoke(_inventory.Items[toIndex], toIndex);
     }
 }
