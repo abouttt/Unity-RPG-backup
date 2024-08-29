@@ -1,49 +1,89 @@
 using System;
 using UnityEngine;
 
-public class EquipmentInventory : MonoBehaviour, IInventory
+public class EquipmentInventory : MonoBehaviour
 {
     public event Action<EquipmentItem, EquipmentType> InventoryChanged;
 
-    private readonly Inventory<EquipmentItem> _inventory = new();
+    private readonly Inventory<ArmorItem> _armorInventory = new();
+    private readonly Inventory<WeaponItem> _weaponInventory = new();
 
     private void Awake()
     {
-        _inventory.Init(Enum.GetValues(typeof(EquipmentType)).Length);
-        Item.SetEquipmentInventory(this);
+        _armorInventory.Init(Enum.GetValues(typeof(ArmorType)).Length);
+        _weaponInventory.Init(Enum.GetValues(typeof(WeaponType)).Length);
     }
 
-    public void EquipItem(EquipmentItemData equipmentItemData)
+    public void EquipArmor(ArmorItemData armorItemData)
     {
-        var equipmentType = equipmentItemData.EquipmentType;
-        if (IsEquipped(equipmentType))
+        var armorType = armorItemData.ArmorType;
+        UnequipArmor(armorType);
+
+        var newArmorItem = armorItemData.CreateItem() as ArmorItem;
+        _armorInventory.SetItem(newArmorItem, (int)armorType);
+        InventoryChanged?.Invoke(newArmorItem, EquipmentType.Armor);
+    }
+
+    public void EquipWeapon(WeaponItemData weaponItemData)
+    {
+        var weaponType = weaponItemData.WeaponType;
+        UnequipWeapon(weaponType);
+
+        if (weaponType == WeaponType.OneHanded ||
+            weaponType == WeaponType.Shield)
         {
-            UnequipItem(equipmentType);
+            UnequipWeapon(WeaponType.TwoHanded);
+        }
+        else if (weaponType == WeaponType.TwoHanded)
+        {
+            UnequipWeapon(WeaponType.OneHanded);
+            UnequipWeapon(WeaponType.Shield);
         }
 
-        var newEquipmentItem = equipmentItemData.CreateItem() as EquipmentItem;
-        _inventory.SetItem(newEquipmentItem, (int)equipmentType);
-        InventoryChanged?.Invoke(newEquipmentItem, equipmentType);
+        var newWeaponItem = weaponItemData.CreateItem() as WeaponItem;
+        _weaponInventory.SetItem(newWeaponItem, (int)weaponType);
+        InventoryChanged?.Invoke(newWeaponItem, EquipmentType.Weapon);
     }
 
-    public void UnequipItem(EquipmentType equipmentType)
+    public void UnequipArmor(ArmorType armorType)
     {
-        if (!IsEquipped(equipmentType))
+        if (!IsArmorEquipped(armorType))
         {
             return;
         }
 
-        _inventory.RemoveItem((int)equipmentType);
-        InventoryChanged?.Invoke(null, equipmentType);
+        _armorInventory.RemoveItem((int)armorType);
+        InventoryChanged?.Invoke(null, EquipmentType.Armor);
     }
 
-    public EquipmentItem GetItem(EquipmentType equipmentType)
+    public void UnequipWeapon(WeaponType weaponType)
     {
-        return _inventory.GetItem<EquipmentItem>((int)equipmentType);
+        if (!IsWeaponEquipped(weaponType))
+        {
+            return;
+        }
+
+        _weaponInventory.RemoveItem((int)weaponType);
+        InventoryChanged?.Invoke(null, EquipmentType.Weapon);
     }
 
-    public bool IsEquipped(EquipmentType equipmentType)
+    public ArmorItem GetArmor(ArmorType armorType)
     {
-        return !_inventory.IsEmptyIndex((int)equipmentType);
+        return _armorInventory.GetItem((int)armorType);
+    }
+
+    public WeaponItem GetWeapon(WeaponType weaponType)
+    {
+        return _weaponInventory.GetItem((int)weaponType);
+    }
+
+    public bool IsArmorEquipped(ArmorType armorType)
+    {
+        return _armorInventory.HasItem((int)armorType);
+    }
+
+    public bool IsWeaponEquipped(WeaponType weaponType)
+    {
+        return _weaponInventory.HasItem((int)weaponType);
     }
 }
