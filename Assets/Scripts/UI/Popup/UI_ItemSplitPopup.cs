@@ -27,11 +27,11 @@ public class UI_ItemSplitPopup : UI_Popup
         InputField,
     }
 
-    public int Count { get; private set; }
+    public int Quantity { get; private set; }
 
     private int _price;
-    private int _minCount;
-    private int _maxCount;
+    private int _minQuantity;
+    private int _maxQuantity;
 
     protected override void Init()
     {
@@ -54,22 +54,22 @@ public class UI_ItemSplitPopup : UI_Popup
         Managers.UI.Register(this);
     }
 
-    public void SetEvent(UnityAction callback, string text, int minCount, int maxCount, int price = -1)
+    public void SetEvent(UnityAction callback, string text, int minQuantity, int maxQuantity, int price = -1)
     {
         var yesButton = GetButton((int)Buttons.YesButton);
         yesButton.onClick.RemoveAllListeners();
         yesButton.onClick.AddListener(callback);
         yesButton.onClick.AddListener(Managers.UI.Close<UI_ItemSplitPopup>);
 
-        Count = maxCount;
-        _maxCount = maxCount;
-        _minCount = minCount;
+        Quantity = maxQuantity;
+        _maxQuantity = maxQuantity;
+        _minQuantity = minQuantity;
         _price = price;
 
         GetObject((int)GameObjects.ItemPrice).SetActive(price >= 0);
         GetText((int)Texts.GuideText).text = text;
         var inputField = GetInputField((int)InputFields.InputField);
-        inputField.text = Count.ToString();
+        inputField.text = Quantity.ToString();
         inputField.ActivateInputField();
         RefreshPriceText();
     }
@@ -81,21 +81,21 @@ public class UI_ItemSplitPopup : UI_Popup
             return;
         }
 
-        Count = Mathf.Clamp(int.Parse(value), _minCount, _maxCount);
-        GetInputField((int)InputFields.InputField).text = Count.ToString();
+        Quantity = Mathf.Clamp(int.Parse(value), _minQuantity, _maxQuantity);
+        GetInputField((int)InputFields.InputField).text = Quantity.ToString();
         RefreshPriceText();
     }
 
     private void OnEndEdit(string value)
     {
-        Count = Mathf.Clamp(string.IsNullOrEmpty(value) ? _maxCount : int.Parse(value), _minCount, _maxCount);
-        GetInputField((int)InputFields.InputField).text = Count.ToString();
+        Quantity = Mathf.Clamp(string.IsNullOrEmpty(value) ? _maxQuantity : int.Parse(value), _minQuantity, _maxQuantity);
+        GetInputField((int)InputFields.InputField).text = Quantity.ToString();
     }
 
-    private void OnClickUpOrDownButton(int count)
+    private void OnClickUpOrDownButton(int quantity)
     {
-        Count = Mathf.Clamp(Count + count, _minCount, _maxCount);
-        GetInputField((int)InputFields.InputField).text = Count.ToString();
+        Quantity = Mathf.Clamp(Quantity + quantity, _minQuantity, _maxQuantity);
+        GetInputField((int)InputFields.InputField).text = Quantity.ToString();
     }
 
     private void RefreshPriceText()
@@ -105,7 +105,7 @@ public class UI_ItemSplitPopup : UI_Popup
             return;
         }
 
-        int totalPrice = _price * Count;
+        int totalPrice = _price * Quantity;
         GetText((int)Texts.PriceText).text = totalPrice.ToString();
         // TODO : Player Gold
     }

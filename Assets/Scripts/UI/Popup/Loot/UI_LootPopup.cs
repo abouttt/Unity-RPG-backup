@@ -92,8 +92,8 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
                 int count = kvp.Value;
                 while (count > 0)
                 {
-                    CreateLootSubitem(kvp.Key, Mathf.Clamp(count, count, stackableData.MaxCount));
-                    count -= stackableData.MaxCount;
+                    CreateLootSubitem(kvp.Key, Mathf.Clamp(count, count, stackableData.MaxQuantity));
+                    count -= stackableData.MaxQuantity;
                 }
             }
             else
@@ -109,10 +109,10 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
     public void AddItemToItemInventory(UI_LootSubitem lootSubitem)
     {
         _fieldItemRef.RemoveItem(lootSubitem.ItemDataRef, lootSubitem.Count);
-        int count = _itemInventoryRef.AddItem(lootSubitem.ItemDataRef, lootSubitem.Count);
-        if (count > 0)
+        int quantity = _itemInventoryRef.AddItem(lootSubitem.ItemDataRef, lootSubitem.Count);
+        if (quantity > 0)
         {
-            lootSubitem.SetItemData(lootSubitem.ItemDataRef, count);
+            lootSubitem.SetItemData(lootSubitem.ItemDataRef, quantity);
         }
         else
         {
