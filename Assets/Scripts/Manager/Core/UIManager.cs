@@ -308,7 +308,7 @@ public sealed class UIManager : BaseManager<UIManager>
     {
         popup.Focused += () =>
         {
-            if (_activePopups.Last.Value == popup)
+            if (_activePopups.First.Value == popup)
             {
                 return;
             }
