@@ -3,7 +3,7 @@ using UnityEngine;
 
 public interface IStackable
 {
-    event Action StackChanged;
+    event Action<IStackable> StackChanged;
 
     int Quantity { get; }
     int MaxQuantity { get; }

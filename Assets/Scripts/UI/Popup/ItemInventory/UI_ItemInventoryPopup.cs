@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
@@ -20,7 +19,7 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public ItemInventory ItemInventoryRef { get; private set; }
 
-    private readonly List<UI_ItemSlot> _slots = new();
+    private UI_ItemSlot[] _slots;
 
     protected override void Init()
     {
@@ -32,10 +31,7 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
         GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_ItemInventoryPopup>);
 
-        Showed += () =>
-        {
-            PopupRT.SetParent(transform);
-        };
+        Showed += () => PopupRT.SetParent(transform);
 
         Managers.UI.Register(this);
     }
@@ -44,7 +40,7 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
     {
         ItemInventoryRef = itemInventory;
         itemInventory.InventoryChanged += RefreshSlot;
-        InitSlots(itemInventory.Items.Count, GetRT((int)RTs.ItemSlots));
+        CreateSlots(itemInventory.Items.Count, GetRT((int)RTs.ItemSlots));
     }
 
     public void DeconnectSystem()
@@ -61,14 +57,15 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
         _slots[index].Refresh(item);
     }
 
-    private void InitSlots(int count, Transform parent)
+    private void CreateSlots(int count, Transform parent)
     {
         for (int index = 0; index < count; index++)
         {
             var itemSlot = Managers.Resource.Instantiate<UI_ItemSlot>("UI_ItemSlot.prefab");
-            itemSlot.Setup(index);
+            itemSlot.Index = index;
             itemSlot.transform.SetParent(parent);
-            _slots.Add(itemSlot);
         }
+
+        _slots = parent.GetComponentsInChildren<UI_ItemSlot>();
     }
 }

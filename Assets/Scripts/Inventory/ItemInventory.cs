@@ -150,6 +150,31 @@ public class ItemInventory : MonoBehaviour
         }
     }
 
+    public bool UseItem(int index)
+    {
+        if (!_inventory.HasItem(index))
+        {
+            return false;
+        }
+
+        if (_inventory.Items[index] is not IUsable usable)
+        {
+            return false;
+        }
+
+        bool succeeded = usable.Use();
+
+        if (succeeded)
+        {
+            if (usable is StackableItem stackableItem && stackableItem.IsEmpty)
+            {
+                RemoveItem(index);
+            }
+        }
+
+        return succeeded;
+    }
+
     public T GetItem<T>(int index) where T : Item
     {
         return _inventory.GetItem<T>(index);

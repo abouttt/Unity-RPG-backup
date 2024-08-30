@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public abstract class UI_BaseSlot : UI_Base,
-    IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
+    IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
     private enum Images
     {
@@ -10,22 +10,13 @@ public abstract class UI_BaseSlot : UI_Base,
         TempImage,
     }
 
-    public static bool IsDragging { get; private set; }
-
     [field: SerializeField]
     public SlotType SlotType { get; private set; }
 
-    public object ObjectRef { get; private set; }
-    public bool HasObject { get; private set; }
-
     [field: SerializeField]
-    protected bool _canDrag = true;
+    private bool _canDrag = true;
 
-    protected bool _isPointerDown = false;
-
-    protected static bool s_isInitInventoryRef;
-    protected static ItemInventory s_itemInventoryRef;
-    protected static EquipmentInventory s_equipmentInventoryRef;
+    private bool _isPointerDown;
 
     protected override void Init()
     {
@@ -33,59 +24,47 @@ public abstract class UI_BaseSlot : UI_Base,
         GetImage((int)Images.TempImage).gameObject.SetActive(false);
     }
 
-    private void Start()
+    protected void SetImage(Sprite image)
     {
-        if (!s_isInitInventoryRef)
-        {
-            s_itemInventoryRef = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
-            s_equipmentInventoryRef = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
-            s_isInitInventoryRef = true;
-        }
+        GetImage((int)Images.SlotImage).sprite = image;
+        GetImage((int)Images.TempImage).sprite = image;
+        GetImage((int)Images.SlotImage).gameObject.SetActive(image != null);
+        GetImage((int)Images.TempImage).gameObject.SetActive(false);
     }
 
-    protected void SetObject(object obj, Sprite image)
+    public void OnBeginDrag(PointerEventData eventData)
     {
-        if (obj == null)
+        if (!_canDrag)
         {
-            return;
-        }
-
-        ObjectRef = obj;
-        HasObject = true;
-        SetImage(image);
-    }
-
-    protected virtual void Clear()
-    {
-        ObjectRef = null;
-        HasObject = false;
-        SetImage(null);
-    }
-
-    public virtual void OnBeginDrag(PointerEventData eventData)
-    {
-        if ((eventData.button != PointerEventData.InputButton.Left) || !HasObject || !_canDrag)
-        {
-            _isPointerDown = false;
             eventData.pointerDrag = null;
             return;
         }
 
-        IsDragging = true;
+        if (eventData.button != PointerEventData.InputButton.Left)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
+
+        if (!GetImage((int)Images.SlotImage).isActiveAndEnabled)
+        {
+            eventData.pointerDrag = null;
+            return;
+        }
+
         GetImage((int)Images.TempImage).gameObject.SetActive(true);
         GetImage((int)Images.TempImage).transform.SetParent(Managers.UI.Get<UI_TopCanvas>().transform);
         GetImage((int)Images.TempImage).transform.SetAsLastSibling();
         GetImage((int)Images.SlotImage).color -= new Color(0f, 0f, 0f, 0.7f);
     }
 
-    public virtual void OnDrag(PointerEventData eventData)
+    public void OnDrag(PointerEventData eventData)
     {
         GetImage((int)Images.TempImage).rectTransform.position = eventData.position;
     }
 
-    public virtual void OnEndDrag(PointerEventData eventData)
+    public void OnEndDrag(PointerEventData eventData)
     {
-        IsDragging = false;
         GetImage((int)Images.TempImage).gameObject.SetActive(false);
         GetImage((int)Images.TempImage).transform.SetParent(transform);
         GetImage((int)Images.TempImage).rectTransform.position = transform.position;
@@ -94,7 +73,7 @@ public abstract class UI_BaseSlot : UI_Base,
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        if ((eventData.button != PointerEventData.InputButton.Left) || !HasObject)
+        if (!GetImage((int)Images.SlotImage).isActiveAndEnabled)
         {
             return;
         }
@@ -102,11 +81,9 @@ public abstract class UI_BaseSlot : UI_Base,
         _isPointerDown = true;
     }
 
-    public abstract void OnPointerEnter(PointerEventData eventData);
-    public abstract void OnPointerExit(PointerEventData eventData);
     public abstract void OnPointerUp(PointerEventData eventData);
 
-    protected bool CanPointerUp()
+    protected bool CanPointerUp(PointerEventData eventData)
     {
         if (!_isPointerDown)
         {
@@ -115,19 +92,11 @@ public abstract class UI_BaseSlot : UI_Base,
 
         _isPointerDown = false;
 
-        if (IsDragging)
+        if (eventData.dragging)
         {
             return false;
         }
 
         return true;
-    }
-
-    private void SetImage(Sprite image)
-    {
-        GetImage((int)Images.SlotImage).sprite = image;
-        GetImage((int)Images.TempImage).sprite = image;
-        GetImage((int)Images.SlotImage).gameObject.SetActive(image != null);
-        GetImage((int)Images.TempImage).gameObject.SetActive(false);
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class StackableItem : Item, IStackable
 {
-    public event Action StackChanged;
+    public event Action<IStackable> StackChanged;
 
     public StackableItemData StackableData => Data as StackableItemData;
 
@@ -16,7 +16,7 @@ public abstract class StackableItem : Item, IStackable
             _quantity = Mathf.Clamp(value, 0, MaxQuantity);
             if (_quantity != prevQuantity)
             {
-                StackChanged?.Invoke();
+                StackChanged?.Invoke(this);
             }
         }
     }

@@ -56,7 +56,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UIType>k__BackingField: -1
   <SlotType>k__BackingField: 0
-  CanDrag: 1
+  _canDrag: 1
   _itemSplitText: "\uC544\uC774\uD15C \uB098\uB204\uAE30"
 --- !u!1 &4543174180895700177
 GameObject:
@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 7603194601196890842}
   - component: {fileID: 6145938908776862779}
   m_Layer: 5
-  m_Name: CountText
+  m_Name: QuantityText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
