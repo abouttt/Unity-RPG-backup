@@ -3,9 +3,6 @@ using UnityEngine.EventSystems;
 
 public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 {
-    [SerializeField, Space(10), TextArea]
-    private string _itemDestroyText;
-
     protected override void Init()
     {
         Managers.UI.Register(this);
@@ -37,24 +34,21 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot itemSlot)
     {
-        var item = itemSlot.ObjectRef as Item;
-        string text = $"[{item.Data.ItemName}] {_itemDestroyText}";
+        string text = $"[{itemSlot.ItemRef.Data.ItemName}] {GuideSettings.Instance.DestroyText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
-            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(item);
+            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(itemSlot.Index);
         },
         text);
     }
 
     private void OnDropEquipmentSlot(UI_EquipmentSlot equipmentSlot)
     {
-        var equipmentItem = equipmentSlot.ObjectRef as EquipmentItem;
-        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.UnequipItem(equipmentSlot.EquipmentType);
-        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(equipmentItem.Data);
+
     }
 
     private void OnDropQuickSlot(UI_QuickSlot quickSlot)
     {
-        Managers.UI.Get<UI_QuickInventoryFixed>().QuickInventoryRef.RemoveQuickable(quickSlot.Index);
+
     }
 }
