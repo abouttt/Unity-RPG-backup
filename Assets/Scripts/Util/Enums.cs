@@ -6,6 +6,13 @@ public enum SlotType
     Quick,
 }
 
+public enum HandedType
+{
+    Right,
+    Left,
+    Two,
+}
+
 public enum EquipmentType
 {
     Armor,
@@ -22,8 +29,8 @@ public enum ArmorType
 
 public enum WeaponType
 {
-    OneHanded,
-    TwoHanded,
+    Sword,
+    Axe,
     Shield,
 }
 

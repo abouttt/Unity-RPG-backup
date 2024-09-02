@@ -6,6 +6,9 @@ public class WeaponItemData : EquipmentItemData
     [field: SerializeField]
     public WeaponType WeaponType { get; private set; }
 
+    [field: SerializeField]
+    public HandedType HandedType { get; private set; }
+
     protected override void Init()
     {
         base.Init();
