@@ -98,9 +98,15 @@ public class ItemInventory : MonoBehaviour
 
     public void SetItem(ItemData itemData, int index, int quantity = 1)
     {
+        if (itemData == null)
+        {
+            return;
+        }
+
         var newItem = itemData is StackableItemData stackableData
                     ? stackableData.CreateItem(quantity)
                     : itemData.CreateItem();
+
         if (_inventory.SetItem(newItem, index))
         {
             InventoryChanged?.Invoke(newItem, index);
@@ -148,6 +154,12 @@ public class ItemInventory : MonoBehaviour
             fromItem.Quantity = remaining;
             SetItem(fromItem.StackableData, toIndex, quantity);
         }
+    }
+
+    public void UseItem(Item item)
+    {
+        int index = _inventory.GetItemIndex(item);
+        UseItem(index);
     }
 
     public bool UseItem(int index)

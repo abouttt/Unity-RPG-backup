@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 public abstract class UI_BaseSlot : UI_Base,
     IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {
-    private enum Images
+    protected enum Images
     {
         SlotImage,
         TempImage,
@@ -14,7 +14,7 @@ public abstract class UI_BaseSlot : UI_Base,
     public SlotType SlotType { get; private set; }
 
     [field: SerializeField]
-    private bool _canDrag = true;
+    protected bool _canDrag = true;
 
     private bool _isPointerDown;
 
@@ -32,7 +32,7 @@ public abstract class UI_BaseSlot : UI_Base,
         GetImage((int)Images.TempImage).gameObject.SetActive(false);
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         if (!_canDrag)
         {
@@ -55,15 +55,15 @@ public abstract class UI_BaseSlot : UI_Base,
         GetImage((int)Images.TempImage).gameObject.SetActive(true);
         GetImage((int)Images.TempImage).transform.SetParent(Managers.UI.Get<UI_TopCanvas>().transform);
         GetImage((int)Images.TempImage).transform.SetAsLastSibling();
-        GetImage((int)Images.SlotImage).color -= new Color(0f, 0f, 0f, 0.7f);
+        GetImage((int)Images.SlotImage).color = new Color(1f, 1f, 1f, 0.3f);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         GetImage((int)Images.TempImage).rectTransform.position = eventData.position;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
         GetImage((int)Images.TempImage).gameObject.SetActive(false);
         GetImage((int)Images.TempImage).transform.SetParent(transform);

@@ -1,47 +1,31 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
+public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
 {
-    enum Imagess
+    protected enum Imagess
     {
         BG = 2,
     }
 
-    [field: SerializeField]
-    public EquipmentType EquipmentType { get; private set; }
+    public EquipmentItem EquipmentItemRef { get; protected set; }
 
     [SerializeField]
-    private Sprite _backgroundImage;
+    private Sprite _equipBackgroundImage;
+
+    [SerializeField]
+    private Sprite _unequipBackgroundImage;
 
     protected override void Init()
     {
         base.Init();
         BindImage(typeof(Imagess));
-        GetImage((int)Imagess.BG).sprite = _backgroundImage;
-        Refresh(null);
+        GetImage((int)Imagess.BG).sprite = _unequipBackgroundImage;
     }
 
-    public void Refresh(EquipmentItem equipmentItem)
+    protected void ChangeBackgroundImage(bool isEquipped)
     {
-        if (equipmentItem != null)
-        {
-            SetObject(equipmentItem, equipmentItem.Data.ItemImage);
-        }
-        else
-        {
-            Clear();
-        }
-    }
-
-    public override void OnPointerEnter(PointerEventData eventData)
-    {
-        // TODO : Tooltip On
-    }
-
-    public override void OnPointerExit(PointerEventData eventData)
-    {
-        // TODO : Tooltip Off
+        GetImage((int)Imagess.BG).sprite = isEquipped ? _equipBackgroundImage : _unequipBackgroundImage;
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -52,15 +36,23 @@ public class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
 
     public override void OnPointerUp(PointerEventData eventData)
     {
-        if (!CanPointerUp())
+        if (!CanPointerUp(eventData))
         {
             return;
         }
 
-        if (ObjectRef is IUsableItem usable)
+        if (eventData.button != PointerEventData.InputButton.Right)
         {
-            usable.Use();
+            return;
         }
+
+        if (EquipmentItemRef == null)
+        {
+            return;
+        }
+
+        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(EquipmentItemRef.EquipmentData);
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Unequip(EquipmentItemRef.EquipmentData);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -72,22 +64,28 @@ public class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
 
         if (eventData.pointerDrag.TryGetComponent<UI_ItemSlot>(out var otherItemSlot))
         {
-            if (otherItemSlot.ObjectRef is not EquipmentItem otherEquipmentItem)
+            if (otherItemSlot.ItemRef is not EquipmentItem otherEquipmentItem)
             {
                 return;
             }
 
-            if (EquipmentType != otherEquipmentItem.EquipmentData.EquipmentType)
+            if (!CanDropItem(otherEquipmentItem))
             {
                 return;
             }
 
-            if (otherEquipmentItem is not IUsableItem otherUsable)
+            if (EquipmentItemRef != null)
             {
-                return;
+                Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.SetItem(EquipmentItemRef.Data, otherItemSlot.Index);
+            }
+            else
+            {
+                Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(otherItemSlot.Index);
             }
 
-            otherUsable.Use();
+            Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Equip(otherEquipmentItem.EquipmentData);
         }
     }
+
+    protected abstract bool CanDropItem(EquipmentItem equipmentItem);
 }

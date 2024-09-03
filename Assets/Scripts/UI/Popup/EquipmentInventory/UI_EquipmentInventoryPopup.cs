@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<EquipmentInventory>
@@ -19,7 +18,8 @@ public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<Equipment
 
     public EquipmentInventory EquipmentInventoryRef { get; private set; }
 
-    private readonly Dictionary<EquipmentType, UI_EquipmentSlot> _slots = new();
+    private UI_ArmorSlot[] _armorSlots;
+    private UI_WeaponSlot[] _weaponSlots;
 
     protected override void Init()
     {
@@ -28,8 +28,10 @@ public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<Equipment
         BindText(typeof(Texts));
         BindButton(typeof(Buttons));
 
+        _armorSlots = GetComponentsInChildren<UI_ArmorSlot>();
+        _weaponSlots = GetComponentsInChildren<UI_WeaponSlot>();
+
         GetButton((int)Buttons.CloseButton).onClick.AddListener(Managers.UI.Close<UI_EquipmentInventoryPopup>);
-        InitSlots();
 
         Managers.UI.Register(this);
     }
@@ -51,15 +53,19 @@ public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<Equipment
 
     private void RefreshSlot(EquipmentItem equipmentItem, EquipmentType equipmentType)
     {
-        _slots[equipmentType].Refresh(equipmentItem);
-    }
-
-    private void InitSlots()
-    {
-        var equipmentSlots = GetComponentsInChildren<UI_EquipmentSlot>();
-        foreach (var equipmentSlot in equipmentSlots)
+        switch (equipmentType)
         {
-            _slots.Add(equipmentSlot.EquipmentType, equipmentSlot);
+            case EquipmentType.Armor:
+                var armorItem = equipmentItem as ArmorItem;
+                _armorSlots[(int)armorItem.ArmorData.ArmorType].Refresh(armorItem);
+                break;
+            case EquipmentType.Weapon:
+                var weaponItem = equipmentItem as WeaponItem;
+                foreach (var weaponSlot in _weaponSlots)
+                {
+                    weaponSlot.Refresh(weaponItem);
+                }
+                break;
         }
     }
 }

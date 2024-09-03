@@ -94,7 +94,7 @@ public class Inventory<T> where T : class
 
     public int GetItemIndex(T item)
     {
-        return _items.IndexOf(item);
+        return item != null ? _items.IndexOf(item) : -1;
     }
 
     public int FindIndex(int startIndex, Predicate<T> match)

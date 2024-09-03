@@ -5,8 +5,11 @@ public class EquipmentInventory : MonoBehaviour
 {
     public event Action<EquipmentItem, EquipmentType> InventoryChanged;
 
-    private readonly Inventory<ArmorItem> _armorInventory = new();
-    private readonly Inventory<WeaponItem> _weaponInventory = new();
+    [SerializeField, ReadOnly]
+    private Inventory<ArmorItem> _armorInventory;
+
+    [SerializeField, ReadOnly]
+    private Inventory<WeaponItem> _weaponInventory;
 
     private void Awake()
     {
