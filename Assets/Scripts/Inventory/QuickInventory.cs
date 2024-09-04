@@ -1,12 +1,10 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class QuickInventory : MonoBehaviour
 {
     public event Action<IQuickable, int> InventoryChanged;
-
-    public IReadOnlyList<IQuickable> Quickables => _inventory.Items;
 
     [SerializeField]
     private Inventory<IQuickable> _inventory;
@@ -18,11 +16,6 @@ public class QuickInventory : MonoBehaviour
 
     public void SetQuickable(IQuickable quickable, int index)
     {
-        if (quickable == null)
-        {
-            return;
-        }
-
         if (_inventory.SetItem(quickable, index))
         {
             if (quickable is Item item)
@@ -37,13 +30,13 @@ public class QuickInventory : MonoBehaviour
 
     public void RemoveQuickable(int index)
     {
-        var quickable = _inventory.GetItem<IQuickable>(index);
+        var quickable = _inventory.Items[index];
 
         if (_inventory.RemoveItem(index))
         {
             if (quickable is Item item)
             {
-                if (!_inventory.IsIncluded(quickable))
+                if (!_inventory.Items.Contains(quickable))
                 {
                     item.Destroyed -= OnItemDestroyed;
                 }
@@ -58,19 +51,21 @@ public class QuickInventory : MonoBehaviour
         return _inventory.GetItem<IQuickable>(index);
     }
 
-    public void SwapQuickable(int indexA, int indexB)
+    public void SwapQuickable(int fromIndex, int toIndex)
     {
-        _inventory.SwapItem(indexA, indexB);
-        InventoryChanged?.Invoke(_inventory.Items[indexA], indexA);
-        InventoryChanged?.Invoke(_inventory.Items[indexB], indexB);
+        _inventory.SwapItem(fromIndex, toIndex);
+        InventoryChanged?.Invoke(_inventory.Items[fromIndex], fromIndex);
+        InventoryChanged?.Invoke(_inventory.Items[toIndex], toIndex);
     }
 
     private void OnItemDestroyed(Item item)
     {
-        var indexes = _inventory.GetItemAllIndex(item as IQuickable);
-        foreach (var index in indexes)
+        for (int index = 0; index < _inventory.Capacity; index++)
         {
-            RemoveQuickable(index);
+            if (_inventory.Items[index] == item)
+            {
+                RemoveQuickable(index);
+            }
         }
     }
 }

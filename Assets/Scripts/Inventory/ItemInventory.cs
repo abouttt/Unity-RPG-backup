@@ -66,7 +66,7 @@ public class ItemInventory : MonoBehaviour
                 break;
             }
 
-            int emptyIndex = _inventory.FindEmptyIndex(index);
+            int emptyIndex = _inventory.FindEmpty(index);
             if (emptyIndex != -1)
             {
                 SetItem(itemData, emptyIndex, quantity);
@@ -84,14 +84,20 @@ public class ItemInventory : MonoBehaviour
 
     public void RemoveItem(Item item)
     {
-        int index = _inventory.GetItemIndex(item);
-        RemoveItem(index);
+        int index = _inventory.GetIndex(item);
+        if (_inventory.RemoveItem(index))
+        {
+            item.Destroy();
+            InventoryChanged?.Invoke(null, index);
+        }
     }
 
     public void RemoveItem(int index)
     {
+        var item = _inventory.GetItem(index);
         if (_inventory.RemoveItem(index))
         {
+            item.Destroy();
             InventoryChanged?.Invoke(null, index);
         }
     }
@@ -158,7 +164,7 @@ public class ItemInventory : MonoBehaviour
 
     public void UseItem(Item item)
     {
-        int index = _inventory.GetItemIndex(item);
+        int index = _inventory.GetIndex(item);
         UseItem(index);
     }
 
@@ -194,7 +200,7 @@ public class ItemInventory : MonoBehaviour
 
     public int GetIndex(Item item)
     {
-        return _inventory.GetItemIndex(item);
+        return _inventory.GetIndex(item);
     }
 
     public int FindSameItemIndex(int startIndex, ItemData itemData)

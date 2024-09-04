@@ -92,7 +92,7 @@ public class Inventory<T> where T : class
         return true;
     }
 
-    public int GetItemIndex(T item)
+    public int GetIndex(T item)
     {
         return item != null ? _items.IndexOf(item) : -1;
     }
@@ -102,7 +102,7 @@ public class Inventory<T> where T : class
         return IsIndexInRange(startIndex) ? _items.FindIndex(startIndex, match) : -1;
     }
 
-    public int FindEmptyIndex(int startIndex)
+    public int FindEmpty(int startIndex)
     {
         if (!IsIndexInRange(startIndex))
         {
