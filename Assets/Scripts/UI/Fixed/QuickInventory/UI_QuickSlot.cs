@@ -5,7 +5,7 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
 {
     enum Texts
     {
-        CountText,
+        QuantityText,
         KeyInfoText,
     }
 
@@ -14,113 +14,106 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
         CooldownImage,
     }
 
-    public int Index { get; private set; }
+    public int Index
+    {
+        get => _index;
+        set
+        {
+            _index = value;
+            GetText((int)Texts.KeyInfoText).text = Managers.Input.GetBindingPath("Quick", _index);
+        }
+    }
+
+    public IQuickable QuickableRef { get; private set; }
+
+    private int _index;
 
     protected override void Init()
     {
         base.Init();
-
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-
-        Refresh(null);
-    }
-
-    public void Setup(int bindingIndex)
-    {
-        Index = bindingIndex;
-        GetText((int)Texts.KeyInfoText).text = Managers.Input.GetBindingPath("Quick", bindingIndex);
+        ClearQuickableRef();
     }
 
     public void Refresh(IQuickable quickable)
     {
-        if (quickable != null)
-        {
-            if (ObjectRef == quickable)
-            {
-                return;
-            }
+        ClearQuickableRef();
 
-            if (HasObject)
-            {
-                Clear();
-            }
-
-            if (quickable is Item item)
-            {
-                SetObject(quickable, item.Data.ItemImage);
-
-                if (item is IStackableItem stackable)
-                {
-                    stackable.CountChanged += RefreshCountText;
-                }
-
-                if (item.Data is ICooldownable cooldownable)
-                {
-                    Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
-                }
-            }
-
-            RefreshCountText();
-        }
-        else
-        {
-            Clear();
-        }
-    }
-
-    protected override void Clear()
-    {
-        if (ObjectRef is Item item)
-        {
-            if (item is IStackableItem stackable)
-            {
-                stackable.CountChanged -= RefreshCountText;
-            }
-
-            if (item.Data is ICooldownable)
-            {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
-            }
-        }
-
-        base.Clear();
-        GetText((int)Texts.CountText).gameObject.SetActive(false);
-    }
-
-    private void RefreshCountText()
-    {
-        if (ObjectRef is IStackableItem stackable)
-        {
-            GetText((int)Texts.CountText).gameObject.SetActive(true);
-            GetText((int)Texts.CountText).text = stackable.Count.ToString();
-        }
-        else
-        {
-            GetText((int)Texts.CountText).gameObject.SetActive(false);
-        }
-    }
-
-    public override void OnPointerEnter(PointerEventData eventData)
-    {
-        // TODO : Tooltip On
-    }
-
-    public override void OnPointerExit(PointerEventData eventData)
-    {
-        // TODO : Tooltip Off
-    }
-
-    public override void OnPointerUp(PointerEventData eventData)
-    {
-        if (!CanPointerUp())
+        if (quickable == null)
         {
             return;
         }
 
-        if (ObjectRef is IQuickable quickable)
+        if (quickable is Item item)
         {
-            quickable.UseQuick();
+            SetImage(item.Data.ItemImage);
+
+            if (item is IStackable stackable)
+            {
+                stackable.StackChanged += RefreshQuantityText;
+                GetText((int)Texts.QuantityText).gameObject.SetActive(true);
+                RefreshQuantityText(stackable);
+            }
+
+            if (item.Data is ICooldownable cooldownable)
+            {
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
+            }
+        }
+
+        QuickableRef = quickable;
+    }
+
+    private void RefreshQuantityText(IStackable stackable)
+    {
+        GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
+    }
+
+    private void ClearQuickableRef()
+    {
+        if (QuickableRef != null)
+        {
+            if (QuickableRef is Item item)
+            {
+                if (item is IStackable stackable)
+                {
+                    stackable.StackChanged -= RefreshQuantityText;
+                }
+
+                if (item.Data is ICooldownable)
+                {
+                    Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
+                }
+            }
+
+            QuickableRef = null;
+        }
+
+        SetImage(null);
+        GetText((int)Texts.QuantityText).gameObject.SetActive(false);
+    }
+
+    public override void OnPointerUp(PointerEventData eventData)
+    {
+        if (!CanPointerUp(eventData))
+        {
+            return;
+        }
+
+        if (eventData.button != PointerEventData.InputButton.Right)
+        {
+            return;
+        }
+
+        if (QuickableRef == null)
+        {
+            return;
+        }
+
+        if (QuickableRef is Item item)
+        {
+            Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.UseItem(item);
         }
     }
 
@@ -147,12 +140,12 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
-        if (otherItemSlot.ObjectRef is not IQuickable quickable)
+        if (otherItemSlot.ItemRef is not IQuickable quickable)
         {
             return;
         }
 
-        if (ObjectRef == quickable)
+        if (QuickableRef == quickable)
         {
             return;
         }

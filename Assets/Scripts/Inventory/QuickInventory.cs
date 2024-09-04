@@ -6,6 +6,8 @@ public class QuickInventory : MonoBehaviour
 {
     public event Action<IQuickable, int> InventoryChanged;
 
+    public int Capacity => _inventory.Capacity;
+
     [SerializeField]
     private Inventory<IQuickable> _inventory;
 

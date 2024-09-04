@@ -101,7 +101,10 @@ public sealed class InputManager : BaseManager<InputManager>, GameControls.IUIAc
 
             int index = (int)context.ReadValue<float>();
             var quickable = Managers.UI.Get<UI_QuickInventoryFixed>().QuickInventoryRef.GetQuickable(index);
-            quickable?.UseQuick();
+            if (quickable is Item item)
+            {
+                Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.UseItem(item);
+            }
         }
     }
 

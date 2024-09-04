@@ -288,7 +288,7 @@ GameObject:
   - component: {fileID: 5991172157416093415}
   - component: {fileID: 4067891945956479953}
   m_Layer: 5
-  m_Name: CountText
+  m_Name: QuantityText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -751,7 +751,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <UIType>k__BackingField: -1
   <SlotType>k__BackingField: 2
-  CanDrag: 1
+  _canDrag: 1
 --- !u!1 &8682553971658779000
 GameObject:
   m_ObjectHideFlags: 0

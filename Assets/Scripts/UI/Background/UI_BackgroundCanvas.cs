@@ -51,6 +51,6 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 
     private void OnDropQuickSlot(UI_QuickSlot quickSlot)
     {
-
+        Managers.UI.Get<UI_QuickInventoryFixed>().QuickInventoryRef.RemoveQuickable(quickSlot.Index);
     }
 }

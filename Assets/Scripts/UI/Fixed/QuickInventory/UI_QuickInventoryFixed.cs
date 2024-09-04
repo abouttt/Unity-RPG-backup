@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class UI_QuickInventoryFixed : UI_Base, ISystemConnectable<QuickInventory>
@@ -10,7 +9,7 @@ public class UI_QuickInventoryFixed : UI_Base, ISystemConnectable<QuickInventory
 
     public QuickInventory QuickInventoryRef { get; private set; }
 
-    private readonly List<UI_QuickSlot> _quickSlots = new();
+    private UI_QuickSlot[] _slots;
 
     protected override void Init()
     {
@@ -22,7 +21,7 @@ public class UI_QuickInventoryFixed : UI_Base, ISystemConnectable<QuickInventory
     {
         QuickInventoryRef = quickInventory;
         quickInventory.InventoryChanged += RefreshSlot;
-        InitSlots(quickInventory.Quickables.Count, GetRT((int)RTs.QuickSlots));
+        InitSlots(quickInventory.Capacity, GetRT((int)RTs.QuickSlots));
     }
 
     public void DeconnectSystem()
@@ -36,17 +35,18 @@ public class UI_QuickInventoryFixed : UI_Base, ISystemConnectable<QuickInventory
 
     private void RefreshSlot(IQuickable quickable, int index)
     {
-        _quickSlots[index].Refresh(quickable);
+        _slots[index].Refresh(quickable);
     }
 
     private void InitSlots(int capacity, Transform parent)
     {
-        for (int i = 0; i < capacity; i++)
+        for (int index = 0; index < capacity; index++)
         {
             var quickSlot = Managers.Resource.Instantiate<UI_QuickSlot>("UI_QuickSlot.prefab");
-            quickSlot.Setup(i);
+            quickSlot.Index = index;
             quickSlot.transform.SetParent(parent);
-            _quickSlots.Add(quickSlot);
         }
+
+        _slots = parent.GetComponentsInChildren<UI_QuickSlot>();
     }
 }

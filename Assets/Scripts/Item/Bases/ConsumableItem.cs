@@ -37,10 +37,5 @@ public abstract class ConsumableItem : StackableItem, IUsable, IQuickable
         return true;
     }
 
-    public void UseQuick()
-    {
-        Use();
-    }
-
     protected abstract void OnUse();
 }
