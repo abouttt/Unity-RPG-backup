@@ -67,9 +67,13 @@ public class PlayerController : MonoBehaviour
         var inputDirection = new Vector3(_move.x, 0f, _move.y);
         float cameraYaw = _mainCamera.transform.eulerAngles.y;
 
-        _movement.MoveSpeed = _movement.IsLanding ? _landingSpeed
+        if (_movement.IsGrounded)
+        {
+            _movement.MoveSpeed = _movement.IsLanding ? _landingSpeed
                             : _isPressedSprint ? _sprintSpeed
                             : _runSpeed;
+        }
+
         _movement.Move(inputDirection, cameraYaw);
 
         if (_lockOnFov.HasTarget && IsOnlyRun())

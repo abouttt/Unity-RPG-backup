@@ -391,6 +391,7 @@ MonoBehaviour:
   <MoveSpeed>k__BackingField: 4
   <SpeedChangeRate>k__BackingField: 10
   <SlopeRayLength>k__BackingField: 0.2
+  <SlopeVelocity>k__BackingField: -20
   <RotationSmoothTime>k__BackingField: 0.075
   <JumpHeight>k__BackingField: 1.2
   <JumpTimeout>k__BackingField: 0.5
@@ -446,6 +447,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bb9851a4e80a2045a150753776bb9d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _armorInventory:
+    <Capacity>k__BackingField: 0
+    <Count>k__BackingField: 0
+  _weaponInventory:
+    <Capacity>k__BackingField: 0
+    <Count>k__BackingField: 0
 --- !u!114 &278754852755204250
 MonoBehaviour:
   m_ObjectHideFlags: 0

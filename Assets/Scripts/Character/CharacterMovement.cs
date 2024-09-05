@@ -29,6 +29,9 @@ public class CharacterMovement : MonoBehaviour
     [field: SerializeField]
     public float SlopeRayLength { get; set; }
 
+    [field: SerializeField]
+    public float SlopeVelocity { get; set; }
+
     [field: Header("Rotation")]
     [field: SerializeField, Range(0f, 0.3f)]
     public float RotationSmoothTime { get; set; }
@@ -211,7 +214,7 @@ public class CharacterMovement : MonoBehaviour
             {
                 if (OnSlope())
                 {
-                    _verticalVelocity = -20f;
+                    _verticalVelocity = SlopeVelocity;
                 }
                 else
                 {
