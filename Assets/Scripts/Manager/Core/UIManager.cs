@@ -306,6 +306,8 @@ public sealed class UIManager : BaseManager<UIManager>
 
     private void InitPopup(UI_Popup popup)
     {
+        popup.gameObject.SetActive(false);
+
         popup.Focused += () =>
         {
             if (_activePopups.First.Value == popup)
