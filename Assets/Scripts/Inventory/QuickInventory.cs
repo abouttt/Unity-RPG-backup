@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using UnityEngine;
 
 public class QuickInventory : MonoBehaviour
@@ -32,13 +31,13 @@ public class QuickInventory : MonoBehaviour
 
     public void RemoveQuickable(int index)
     {
-        var quickable = _inventory.Items[index];
+        var quickable = _inventory[index];
 
         if (_inventory.RemoveItem(index))
         {
             if (quickable is Item item)
             {
-                if (!_inventory.Items.Contains(quickable))
+                if (!_inventory.Contains(quickable))
                 {
                     item.Destroyed -= OnItemDestroyed;
                 }
@@ -56,15 +55,15 @@ public class QuickInventory : MonoBehaviour
     public void SwapQuickable(int fromIndex, int toIndex)
     {
         _inventory.SwapItem(fromIndex, toIndex);
-        InventoryChanged?.Invoke(_inventory.Items[fromIndex], fromIndex);
-        InventoryChanged?.Invoke(_inventory.Items[toIndex], toIndex);
+        InventoryChanged?.Invoke(_inventory[fromIndex], fromIndex);
+        InventoryChanged?.Invoke(_inventory[toIndex], toIndex);
     }
 
     private void OnItemDestroyed(Item item)
     {
         for (int index = 0; index < _inventory.Capacity; index++)
         {
-            if (_inventory.Items[index] == item)
+            if (_inventory[index] == item)
             {
                 RemoveQuickable(index);
             }

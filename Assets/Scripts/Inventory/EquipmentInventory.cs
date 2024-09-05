@@ -97,27 +97,23 @@ public class EquipmentInventory : MonoBehaviour
 
     public EquipmentItem GetEquipment(EquipmentItemData equipmentData)
     {
-        if (equipmentData is ArmorItemData armorData)
+        return equipmentData.EquipmentType switch
         {
-            return GetArmor(armorData.ArmorType);
-        }
-        else if (equipmentData is WeaponItemData weaponData)
-        {
-            return GetWeapon(weaponData.HandedType);
-        }
-
-        return null;
+            EquipmentType.Armor => GetArmor((equipmentData as ArmorItemData).ArmorType),
+            EquipmentType.Weapon => GetWeapon((equipmentData as WeaponItemData).HandedType),
+            _ => null,
+        };
     }
 
     public ArmorItem GetArmor(ArmorType armorType)
     {
-        return _armorInventory.Items[(int)armorType];
+        return _armorInventory[(int)armorType];
     }
 
     public WeaponItem GetWeapon(HandedType handedType)
     {
         handedType = TransformHandedType(handedType);
-        return _weaponInventory.Items[(int)handedType];
+        return _weaponInventory[(int)handedType];
     }
 
     public bool IsEquipped(EquipmentItemData equipmentData)
@@ -143,7 +139,7 @@ public class EquipmentInventory : MonoBehaviour
 
     public bool IsEquippedWeaponHandedTypeIs(HandedType handedType)
     {
-        var equippedItem = _weaponInventory.Items[(int)TransformHandedType(handedType)];
+        var equippedItem = _weaponInventory[(int)TransformHandedType(handedType)];
         if (equippedItem == null)
         {
             return false;
@@ -154,11 +150,6 @@ public class EquipmentInventory : MonoBehaviour
 
     private HandedType TransformHandedType(HandedType handedType)
     {
-        if (handedType == HandedType.Two)
-        {
-            handedType = HandedType.Right;
-        }
-
-        return handedType;
+        return handedType == HandedType.Two ? HandedType.Right : handedType;
     }
 }

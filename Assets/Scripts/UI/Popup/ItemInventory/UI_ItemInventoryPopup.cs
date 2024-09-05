@@ -40,7 +40,7 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
     {
         ItemInventoryRef = itemInventory;
         itemInventory.InventoryChanged += RefreshSlot;
-        CreateSlots(itemInventory.Items.Count, GetRT((int)RTs.ItemSlots));
+        CreateSlots(itemInventory.Capacity, GetRT((int)RTs.ItemSlots));
     }
 
     public void DeconnectSystem()

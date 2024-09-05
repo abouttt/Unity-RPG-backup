@@ -11,7 +11,10 @@ public class Inventory<T> where T : class
     [field: SerializeField, ReadOnly]
     public int Count { get; private set; }
 
-    public IReadOnlyList<T> Items => _items.AsReadOnly();
+    public T this[int index]
+    {
+        get => _items[index];
+    }
 
     private List<T> _items;
 
@@ -120,6 +123,11 @@ public class Inventory<T> where T : class
     public bool HasItem(int index)
     {
         return IsIndexInRange(index) && _items[index] != null;
+    }
+
+    public bool Contains(T item)
+    {
+        return _items.Contains(item);
     }
 
     public bool IsIndexInRange(int index)

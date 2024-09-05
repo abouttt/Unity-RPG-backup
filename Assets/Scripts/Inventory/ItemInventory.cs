@@ -1,12 +1,12 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemInventory : MonoBehaviour
 {
     public event Action<Item, int> InventoryChanged;
 
-    public IReadOnlyList<Item> Items => _inventory.Items;
+    public int Capacity => _inventory.Capacity;
+    public int Count => _inventory.Count;
 
     [SerializeField]
     private Inventory<Item> _inventory;
@@ -175,7 +175,7 @@ public class ItemInventory : MonoBehaviour
             return false;
         }
 
-        if (_inventory.Items[index] is not IUsable usable)
+        if (_inventory[index] is not IUsable usable)
         {
             return false;
         }
@@ -245,7 +245,7 @@ public class ItemInventory : MonoBehaviour
     private void SwapItem(int fromIndex, int toIndex)
     {
         _inventory.SwapItem(fromIndex, toIndex);
-        InventoryChanged?.Invoke(_inventory.Items[fromIndex], fromIndex);
-        InventoryChanged?.Invoke(_inventory.Items[toIndex], toIndex);
+        InventoryChanged?.Invoke(_inventory[fromIndex], fromIndex);
+        InventoryChanged?.Invoke(_inventory[toIndex], toIndex);
     }
 }
