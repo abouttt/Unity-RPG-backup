@@ -69,6 +69,14 @@ public sealed class UIManager : BaseManager<UIManager>
 
     protected override void OnDispose()
     {
+        foreach (var kvp in _roots)
+        {
+            foreach (Transform child in kvp.Value)
+            {
+                Object.Destroy(child.gameObject);
+            }
+        }
+
         _objects.Clear();
         Object.Destroy(_root.gameObject);
     }
