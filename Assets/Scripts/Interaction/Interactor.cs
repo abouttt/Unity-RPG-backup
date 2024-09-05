@@ -6,6 +6,7 @@ public class Interactor : MonoBehaviour
     public event Action<Interactable> TargetChanged;
 
     public Interactable Target { get; private set; }
+    public bool HasTarget { get; private set; }
     public bool Interact { get; set; }
     public float InteractionHoldingTime { get; private set; }
 
@@ -16,12 +17,16 @@ public class Interactor : MonoBehaviour
     public LayerMask ObstacleLayers { get; set; }
 
     private bool _isReadyToInteract;
-    private bool _isTargetRangeOut;
+    private bool _isTargetOutOfRange;
 
     private void LateUpdate()
     {
         if (Target == null)
         {
+            if (HasTarget)
+            {
+                SetTarget(null);
+            }
             return;
         }
 
@@ -36,7 +41,7 @@ public class Interactor : MonoBehaviour
             return;
         }
 
-        if (_isTargetRangeOut)
+        if (_isTargetOutOfRange)
         {
             SetTarget(null);
             return;
@@ -115,7 +120,7 @@ public class Interactor : MonoBehaviour
 
         if (Target.IsInteracted)
         {
-            _isTargetRangeOut = true;
+            _isTargetOutOfRange = true;
         }
         else
         {
@@ -137,20 +142,16 @@ public class Interactor : MonoBehaviour
 
     private void SetTarget(Interactable target)
     {
-        if (Target == target)
-        {
-            return;
-        }
-
         if (Target != null)
         {
             Target.Undetected();
         }
 
         Target = target;
+        HasTarget = target != null;
         InteractionHoldingTime = 0f;
         _isReadyToInteract = false;
-        _isTargetRangeOut = false;
+        _isTargetOutOfRange = false;
 
         if (target != null)
         {

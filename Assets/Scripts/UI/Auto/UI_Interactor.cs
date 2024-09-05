@@ -3,6 +3,11 @@ using UnityEngine;
 [RequireComponent(typeof(UI_FollowWorldObject))]
 public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 {
+    enum Objects
+    {
+        Body,
+    }
+
     enum Images
     {
         LoadingTimeImage,
@@ -24,6 +29,7 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
     {
         base.Init();
 
+        BindObject(typeof(Objects));
         BindImage(typeof(Images));
         BindText(typeof(Texts));
 
@@ -36,18 +42,18 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
     {
         if (_interactorRef.Target.IsInteracted)
         {
-            gameObject.SetActive(false);
+            GetObject((int)Objects.Body).SetActive(false);
             return;
         }
 
-        if (!gameObject.activeSelf)
+        if (!GetObject((int)Objects.Body).activeSelf)
         {
-            gameObject.SetActive(true);
+            GetObject((int)Objects.Body).SetActive(true);
         }
 
         if (GetImage((int)Images.LoadingTimeImage).IsActive())
         {
-            GetImage((int)Images.LoadingTimeImage).fillAmount = 
+            GetImage((int)Images.LoadingTimeImage).fillAmount =
                 _interactorRef.InteractionHoldingTime / _interactorRef.Target.InteractionHoldTime;
         }
     }
