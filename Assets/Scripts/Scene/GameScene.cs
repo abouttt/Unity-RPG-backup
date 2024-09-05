@@ -15,11 +15,11 @@ public class GameScene : BaseScene
         base.Init();
         InitPlayer();
         InstantiatePackage("GameUIPackage.prefab");
+        ConnectUI();
     }
 
     private void Start()
     {
-        ConnectUI();
         Managers.Input.Enabled = true;
         Managers.Input.CursorLocked = true;
         Managers.Sound.Play(SoundType.BGM, SceneSettings.Instance[SceneAddress].BGM);
