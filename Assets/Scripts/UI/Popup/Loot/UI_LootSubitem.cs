@@ -10,7 +10,7 @@ public class UI_LootSubitem : UI_Base
     enum Texts
     {
         ItemNameText,
-        CountText,
+        QuantityText,
     }
 
     enum Buttons
@@ -19,7 +19,7 @@ public class UI_LootSubitem : UI_Base
     }
 
     public ItemData ItemDataRef { get; private set; }
-    public int Count { get; private set; }
+    public int Quantity { get; private set; }
 
     protected override void Init()
     {
@@ -35,7 +35,7 @@ public class UI_LootSubitem : UI_Base
         });
     }
 
-    public void SetItemData(ItemData itemData, int count)
+    public void SetItemData(ItemData itemData, int quantity)
     {
         if (ItemDataRef == null || !ItemDataRef.Equals(itemData))
         {
@@ -44,13 +44,14 @@ public class UI_LootSubitem : UI_Base
             GetText((int)Texts.ItemNameText).text = itemData.ItemName;
         }
 
-        Count = count;
+        Quantity = quantity;
         RefreshCountText();
     }
 
     private void RefreshCountText()
     {
-        GetText((int)Texts.CountText).gameObject.SetActive(Count > 1);
-        GetText((int)Texts.CountText).text = $"{Count}";
+        var quantityText = GetText((int)Texts.QuantityText);
+        quantityText.gameObject.SetActive(Quantity > 1);
+        quantityText.text = Quantity.ToString();
     }
 }

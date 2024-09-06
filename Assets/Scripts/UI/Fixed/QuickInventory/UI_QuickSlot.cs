@@ -33,12 +33,12 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
         base.Init();
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-        ClearQuickableRef();
+        Clear();
     }
 
     public void Refresh(IQuickable quickable)
     {
-        ClearQuickableRef();
+        Clear();
 
         if (quickable == null)
         {
@@ -70,7 +70,7 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
         GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
     }
 
-    private void ClearQuickableRef()
+    private void Clear()
     {
         if (QuickableRef != null)
         {
@@ -97,11 +97,6 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
     public override void OnPointerUp(PointerEventData eventData)
     {
         if (!CanPointerUp(eventData))
-        {
-            return;
-        }
-
-        if (eventData.button != PointerEventData.InputButton.Right)
         {
             return;
         }

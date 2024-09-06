@@ -41,11 +41,6 @@ public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (eventData.button != PointerEventData.InputButton.Right)
-        {
-            return;
-        }
-
         if (EquipmentItemRef == null)
         {
             return;

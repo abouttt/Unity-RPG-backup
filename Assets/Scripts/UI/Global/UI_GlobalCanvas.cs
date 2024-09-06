@@ -16,18 +16,11 @@ public class UI_GlobalCanvas : UI_Base
         Managers.UI.Register(this);
     }
 
-    public void FadeIn(float duration)
+    public void Fade(float start, float end, float duration)
     {
         var fadeImage = GetImage((int)Images.FadeImage);
-        ChangeAlpha(fadeImage, 1f);
-        fadeImage.DOFade(0f, duration);
-    }
-
-    public void FadeOut(float duration)
-    {
-        var fadeImage = GetImage((int)Images.FadeImage);
-        ChangeAlpha(fadeImage, 0f);
-        fadeImage.DOFade(1f, duration);
+        ChangeAlpha(fadeImage, start);
+        fadeImage.DOFade(end, duration);
     }
 
     private void ChangeAlpha(Image image, float alpha)

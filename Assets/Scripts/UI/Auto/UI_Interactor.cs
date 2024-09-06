@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(UI_FollowWorldObject))]
-public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
+public class UI_Interactor : UI_AutoSubitem, ISystemConnectable<Interactor>
 {
     enum Objects
     {
@@ -60,6 +60,13 @@ public class UI_Interactor : UI_Auto, ISystemConnectable<Interactor>
 
     public void ConnectSystem(Interactor interactor)
     {
+        if (interactor == null)
+        {
+            return;
+        }
+
+        DeconnectSystem();
+
         _interactorRef = interactor;
         interactor.TargetChanged += SetTarget;
     }

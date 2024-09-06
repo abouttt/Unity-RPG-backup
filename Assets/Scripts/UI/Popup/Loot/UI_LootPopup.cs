@@ -73,6 +73,11 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public void ConnectSystem(ItemInventory itemInventory)
     {
+        if (itemInventory == null)
+        {
+            return;
+        }
+
         _itemInventoryRef = itemInventory;
     }
 
@@ -89,48 +94,48 @@ public class UI_LootPopup : UI_Popup, ISystemConnectable<ItemInventory>
         {
             if (kvp.Key is StackableItemData stackableData)
             {
-                int count = kvp.Value;
-                while (count > 0)
+                int quantity = kvp.Value;
+                while (quantity > 0)
                 {
-                    CreateLootSubitem(kvp.Key, Mathf.Clamp(count, count, stackableData.MaxQuantity));
-                    count -= stackableData.MaxQuantity;
+                    CreateSubitem(kvp.Key, Mathf.Clamp(quantity, quantity, stackableData.MaxQuantity));
+                    quantity -= stackableData.MaxQuantity;
                 }
             }
             else
             {
                 for (int i = 0; i < kvp.Value; i++)
                 {
-                    CreateLootSubitem(kvp.Key, 1);
+                    CreateSubitem(kvp.Key, 1);
                 }
             }
         }
     }
 
-    public void AddItemToItemInventory(UI_LootSubitem lootSubitem)
+    public void AddItemToItemInventory(UI_LootSubitem subitem)
     {
-        _fieldItemRef.RemoveItem(lootSubitem.ItemDataRef, lootSubitem.Count);
-        int quantity = _itemInventoryRef.AddItem(lootSubitem.ItemDataRef, lootSubitem.Count);
+        _fieldItemRef.RemoveItem(subitem.ItemDataRef, subitem.Quantity);
+        int quantity = _itemInventoryRef.AddItem(subitem.ItemDataRef, subitem.Quantity);
         if (quantity > 0)
         {
-            lootSubitem.SetItemData(lootSubitem.ItemDataRef, quantity);
+            subitem.SetItemData(subitem.ItemDataRef, quantity);
         }
         else
         {
-            RemoveLootSubitem(lootSubitem);
+            RemoveSubitem(subitem);
         }
     }
 
-    private void CreateLootSubitem(ItemData itemData, int count)
+    private void CreateSubitem(ItemData itemData, int count)
     {
-        var lootSubitem = Managers.Resource.Instantiate<UI_LootSubitem>("UI_LootSubitem.prefab", GetRT((int)RTs.LootSubitems), true);
-        lootSubitem.SetItemData(itemData, count);
-        _subitems.Add(lootSubitem, itemData);
+        var subitem = Managers.Resource.Instantiate<UI_LootSubitem>("UI_LootSubitem.prefab", GetRT((int)RTs.LootSubitems), true);
+        subitem.SetItemData(itemData, count);
+        _subitems.Add(subitem, itemData);
     }
 
-    private void RemoveLootSubitem(UI_LootSubitem lootSubitem)
+    private void RemoveSubitem(UI_LootSubitem subitem)
     {
-        _subitems.Remove(lootSubitem);
-        Managers.Resource.Destroy(lootSubitem.gameObject);
+        _subitems.Remove(subitem);
+        Managers.Resource.Destroy(subitem.gameObject);
         if (_subitems.Count == 0)
         {
             Managers.UI.Close<UI_LootPopup>();

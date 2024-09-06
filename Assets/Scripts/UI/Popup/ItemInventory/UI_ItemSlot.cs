@@ -21,12 +21,12 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         base.Init();
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-        ClearItemRef();
+        Clear();
     }
 
     public void Refresh(Item item)
     {
-        ClearItemRef();
+        Clear();
 
         if (item == null)
         {
@@ -55,7 +55,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
     }
 
-    private void ClearItemRef()
+    private void Clear()
     {
         if (ItemRef != null)
         {
@@ -85,11 +85,6 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
     public override void OnPointerUp(PointerEventData eventData)
     {
         if (!CanPointerUp(eventData))
-        {
-            return;
-        }
-
-        if (eventData.button != PointerEventData.InputButton.Right)
         {
             return;
         }

@@ -17,7 +17,7 @@ public class UI_WeaponSlot : UI_EquipmentSlot
     {
         base.Init();
         BindImage(typeof(Imagesss));
-        ClearItemRef();
+        Clear();
     }
 
     public void Refresh(WeaponItem weaponItem)
@@ -52,11 +52,11 @@ public class UI_WeaponSlot : UI_EquipmentSlot
                 }
                 else if (handedType == HandedType.Left)
                 {
-                    _canDrag = true;
                     SetImage(weaponItem.Data.ItemImage);
                     GetImage((int)Images.SlotImage).color = Color.white;
                     ChangeBackgroundImage(true);
                     EquipmentItemRef = weaponItem;
+                    _canDrag = true;
                 }
             }
         }
@@ -84,11 +84,11 @@ public class UI_WeaponSlot : UI_EquipmentSlot
                 }
             }
 
-            ClearItemRef();
+            Clear();
         }
     }
 
-    private void ClearItemRef()
+    private void Clear()
     {
         SetImage(null);
         ChangeBackgroundImage(false);
@@ -98,11 +98,11 @@ public class UI_WeaponSlot : UI_EquipmentSlot
 
     private void SetVirtualTwoHanded(WeaponItem twoHandedItem)
     {
-        _canDrag = false;
         SetImage(twoHandedItem.Data.ItemImage);
         GetImage((int)Images.SlotImage).color = new Color(1f, 1f, 1f, 0.3f);
         GetImage((int)Imagesss.InactiveImage).gameObject.SetActive(false);
         ChangeBackgroundImage(true);
+        _canDrag = false;
     }
 
     public override void OnEndDrag(PointerEventData eventData)
@@ -130,6 +130,6 @@ public class UI_WeaponSlot : UI_EquipmentSlot
             }
         }
 
-        return weaponItem.WeaponData.HandedType != HandedType.Left == _isRightHand;
+        return (weaponItem.WeaponData.HandedType != HandedType.Left) == _isRightHand;
     }
 }

@@ -470,7 +470,7 @@ GameObject:
   - component: {fileID: 4062614099764767681}
   - component: {fileID: 7051281213506916644}
   m_Layer: 5
-  m_Name: CountText
+  m_Name: QuantityText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

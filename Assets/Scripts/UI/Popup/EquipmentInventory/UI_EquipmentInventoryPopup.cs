@@ -38,6 +38,13 @@ public class UI_EquipmentInventoryPopup : UI_Popup, ISystemConnectable<Equipment
 
     public void ConnectSystem(EquipmentInventory equipmentInventory)
     {
+        if (equipmentInventory == null)
+        {
+            return;
+        }
+
+        DeconnectSystem();
+
         EquipmentInventoryRef = equipmentInventory;
         equipmentInventory.InventoryChanged += RefreshSlot;
     }

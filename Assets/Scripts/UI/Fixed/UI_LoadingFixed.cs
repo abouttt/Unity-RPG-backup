@@ -18,7 +18,7 @@ public class UI_LoadingFixed : UI_Base
 
         GetImage((int)Images.Bar).fillAmount = 0f;
 
-        Managers.Scene.LoadCompleteReady += () => Managers.UI.Get<UI_GlobalCanvas>().FadeOut(SceneSettings.Instance.FadeOutDuration);
+        Managers.Scene.LoadCompleteReady += () => Managers.UI.Get<UI_GlobalCanvas>().Fade(0f, 1f, SceneSettings.Instance.FadeOutDuration);
     }
 
     private void Update()

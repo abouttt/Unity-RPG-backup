@@ -73,7 +73,7 @@ public abstract class UI_BaseSlot : UI_Base,
 
     public virtual void OnPointerDown(PointerEventData eventData)
     {
-        if (!GetImage((int)Images.SlotImage).isActiveAndEnabled)
+        if (eventData.button != PointerEventData.InputButton.Right)
         {
             return;
         }

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class UI_AutoCanvas : UI_Base
 {
-    public readonly Dictionary<Type, UI_Auto> _subitems = new();
+    public readonly Dictionary<Type, UI_AutoSubitem> _subitems = new();
 
     protected override void Init()
     {
         Managers.UI.Register(this);
     }
 
-    public void AddSubitem(UI_Auto ui)
+    public void AddSubitem(UI_AutoSubitem ui)
     {
         if (_subitems.ContainsKey(ui.GetType()))
         {
@@ -25,7 +25,7 @@ public class UI_AutoCanvas : UI_Base
         }
     }
 
-    public T GetSubitem<T>() where T : UI_Auto
+    public T GetSubitem<T>() where T : UI_AutoSubitem
     {
         if (_subitems.TryGetValue(typeof(T), out var ui))
         {
@@ -33,10 +33,5 @@ public class UI_AutoCanvas : UI_Base
         }
 
         return null;
-    }
-
-    private void OnDestroy()
-    {
-        _subitems.Clear();
     }
 }

@@ -19,6 +19,13 @@ public class UI_QuickInventoryFixed : UI_Base, ISystemConnectable<QuickInventory
 
     public void ConnectSystem(QuickInventory quickInventory)
     {
+        if (quickInventory == null)
+        {
+            return;
+        }
+
+        DeconnectSystem();
+
         QuickInventoryRef = quickInventory;
         quickInventory.InventoryChanged += RefreshSlot;
         InitSlots(quickInventory.Capacity, GetRT((int)RTs.QuickSlots));

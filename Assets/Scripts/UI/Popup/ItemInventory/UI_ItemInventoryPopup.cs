@@ -38,6 +38,13 @@ public class UI_ItemInventoryPopup : UI_Popup, ISystemConnectable<ItemInventory>
 
     public void ConnectSystem(ItemInventory itemInventory)
     {
+        if (itemInventory == null)
+        {
+            return;
+        }
+
+        DeconnectSystem();
+
         ItemInventoryRef = itemInventory;
         itemInventory.InventoryChanged += RefreshSlot;
         CreateSlots(itemInventory.Capacity, GetRT((int)RTs.ItemSlots));

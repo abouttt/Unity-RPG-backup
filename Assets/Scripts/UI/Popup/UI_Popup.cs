@@ -55,6 +55,11 @@ public abstract class UI_Popup : UI_Base, IPointerDownHandler
         PopupRT.anchoredPosition = DefaultPosition;
     }
 
+    protected virtual void Start()
+    {
+        gameObject.SetActive(false);
+    }
+
     public void SetTop()
     {
         Focused?.Invoke();

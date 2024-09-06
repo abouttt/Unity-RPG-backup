@@ -105,9 +105,9 @@ public class PlayerController : MonoBehaviour
     private void UpdateAnimatorParameters()
     {
         var inputDirection = new Vector3(_move.x, 0f, _move.y);
-        bool isLockOnOnlyRun = _lockOnFov.HasTarget && IsOnlyRun();
-        float targetSpeed = inputDirection == Vector3.zero ? 0 : _movement.MoveSpeed;
+        float targetSpeed = inputDirection == Vector3.zero ? 0f : _movement.MoveSpeed;
         float speedChangeRate = _movement.SpeedChangeRate * Time.deltaTime;
+        bool isLockOnOnlyRun = _lockOnFov.HasTarget && IsOnlyRun();
 
         _speedBlend = Mathf.Lerp(_speedBlend, targetSpeed, speedChangeRate);
         _posXBlend = Mathf.Lerp(_posXBlend, inputDirection.x, speedChangeRate);

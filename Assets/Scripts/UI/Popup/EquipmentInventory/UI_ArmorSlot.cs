@@ -10,23 +10,26 @@ public class UI_ArmorSlot : UI_EquipmentSlot
     protected override void Init()
     {
         base.Init();
-        Refresh(null);
+        Clear();
     }
 
     public void Refresh(ArmorItem armorItem)
     {
+        Clear();
+
         if (armorItem != null)
         {
             SetImage(armorItem.Data.ItemImage);
             ChangeBackgroundImage(true);
             EquipmentItemRef = armorItem;
         }
-        else
-        {
-            SetImage(null);
-            ChangeBackgroundImage(false);
-            EquipmentItemRef = null;
-        }
+    }
+
+    public void Clear()
+    {
+        SetImage(null);
+        ChangeBackgroundImage(false);
+        EquipmentItemRef = null;
     }
 
     protected override bool CanDropItem(EquipmentItem equipmentItem)

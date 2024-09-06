@@ -1,4 +1,5 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class GameScene : BaseScene
 {
@@ -13,6 +14,7 @@ public class GameScene : BaseScene
     protected override void Init()
     {
         base.Init();
+        DOTween.Init();
         InitPlayer();
         InstantiatePackage("GameUIPackage.prefab");
         ConnectUI();
@@ -23,7 +25,7 @@ public class GameScene : BaseScene
         Managers.Input.Enabled = true;
         Managers.Input.CursorLocked = true;
         Managers.Sound.Play(SoundType.BGM, SceneSettings.Instance[SceneAddress].BGM);
-        Managers.UI.Get<UI_GlobalCanvas>().FadeIn(SceneSettings.Instance.FadeInDuration);
+        Managers.UI.Get<UI_GlobalCanvas>().Fade(1f, 0f, SceneSettings.Instance.FadeInDuration);
     }
 
     private void OnDestroy()
