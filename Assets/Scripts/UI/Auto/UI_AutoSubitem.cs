@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class UI_AutoSubitem : UI_Base
+public abstract class UI_AutoSubitem : UI_Subitem
 {
     protected override void Init()
     {
