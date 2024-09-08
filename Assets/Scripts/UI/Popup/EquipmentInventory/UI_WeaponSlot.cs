@@ -8,8 +8,6 @@ public class UI_WeaponSlot : UI_EquipmentSlot
         InactiveImage = 3,
     }
 
-    public WeaponItem WeaponItemRef => EquipmentItemRef as WeaponItem;
-
     [SerializeField]
     private bool _isRightHand;
 
@@ -17,7 +15,7 @@ public class UI_WeaponSlot : UI_EquipmentSlot
     {
         base.Init();
         BindImage(typeof(Imagesss));
-        Clear();
+        Refresh(null);
     }
 
     public void Refresh(WeaponItem weaponItem)
@@ -32,16 +30,15 @@ public class UI_WeaponSlot : UI_EquipmentSlot
             {
                 if (handedType != HandedType.Left)
                 {
-                    SetImage(weaponItem.Data.ItemImage);
+                    SetObject(weaponItem, weaponItem.Data.ItemImage);
                     ChangeBackgroundImage(true);
-                    EquipmentItemRef = weaponItem;
                 }
             }
             else
             {
                 if (handedType == HandedType.Two)
                 {
-                    if (EquipmentItemRef != null)
+                    if (ObjectRef != null)
                     {
                         GetImage((int)Imagesss.InactiveImage).gameObject.SetActive(true);
                     }
@@ -52,19 +49,18 @@ public class UI_WeaponSlot : UI_EquipmentSlot
                 }
                 else if (handedType == HandedType.Left)
                 {
-                    SetImage(weaponItem.Data.ItemImage);
+                    SetObject(weaponItem, weaponItem.Data.ItemImage);
                     GetImage((int)Images.SlotImage).color = Color.white;
                     ChangeBackgroundImage(true);
-                    EquipmentItemRef = weaponItem;
                     _canDrag = true;
                 }
             }
         }
         else
         {
-            if (EquipmentItemRef != null)
+            if (ObjectRef is EquipmentItem equipmentItem)
             {
-                if (equipmentInventory.IsEquipped(EquipmentItemRef.EquipmentData))
+                if (equipmentInventory.IsEquipped(equipmentItem.EquipmentData))
                 {
                     if (!_isRightHand)
                     {
@@ -77,8 +73,8 @@ public class UI_WeaponSlot : UI_EquipmentSlot
                     if (equipmentInventory.IsEquippedWeaponHandedTypeIs(HandedType.Two))
                     {
                         var equippedItem = equipmentInventory.GetWeapon(HandedType.Two);
+                        base.Clear();
                         SetVirtualTwoHanded(equippedItem);
-                        EquipmentItemRef = null;
                         return;
                     }
                 }
@@ -88,12 +84,11 @@ public class UI_WeaponSlot : UI_EquipmentSlot
         }
     }
 
-    private void Clear()
+    protected override void Clear()
     {
-        SetImage(null);
+        base.Clear();
         ChangeBackgroundImage(false);
         GetImage((int)Imagesss.InactiveImage).gameObject.SetActive(false);
-        EquipmentItemRef = null;
     }
 
     private void SetVirtualTwoHanded(WeaponItem twoHandedItem)
@@ -109,7 +104,7 @@ public class UI_WeaponSlot : UI_EquipmentSlot
     {
         base.OnEndDrag(eventData);
 
-        if (!_isRightHand && EquipmentItemRef == null)
+        if (!_isRightHand && !HasObject)
         {
             GetImage((int)Images.SlotImage).color = new Color(1f, 1f, 1f, 0.3f);
         }

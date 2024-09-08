@@ -24,8 +24,6 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
         }
     }
 
-    public IQuickable QuickableRef { get; private set; }
-
     private int _index;
 
     protected override void Init()
@@ -33,65 +31,68 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
         base.Init();
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-        Clear();
+        Refresh(null);
     }
 
     public void Refresh(IQuickable quickable)
     {
-        Clear();
-
-        if (quickable == null)
+        if (quickable != null)
         {
-            return;
+            if (ObjectRef == quickable)
+            {
+                return;
+            }
+
+            if (HasObject)
+            {
+                Clear();
+            }
+
+            if (quickable is Item item)
+            {
+                SetObject(item, item.Data.ItemImage);
+
+                if (item is IStackable stackable)
+                {
+                    stackable.StackChanged += RefreshQuantityText;
+                    GetText((int)Texts.QuantityText).gameObject.SetActive(true);
+                    RefreshQuantityText(stackable);
+                }
+
+                if (item.Data is ICooldownable cooldownable)
+                {
+                    Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
+                }
+            }
         }
-
-        if (quickable is Item item)
+        else
         {
-            SetImage(item.Data.ItemImage);
+            Clear();
+        }
+    }
 
+    protected override void Clear()
+    {
+        if (ObjectRef is Item item)
+        {
             if (item is IStackable stackable)
             {
-                stackable.StackChanged += RefreshQuantityText;
-                GetText((int)Texts.QuantityText).gameObject.SetActive(true);
-                RefreshQuantityText(stackable);
+                stackable.StackChanged -= RefreshQuantityText;
             }
 
-            if (item.Data is ICooldownable cooldownable)
+            if (item.Data is ICooldownable)
             {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
             }
         }
 
-        QuickableRef = quickable;
+        base.Clear();
+        GetText((int)Texts.QuantityText).gameObject.SetActive(false);
     }
 
     private void RefreshQuantityText(IStackable stackable)
     {
         GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
-    }
-
-    private void Clear()
-    {
-        if (QuickableRef != null)
-        {
-            if (QuickableRef is Item item)
-            {
-                if (item is IStackable stackable)
-                {
-                    stackable.StackChanged -= RefreshQuantityText;
-                }
-
-                if (item.Data is ICooldownable)
-                {
-                    Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
-                }
-            }
-
-            QuickableRef = null;
-        }
-
-        SetImage(null);
-        GetText((int)Texts.QuantityText).gameObject.SetActive(false);
     }
 
     public override void OnPointerUp(PointerEventData eventData)
@@ -101,15 +102,20 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (QuickableRef == null)
-        {
-            return;
-        }
-
-        if (QuickableRef is Item item)
+        if (ObjectRef is Item item)
         {
             Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.UseItem(item);
         }
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(this);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(null);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -135,12 +141,12 @@ public class UI_QuickSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
-        if (otherItemSlot.ItemRef is not IQuickable quickable)
+        if (otherItemSlot.ObjectRef is not IQuickable quickable)
         {
             return;
         }
 
-        if (QuickableRef == quickable)
+        if (ObjectRef == quickable)
         {
             return;
         }

@@ -2,34 +2,32 @@ using UnityEngine;
 
 public class UI_ArmorSlot : UI_EquipmentSlot
 {
-    public ArmorItem ArmorItemRef => EquipmentItemRef as ArmorItem;
-
     [SerializeField]
     private ArmorType _armorType;
 
     protected override void Init()
     {
         base.Init();
-        Clear();
+        Refresh(null);
     }
 
     public void Refresh(ArmorItem armorItem)
     {
-        Clear();
-
         if (armorItem != null)
         {
-            SetImage(armorItem.Data.ItemImage);
+            SetObject(armorItem, armorItem.Data.ItemImage);
             ChangeBackgroundImage(true);
-            EquipmentItemRef = armorItem;
+        }
+        else
+        {
+            Clear();
         }
     }
 
-    public void Clear()
+    protected override void Clear()
     {
-        SetImage(null);
+        base.Clear();
         ChangeBackgroundImage(false);
-        EquipmentItemRef = null;
     }
 
     protected override bool CanDropItem(EquipmentItem equipmentItem)

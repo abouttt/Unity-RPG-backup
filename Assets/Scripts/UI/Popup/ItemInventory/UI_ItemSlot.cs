@@ -14,66 +14,71 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
     }
 
     public int Index { get; set; } = -1;
-    public Item ItemRef { get; private set; }
 
     protected override void Init()
     {
         base.Init();
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-        Clear();
+        Refresh(null);
     }
 
     public void Refresh(Item item)
     {
-        Clear();
-
-        if (item == null)
+        if (item != null)
         {
-            return;
+            if (ObjectRef == item)
+            {
+                return;
+            }
+
+            if (HasObject)
+            {
+                Clear();
+            }
+
+            SetObject(item, item.Data.ItemImage);
+
+            if (item is IStackable stackable)
+            {
+                stackable.StackChanged += RefreshQuantityText;
+                GetText((int)Texts.QuantityText).gameObject.SetActive(true);
+                RefreshQuantityText(stackable);
+            }
+
+            if (item.Data is ICooldownable cooldownable)
+            {
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
+            }
+        }
+        else
+        {
+            Clear();
+        }
+    }
+
+    protected override void Clear()
+    {
+        if (ObjectRef is Item item)
+        {
+            if (item is IStackable stackable)
+            {
+                stackable.StackChanged -= RefreshQuantityText;
+            }
+
+            if (item.Data is ICooldownable)
+            {
+                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
+            }
         }
 
-        SetImage(item.Data.ItemImage);
-
-        if (item is IStackable stackable)
-        {
-            stackable.StackChanged += RefreshQuantityText;
-            GetText((int)Texts.QuantityText).gameObject.SetActive(true);
-            RefreshQuantityText(stackable);
-        }
-
-        if (item.Data is ICooldownable cooldownable)
-        {
-            Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
-        }
-
-        ItemRef = item;
+        base.Clear();
+        GetText((int)Texts.QuantityText).gameObject.SetActive(false);
     }
 
     private void RefreshQuantityText(IStackable stackable)
     {
         GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
-    }
-
-    private void Clear()
-    {
-        if (ItemRef != null)
-        {
-            if (ItemRef is IStackable stackable)
-            {
-                stackable.StackChanged -= RefreshQuantityText;
-            }
-
-            if (ItemRef.Data is ICooldownable)
-            {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
-            }
-
-            ItemRef = null;
-        }
-
-        SetImage(null);
-        GetText((int)Texts.QuantityText).gameObject.SetActive(false);
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -89,16 +94,11 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (ItemRef == null)
-        {
-            return;
-        }
-
-        if (ItemRef is IUsable)
+        if (ObjectRef is IUsable)
         {
             Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.UseItem(Index);
         }
-        else if (ItemRef is EquipmentItem equipmentItem)
+        else if (ObjectRef is EquipmentItem equipmentItem)
         {
             var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
             var equipmentInventory = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
@@ -124,6 +124,16 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         }
     }
 
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(this);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(null);
+    }
+
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag == gameObject)
@@ -147,14 +157,16 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
-        if (ItemRef == null && otherItemSlot.ItemRef is IStackable otherStackable && otherStackable.Quantity > 1)
+        var otherItem = otherItemSlot.ObjectRef as Item;
+
+        if (!HasObject && otherItem is IStackable otherStackable && otherStackable.Quantity > 1)
         {
             var splitPopup = Managers.UI.Show<UI_ItemSplitPopup>();
             splitPopup.SetEvent(() =>
             {
                 Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.SplitItem(otherItemSlot.Index, Index, splitPopup.Quantity);
             },
-            $"[{otherItemSlot.ItemRef.Data.ItemName}] {GuideSettings.Instance.ItemSpliteText}", 1, otherStackable.Quantity);
+            $"[{otherItem.Data.ItemName}] {GuideSettings.Instance.ItemSpliteText}", 1, otherStackable.Quantity);
         }
         else
         {
@@ -164,11 +176,11 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropEquipmentSlot(UI_EquipmentSlot otherEquipmentSlot)
     {
-        var otherEquipmentItem = otherEquipmentSlot.EquipmentItemRef;
+        var otherEquipmentItem = otherEquipmentSlot.ObjectRef as EquipmentItem;
 
-        if (ItemRef != null)
+        if (ObjectRef is Item item)
         {
-            if (ItemRef is not EquipmentItem equipmentItem)
+            if (item is not EquipmentItem equipmentItem)
             {
                 return;
             }

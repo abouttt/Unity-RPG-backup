@@ -8,8 +8,6 @@ public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
         BG = 2,
     }
 
-    public EquipmentItem EquipmentItemRef { get; protected set; }
-
     [SerializeField]
     private Sprite _equipBackgroundImage;
 
@@ -41,13 +39,19 @@ public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (EquipmentItemRef == null)
-        {
-            return;
-        }
+        var equipmentItem = ObjectRef as EquipmentItem;
+        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(equipmentItem.EquipmentData);
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Unequip(equipmentItem.EquipmentData);
+    }
 
-        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(EquipmentItemRef.EquipmentData);
-        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Unequip(EquipmentItemRef.EquipmentData);
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(this);
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(null);
     }
 
     public void OnDrop(PointerEventData eventData)
@@ -59,7 +63,7 @@ public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
 
         if (eventData.pointerDrag.TryGetComponent<UI_ItemSlot>(out var otherItemSlot))
         {
-            if (otherItemSlot.ItemRef is not EquipmentItem otherEquipmentItem)
+            if (otherItemSlot.ObjectRef is not EquipmentItem otherEquipmentItem)
             {
                 return;
             }
@@ -69,9 +73,9 @@ public abstract class UI_EquipmentSlot : UI_BaseSlot, IDropHandler
                 return;
             }
 
-            if (EquipmentItemRef != null)
+            if (ObjectRef is EquipmentItem equipmentItem)
             {
-                Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.SetItem(EquipmentItemRef.Data, otherItemSlot.Index);
+                Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.SetItem(equipmentItem.Data, otherItemSlot.Index);
             }
             else
             {
