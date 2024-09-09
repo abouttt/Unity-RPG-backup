@@ -34,8 +34,7 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot itemSlot)
     {
-        var item = itemSlot.ObjectRef as Item;
-        string text = $"[{item.Data.ItemName}] {GuideSettings.Instance.DestroyText}";
+        string text = $"[{itemSlot.ItemRef.Data.ItemName}] {GuideSettings.Instance.DestroyText}";
         Managers.UI.Show<UI_ConfirmationPopup>().SetEvent(() =>
         {
             Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.RemoveItem(itemSlot.Index);
@@ -45,9 +44,9 @@ public class UI_BackgroundCanvas : UI_Base, IPointerDownHandler, IDropHandler
 
     private void OnDropEquipmentSlot(UI_EquipmentSlot equipmentSlot)
     {
-        var equipmentItem = equipmentSlot.ObjectRef as EquipmentItem;
-        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(equipmentItem.Data);
-        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Unequip(equipmentItem.EquipmentData);
+        var equipmentData = equipmentSlot.EquipmentItemRef.EquipmentData;
+        Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.AddItem(equipmentData);
+        Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef.Unequip(equipmentData);
     }
 
     private void OnDropQuickSlot(UI_QuickSlot quickSlot)

@@ -33,7 +33,6 @@ public class UI_ItemTooltip : UI_TopSubitem
     [SerializeField]
     private Color _legendaryColor = Color.white;
 
-    private UI_BaseSlot _slotRef;
     private ItemData _itemDataRef;
     private readonly StringBuilder _sb = new(50);
 
@@ -44,61 +43,25 @@ public class UI_ItemTooltip : UI_TopSubitem
         BindText(typeof(Texts));
     }
 
-    private void Update()
+    private void LateUpdate()
     {
-        if (_slotRef == null)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-
-        if (!_slotRef.gameObject.activeInHierarchy)
-        {
-            gameObject.SetActive(false);
-            return;
-        }
-
-        if (_slotRef.IsDragging)
-        {
-            GetRT((int)RTs.Tooltip).gameObject.SetActive(false);
-            return;
-        }
-
-        if (_slotRef.HasObject)
-        {
-            SetData();
-            GetRT((int)RTs.Tooltip).gameObject.SetActive(true);
-        }
-        else
-        {
-            GetRT((int)RTs.Tooltip).gameObject.SetActive(false);
-        }
-
         SetPosition(Mouse.current.position.ReadValue());
     }
 
-    public void SetSlot(UI_BaseSlot slot)
+    public void Show(ItemData itemData)
     {
-        if (_slotRef == slot)
+        if (itemData == null)
         {
             return;
         }
 
-        _slotRef = slot;
-        gameObject.SetActive(slot != null);
-        GetRT((int)RTs.Tooltip).gameObject.SetActive(false);
+        gameObject.SetActive(true);
+        RefreshItemData(itemData);
     }
 
-    private void SetData()
+    public void Hide()
     {
-        if (_slotRef.ObjectRef is Item item)
-        {
-            RefreshItemData(item.Data);
-        }
-        else if (_slotRef.ObjectRef is ItemData itemData)
-        {
-            RefreshItemData(itemData);
-        }
+        gameObject.SetActive(false);
     }
 
     private void RefreshItemData(ItemData itemData)

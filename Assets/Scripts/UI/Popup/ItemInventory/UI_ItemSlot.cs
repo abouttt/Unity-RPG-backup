@@ -13,6 +13,7 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         CooldownImage,
     }
 
+    public Item ItemRef { get; private set; }
     public int Index { get; set; } = -1;
 
     protected override void Init()
@@ -20,65 +21,80 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         base.Init();
         BindText(typeof(Texts));
         Bind<UI_CooldownImage>(typeof(CooldownImages));
-        Refresh(null);
+        Clear();
     }
 
     public void Refresh(Item item)
     {
-        if (item != null)
+        Clear();
+
+        if (item == null)
         {
-            if (ObjectRef == item)
-            {
-                return;
-            }
-
-            if (HasObject)
-            {
-                Clear();
-            }
-
-            SetObject(item, item.Data.ItemImage);
-
-            if (item is IStackable stackable)
-            {
-                stackable.StackChanged += RefreshQuantityText;
-                GetText((int)Texts.QuantityText).gameObject.SetActive(true);
-                RefreshQuantityText(stackable);
-            }
-
-            if (item.Data is ICooldownable cooldownable)
-            {
-                Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
-            }
+            return;
         }
-        else
+
+        SetImage(item.Data.ItemImage);
+
+        if (item is IStackable stackable)
         {
-            Clear();
+            stackable.StackChanged += RefreshQuantityText;
+            GetText((int)Texts.QuantityText).gameObject.SetActive(true);
+            RefreshQuantityText(stackable);
         }
+
+        if (item.Data is ICooldownable cooldownable)
+        {
+            Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).ConnectSystem(cooldownable.Cooldown);
+        }
+
+        ItemRef = item;
     }
 
-    protected override void Clear()
+    private void Clear()
     {
-        if (ObjectRef is Item item)
+        if (ItemRef != null)
         {
-            if (item is IStackable stackable)
+            if (ItemRef is IStackable stackable)
             {
                 stackable.StackChanged -= RefreshQuantityText;
             }
 
-            if (item.Data is ICooldownable)
+            if (ItemRef.Data is ICooldownable)
             {
                 Get<UI_CooldownImage>((int)CooldownImages.CooldownImage).DeconnectSystem();
             }
+
+            ItemRef = null;
         }
 
-        base.Clear();
+        SetImage(null);
         GetText((int)Texts.QuantityText).gameObject.SetActive(false);
     }
 
     private void RefreshQuantityText(IStackable stackable)
     {
         GetText((int)Texts.QuantityText).text = stackable.Quantity.ToString();
+    }
+
+    public override void OnPointerEnter(PointerEventData eventData)
+    {
+        base.OnPointerEnter(eventData);
+
+        if (eventData != null && eventData.dragging)
+        {
+            return;
+        }
+
+        if (ItemRef != null)
+        {
+            Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().Show(ItemRef.Data);
+        }
+    }
+
+    public override void OnPointerExit(PointerEventData eventData)
+    {
+        base.OnPointerExit(eventData);
+        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().Hide();
     }
 
     public override void OnPointerDown(PointerEventData eventData)
@@ -94,11 +110,16 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
             return;
         }
 
-        if (ObjectRef is IUsable)
+        if (ItemRef == null)
+        {
+            return;
+        }
+
+        if (ItemRef is IUsable)
         {
             Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.UseItem(Index);
         }
-        else if (ObjectRef is EquipmentItem equipmentItem)
+        else if (ItemRef is EquipmentItem equipmentItem)
         {
             var itemInventory = Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef;
             var equipmentInventory = Managers.UI.Get<UI_EquipmentInventoryPopup>().EquipmentInventoryRef;
@@ -124,16 +145,6 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
         }
     }
 
-    public override void OnPointerEnter(PointerEventData eventData)
-    {
-        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(this);
-    }
-
-    public override void OnPointerExit(PointerEventData eventData)
-    {
-        Managers.UI.Get<UI_TopCanvas>().GetSubitem<UI_ItemTooltip>().SetSlot(null);
-    }
-
     public void OnDrop(PointerEventData eventData)
     {
         if (eventData.pointerDrag == gameObject)
@@ -157,16 +168,14 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropItemSlot(UI_ItemSlot otherItemSlot)
     {
-        var otherItem = otherItemSlot.ObjectRef as Item;
-
-        if (!HasObject && otherItem is IStackable otherStackable && otherStackable.Quantity > 1)
+        if (ItemRef == null && otherItemSlot.ItemRef is IStackable otherStackable && otherStackable.Quantity > 1)
         {
             var splitPopup = Managers.UI.Show<UI_ItemSplitPopup>();
             splitPopup.SetEvent(() =>
             {
                 Managers.UI.Get<UI_ItemInventoryPopup>().ItemInventoryRef.SplitItem(otherItemSlot.Index, Index, splitPopup.Quantity);
             },
-            $"[{otherItem.Data.ItemName}] {GuideSettings.Instance.ItemSpliteText}", 1, otherStackable.Quantity);
+            $"[{otherItemSlot.ItemRef.Data.ItemName}] {GuideSettings.Instance.ItemSpliteText}", 1, otherStackable.Quantity);
         }
         else
         {
@@ -176,11 +185,11 @@ public class UI_ItemSlot : UI_BaseSlot, IDropHandler
 
     private void OnDropEquipmentSlot(UI_EquipmentSlot otherEquipmentSlot)
     {
-        var otherEquipmentItem = otherEquipmentSlot.ObjectRef as EquipmentItem;
+        var otherEquipmentItem = otherEquipmentSlot.EquipmentItemRef;
 
-        if (ObjectRef is Item item)
+        if (ItemRef != null)
         {
-            if (item is not EquipmentItem equipmentItem)
+            if (ItemRef is not EquipmentItem equipmentItem)
             {
                 return;
             }
